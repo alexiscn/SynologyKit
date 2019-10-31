@@ -27,21 +27,21 @@ extension SynologyRequest {
 
 struct SynologyBasicRequest: SynologyRequest {
     
+    /// path of the API. The path information can be retrieved by requesting SYNO.API.Info
+    var path: String
+    
     /// Name of the API requested
     var api: SynologyAPI
-    
-    var params: Parameters? = nil
-    
-    var headers: HTTPHeaders? = nil
     
     /// Method of the API requested
     var method: SynologyMethod
     
+    var params: Parameters? = nil
+    
     /// Version of the API requested
     var version: Int
     
-    /// path of the API. The path information can be retrieved by requesting SYNO.API.Info
-    var path: String
+    var headers: HTTPHeaders? = nil
     
     func urlQuery() -> String {
         return "webapi/\(path)?api=\(api.rawValue)&version=\(version)&method=\(method)"
@@ -151,4 +151,9 @@ public struct SynologyAdditionalOptions: OptionSet {
         }
         return result.description
     }
+}
+
+public enum VirtualFolderType: String {
+    case cifs
+    case iso
 }

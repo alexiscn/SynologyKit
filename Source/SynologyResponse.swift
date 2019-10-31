@@ -172,12 +172,36 @@ public extension SynologyKit {
         public let name: String?
         
         /// Shared-folder additional object.
-        public let additional: Addition?
+        public let additional: Additional?
         
         public func toFile() -> File {
             return File(path: path, name: name, isdir: isdir, children: nil, additional: additional)
         }
     }
+    
+    struct VirtualFolderList: Codable {
+        /// Total number of mount point folders.
+        public let total: Int
+        
+        /// Requested offset.
+        public let offset: Int
+        
+        /// Array of <virtual folder> object.
+        public let folders: [VirtualFolder]?
+    }
+    
+    struct VirtualFolder: Codable {
+        
+        /// Path of a mount point folder
+        public let path: String
+        
+        /// Name of a mount point folder
+        public let name: String?
+        
+        /// Virtual folder additional object.
+        public let additional: Additional?
+    }
+    
     struct Files: Codable {
         
         /// Total number of files
@@ -206,10 +230,10 @@ public extension SynologyKit {
         public let children: Files?
         
         /// File additional object
-        public let additional: Addition?
+        public let additional: Additional?
     }
     
-    struct Addition: Codable {
+    struct Additional: Codable {
         
         enum CodingKeys: String, CodingKey {
             case realPath = "real_path"
