@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-public struct SynologyKitResponse<T>: Codable where T: Codable {
+public struct SynologyResponse<T>: Codable where T: Codable {
     public var success: Bool
     public var data: T?
     public var error: Int?
@@ -16,7 +16,105 @@ public struct SynologyKitResponse<T>: Codable where T: Codable {
 
 public enum SynologyError: Error {
     case invalidResponse(DefaultDataResponse)
-    case decodeDataError
+    case decodeDataError(DefaultDataResponse, String?)
+    case serverError(ErrorCode, DefaultDataResponse)
+    
+    public enum ErrorCode: Int, CustomStringConvertible {
+        case unknown = 100
+        case invalid = 101
+        case noneExistAPI = 102
+        case noneExistMethod = 103
+        case notSupported = 104
+        case permission = 105
+        case sessionTimeout = 106
+        case sessionInterupted = 107
+        
+        case invalidParameterOfFileOperation = 400
+        case unknownErrorOfFileOperation = 401
+        case systemTooBusy = 402
+        case fileExist = 414
+        case diskQuotaExceeded = 415
+        case noSpaceLeft = 416
+        case inputOutputError = 417
+        case illegalNameOrPath = 418
+        case illegalFileName = 419
+        case deviceOrResourceBusy = 421
+        case noSuchTaskOfFileOperation = 599
+     
+        public var description: String {
+            switch self {
+            case .unknown:
+                return "Unknown error"
+            case .invalid:
+                return "No parameter of API, method or version"
+            case .noneExistAPI:
+                return "The requested API does not exist"
+            case .noneExistMethod:
+                return "The requested method does not exist"
+            case .notSupported:
+                return "The requested version does not support the functionality"
+            case .permission:
+                return "The logged in session does not have permission"
+            case .sessionTimeout:
+                return "Session timeout"
+            case .sessionInterupted:
+                return "Session interrupted by duplicate login"
+            case .invalidParameterOfFileOperation:
+                return "Invalid parameter of file operation"
+            case .unknownErrorOfFileOperation:
+                return "Unknown error of file operation"
+            case .systemTooBusy:
+                return "System is too busy"
+            case .fileExist:
+                return "File already exists"
+            case .diskQuotaExceeded:
+                return "Disk quota exceeded"
+            case .noSpaceLeft:
+                return "No space left on device"
+            case .inputOutputError:
+                return "Input/output error"
+            case .illegalNameOrPath:
+                return "Illegal name or path"
+            case .illegalFileName:
+                return "Illegal file name"
+            case .deviceOrResourceBusy:
+                return "Device or resource busy"
+            case .noSuchTaskOfFileOperation:
+                return "No such task of the file operation"
+            }
+        }
+    }
+}
+
+public struct QuickIDResponse: Codable {
+    public let command: String
+    public let version: Int
+    public let errno: Int
+    public let service: QuickIDService?
+}
+
+public struct QuickIDService: Codable {
+    
+    enum CodingKeys: String, CodingKey {
+        case relayIP = "relay_ip"
+        case relayPort = "relay_port"
+        case env
+    }
+    
+    public let relayIP: String?
+    public let relayPort: Int?
+    public let env: QuickIDEnv?
+}
+
+public struct QuickIDEnv: Codable {
+    
+    enum CodingKeys: String, CodingKey {
+        case relayRegion = "relay_region"
+        case controlHost = "control_host"
+    }
+    
+    let relayRegion: String
+    let controlHost: String
 }
 
 public extension SynologyKit {
@@ -26,13 +124,6 @@ public extension SynologyKit {
         /// Authorized session ID. When the user log in with format=sid,
         /// cookie will not be set and each API request should provide a request parameter _sid=< sid> along with other parameters.
         public let sid: String
-    }
-    
-    struct QuickIDResponse: Codable {
-        public let command: String
-        public let version: Int
-        public let errno: Int
-        public let service: QuickIDService?
     }
     
     struct FileStationInfo: Codable {
@@ -59,30 +150,6 @@ public extension SynologyKit {
         public var supportVirtualProtocol: Bool
     }
     
-    struct QuickIDService: Codable {
-        
-        enum CodingKeys: String, CodingKey {
-            case relayIP = "relay_ip"
-            case relayPort = "relay_port"
-            case env
-        }
-        
-        public let relayIP: String?
-        public let relayPort: Int?
-        public let env: QuickIDEnv?
-    }
-    
-    struct QuickIDEnv: Codable {
-        
-        enum CodingKeys: String, CodingKey {
-            case relayRegion = "relay_region"
-            case controlHost = "control_host"
-        }
-        
-        let relayRegion: String
-        let controlHost: String
-    }
-
     struct SharedFolders: Codable {
         
         /// Total number of shared folders.

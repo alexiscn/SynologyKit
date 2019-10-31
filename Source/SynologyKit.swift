@@ -12,6 +12,8 @@ import Alamofire
 
 public typealias SynologyCompletion<T: Codable> = (Swift.Result<T, SynologyError>) -> Void
 
+public typealias QuickConnectCompletion = (Swift.Result<QuickIDResponse, SynologyError>) -> Void
+
 /// SynologyKit for File Station
 public class SynologyKit {
     
@@ -56,10 +58,16 @@ public class SynologyKit {
             return
         }
         do {
-            let decodedRes = try JSONDecoder().decode(T.self, from: data)
-            completion(.success(decodedRes))
+            let decodedRes = try JSONDecoder().decode(SynologyResponse<T>.self, from: data)
+            if let data = decodedRes.data {
+                completion(.success(data))
+            } else if let code = decodedRes.error {
+                let error = SynologyError.ErrorCode(rawValue: code) ?? .unknown
+                completion(.failure(.serverError(error, response)))
+            }
         } catch {
-            completion(.failure(.decodeDataError))
+            let text = String(data: data, encoding: .utf8)
+            completion(.failure(.decodeDataError(response, text)))
         }
     }
     
@@ -83,7 +91,7 @@ extension SynologyKit {
     }
     
     public class func logout(session: String) {
-        //let request = SynologyRequest(api: .Auth, method: .logout, version: 1, path: "auth.cgi")
+        //let request = SynologyRequest(api: .auth, method: .logout, version: 1, path: CGI.auth)
     }
     
     /// List all shared folders, enumerate files in a shared folder, and get detailed file information.
@@ -168,42 +176,59 @@ extension SynologyKit {
         // TODO
     }
     
-    public class func delete() {
-        // TODO
+    /// Delete file(s)/folder(s).
+    /// This is a non-blocking method. You should poll a request with status method to get more
+    /// information or make a request with stop method to cancel the operation.
+    /// - Parameter path: One or more deleted file/folder paths starting with a shared folder, separated by commas “,”.
+    /// - Parameter accurate_progress: Optional. “true”: calculates the progress of each deleted file with the sub-folder recursively;
+    ///                “false”: calculates the progress of files which you give in path parameters.
+    ///                The latter is faster than recursively, but less precise.
+    ///                Note: Only non-blocking methods suits using the status method to get progress.
+    /// - Parameter recursive: Optional. “true”: Recursively delete files within a folder.
+    ///                        “false”: Only delete first-level file/folder.
+    ///                        If a deleted folder contains any file, an error occurs because the folder can’t be directly deleted
+    /// - Parameter search_taskid: Optional. A unique ID for the search task which is gotten from start method.
+    ///                        It’s used to delete the file in the search result.
+    /// - Parameter completion: callback closure.
+    public class func delete(path: String, accurate_progress: Bool = true, recursive: Bool = true, search_taskid: String? = nil, completion: @escaping SynologyCompletion<String>) {
+        var params: [String: Any] = [:]
+        params["path"] = path
+        params["accurate_progress"] = accurate_progress
+        params["recursive"] = recursive
+        if let taskId = search_taskid {
+            params["search_taskid"] = taskId
+        }
+        let request = SynologyBasicRequest(api: .delete, method: .delete, version: 1, path: CGI.file_delete)
+        post(request, queue: nil, completion: completion)
     }
 }
 
 // MARK: - QuickID
 extension SynologyKit {
     
-    public class func getServerInfo(quickID: String, completion: @escaping (QuickIDResponse) -> Void) {
-        let url = "https://global.QuickConnect.to/Serv.php"
+    /// Get Synology server information via Quick Connect
+    /// - Parameter quickID: quickID of your Synology
+    /// - Parameter completion: callback closure
+    public class func getGlobalServerInfo(quickID: String, completion: @escaping SynologyCompletion<QuickIDResponse>) {
+        let baseUrl = "https://global.QuickConnect.to"
         var params: [String: Any] = [:]
         params["id"] = "audio_http"
         params["serverID"] = quickID
         params["command"] = "get_server_info"
         params["version"] = 1
-        
         let headers = ["User-Agent": userAgent]
-        
-        Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding.default, headers: headers).response { (dataResponse) in
-            if let error = dataResponse.error {
-                print("QuickID login error:\(error)")
-            } else if let data = dataResponse.data {
-                if let response = try? JSONDecoder().decode(QuickIDResponse.self, from: data) {
-                    completion(response)
-                } else {
-                    print("can not parse json")
-                    if let txt = String(data: data, encoding: .utf8) {
-                        print("response text:\(txt)")
-                    }
-                }
-            }
+        let request = QuickConnectRequest(baseURLString: baseUrl, path: "/Serv.php", params: params, headers: headers)
+        SessionManager.default.request(request.asURLRequest()).response(queue: nil) { response in
+            self.handleQuickConnectResponse(response, completion: completion)
         }
     }
     
-    public class func getServerInfo(quickID: String, platform: String, completion: @escaping (QuickIDResponse) -> Void) {
-        let url = "https://cnc.quickconnect.to/Serv.php"
+    /// Get Synology server information via Quick Connect
+    /// - Parameter quickID: quickID of your Synology
+    /// - Parameter platform: platform
+    /// - Parameter completion: callback closure
+    public class func getServerInfo(quickID: String, platform: String = "iPhone9,1", completion: @escaping QuickConnectCompletion) {
+        let url = "https://cnc.quickconnect.to"
         var params: [String: Any] = [:]
         params["location"] = "en_CN"
         params["id"] = "audio_http"
@@ -211,17 +236,24 @@ extension SynologyKit {
         params["serverID"] = quickID
         params["command"] = "request_tunnel"
         params["version"] = 1
-
         let headers = ["User-Agent": userAgent]
-
-        Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding.default, headers: headers).response { (dataResponse) in
-            if let error = dataResponse.error {
-                print("QuickID login error:\(error)")
-            } else if let data = dataResponse.data {
-                if let response = try? JSONDecoder().decode(QuickIDResponse.self, from: data) {
-                    completion(response)
-                }
-            }
+        let request = QuickConnectRequest(baseURLString: url, path: "/Serv.php", params: params, headers: headers)
+        SessionManager.default.request(request.asURLRequest()).response(queue: nil) { response in
+            self.handleQuickConnectResponse(response, completion: completion)
+        }
+    }
+    
+    class func handleQuickConnectResponse(_ response: DefaultDataResponse, completion: @escaping QuickConnectCompletion) {
+        guard let data = response.data else {
+            completion(.failure(.invalidResponse(response)))
+            return
+        }
+        do {
+            let decodedRes = try JSONDecoder().decode(QuickIDResponse.self, from: data)
+            completion(.success(decodedRes))
+        } catch {
+            let text = String(data: data, encoding: .utf8)
+            completion(.failure(.decodeDataError(response, text)))
         }
     }
 }

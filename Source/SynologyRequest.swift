@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-protocol SynologyRequest {
+public protocol SynologyRequest {
     
     var path: String { get }
     
@@ -27,12 +27,12 @@ extension SynologyRequest {
 
 struct SynologyBasicRequest: SynologyRequest {
     
+    /// Name of the API requested
+    var api: SynologyAPI
+    
     var params: Parameters? = nil
     
     var headers: HTTPHeaders? = nil
-    
-    /// Name of the API requested
-    var api: SynologyAPI
     
     /// Method of the API requested
     var method: SynologyMethod
@@ -52,6 +52,28 @@ struct SynologyBasicRequest: SynologyRequest {
             let urlString = SynologyKit.requestUrlString(path: urlQuery())
             let request = try URLRequest(url: urlString, method: .post, headers: headers)
             let encodedRequest = try URLEncoding.default.encode(request, with: params)
+            return encodedRequest
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+}
+
+struct QuickConnectRequest: SynologyRequest {
+    
+    var baseURLString: String
+    
+    var path: String
+    
+    var params: Parameters?
+    
+    var headers: HTTPHeaders?
+    
+    func asURLRequest() -> URLRequestConvertible {
+        do {
+            let urlString = baseURLString + path
+            let request = try URLRequest(url: urlString, method: .post, headers: headers)
+            let encodedRequest = try JSONEncoding.default.encode(request, with: params)
             return encodedRequest
         } catch {
             fatalError(error.localizedDescription)

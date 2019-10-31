@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SynologyAPI: String {
+enum SynologyAPI: String {
     /// Perform login and logout.
     case auth = "SYNO.API.Auth"
     /// Provide File Station info.
@@ -55,95 +55,6 @@ public enum SynologyAPI: String {
     case backgroundTask = "SYNO.FileStation.BackgroundTask"
 }
 
-public enum SynologyErrorCode: Int, CustomStringConvertible {
-    case unknown = 100
-    case invalid = 101
-    case noneExistAPI = 102
-    case noneExistMethod = 103
-    case notSupported = 104
-    case permission = 105
-    case sessionTimeout = 106
-    case sessionInterupted = 107
-    
-    case invalidParameterOfFileOperation = 400
-    case unknownErrorOfFileOperation = 401
-    case systemTooBusy = 402
-    case fileExist = 414
-    case diskQuotaExceeded = 415
-    case noSpaceLeft = 416
-    case inputOutputError = 417
-    case illegalNameOrPath = 418
-    case illegalFileName = 419
-    case deviceOrResourceBusy = 421
-    case noSuchTaskOfFileOperation = 599
- 
-    public var description: String {
-        switch self {
-        case .unknown:
-            return "Unknown error"
-        case .invalid:
-            return "No parameter of API, method or version"
-        case .noneExistAPI:
-            return "The requested API does not exist"
-        case .noneExistMethod:
-            return "The requested method does not exist"
-        case .notSupported:
-            return "The requested version does not support the functionality"
-        case .permission:
-            return "The logged in session does not have permission"
-        case .sessionTimeout:
-            return "Session timeout"
-        case .sessionInterupted:
-            return "Session interrupted by duplicate login"
-        case .invalidParameterOfFileOperation:
-            return "Invalid parameter of file operation"
-        case .unknownErrorOfFileOperation:
-            return "Unknown error of file operation"
-        case .systemTooBusy:
-            return "System is too busy"
-        case .fileExist:
-            return "File already exists"
-        case .diskQuotaExceeded:
-            return "Disk quota exceeded"
-        case .noSpaceLeft:
-            return "No space left on device"
-        case .inputOutputError:
-            return "Input/output error"
-        case .illegalNameOrPath:
-            return "Illegal name or path"
-        case .illegalFileName:
-            return "Illegal file name"
-        case .deviceOrResourceBusy:
-            return "Device or resource busy"
-        case .noSuchTaskOfFileOperation:
-            return "No such task of the file operation"
-        }
-    }
-}
-
-public enum SynologyFileSort: String {
-    case name = "name"
-    /// file owner
-    case user = "user"
-    /// file group
-    case group = "group"
-    ///  last modified time
-    case lastModifiedtime = "mtime"
-    ///  last access time
-    case lastAccessTime = "atime"
-    ///  last change time
-    case lastChangeTime = "ctime"
-    /// create time
-    case createTime = "crtime"
-    /// POSIX permission
-    case posix = "posix"
-}
-
-public enum SynologyFileSortDirection: String {
-    case ascending = "asc"
-    case descending = "desc"
-}
-
 struct CGI {
     static let entry = "entry.cgi"
     static let auth = "auth.cgi"
@@ -167,4 +78,27 @@ struct CGI {
     static let fileCompress = "file_compress.cgi"
     static let backgroundTask = "background_task.cgi"
     static let apiUpload = "api_upload.cgi"
+}
+
+public enum SynologyFileSort: String {
+    case name = "name"
+    /// file owner
+    case user = "user"
+    /// file group
+    case group = "group"
+    ///  last modified time
+    case lastModifiedtime = "mtime"
+    ///  last access time
+    case lastAccessTime = "atime"
+    ///  last change time
+    case lastChangeTime = "ctime"
+    /// create time
+    case createTime = "crtime"
+    /// POSIX permission
+    case posix = "posix"
+}
+
+public enum SynologyFileSortDirection: String {
+    case ascending = "asc"
+    case descending = "desc"
 }
