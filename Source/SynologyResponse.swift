@@ -6,22 +6,22 @@
 //
 
 import Foundation
+import Alamofire
 
-public protocol SynologyKitProtocol: Codable {}
-
-public struct SynologyKitError: Codable {
-    public let code: Int
-}
-
-public struct SynologyKitResponse<T>: Codable where T: SynologyKitProtocol {
+public struct SynologyKitResponse<T>: Codable where T: Codable {
     public var success: Bool
     public var data: T?
-    public var error: SynologyKitError?
+    public var error: Int?
+}
+
+public enum SynologyError: Error {
+    case invalidResponse(DefaultDataResponse)
+    case decodeDataError
 }
 
 public extension SynologyKit {
     
-    struct AuthResponse: SynologyKitProtocol {
+    struct AuthResponse: Codable {
         
         /// Authorized session ID. When the user log in with format=sid,
         /// cookie will not be set and each API request should provide a request parameter _sid=< sid> along with other parameters.
@@ -83,7 +83,7 @@ public extension SynologyKit {
         let controlHost: String
     }
 
-    struct SharedFolders: SynologyKitProtocol {
+    struct SharedFolders: Codable {
         
         /// Total number of shared folders.
         public let total: Int
@@ -95,7 +95,7 @@ public extension SynologyKit {
         public let shares: [SharedFolder]?
     }
     
-    struct SharedFolder: SynologyKitProtocol {
+    struct SharedFolder: Codable {
         public let isdir: Bool
         
         /// Path of a shared folder.
@@ -111,27 +111,38 @@ public extension SynologyKit {
             return File(path: path, name: name, isdir: isdir, children: nil, additional: additional)
         }
     }
-    struct Files: SynologyKitProtocol {
+    struct Files: Codable {
+        
+        /// Total number of files
         public let total: Int
+        
+        /// Requested offset
         public let offset: Int
+        
+        /// Array of <file> objects
         public let files: [File]?
     }
 
-    struct File: SynologyKitProtocol {
+    struct File: Codable {
+        
+        /// Folder/file path started with a shared folder
         public let path: String
+        
+        /// File name
         public let name: String?
+        
+        /// If this file is folder or not
         public let isdir: Bool
-        public let children: FileChildren?
+        
+        /// File list within a folder which is described by a <file> object.
+        /// The value is returned, only if goto_path parameter is given
+        public let children: Files?
+        
+        /// File additional object
         public let additional: Addition?
     }
-
-    struct FileChildren: SynologyKitProtocol {
-        public let total: Int
-        public let offset: Int
-        public let files: [File]?
-    }
-
-    struct Addition: SynologyKitProtocol {
+    
+    struct Addition: Codable {
         
         enum CodingKeys: String, CodingKey {
             case realPath = "real_path"
@@ -146,7 +157,7 @@ public extension SynologyKit {
         /// Real path of a shared folder in a volume space.
         public let realPath: String?
         
-        /// <#Description#>
+        /// File size in bytes
         public let size: Int?
         
         /// File owner information including user name, group name, UID and GID.
@@ -163,13 +174,20 @@ public extension SynologyKit {
         public let type: String?
     }
 
-    struct VolumeStatus: SynologyKitProtocol {
-        let freespace: Int
+    struct VolumeStatus: Codable {
+        
+        /// Byte size of free space of a volume where a shared folder is located.
+        public let freespace: Int
+        
+        /// Byte size of total space of a volume where a shared folder is located.
         let totalspace: Int
+        
+        /// “true”: A volume where a shared folder is located isread-only;
+        /// “false”: It’s writable.
         let readonly: Bool
     }
 
-    struct Owner: SynologyKitProtocol {
+    struct Owner: Codable {
         
         /// User name of file owner.
         public let user: String
@@ -184,7 +202,7 @@ public extension SynologyKit {
         public let gid: Int
     }
 
-    struct FileTime: SynologyKitProtocol {
+    struct FileTime: Codable {
         
         enum CodingKeys: String, CodingKey {
             case accessTime = "atime"

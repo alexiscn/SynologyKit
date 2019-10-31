@@ -144,7 +144,8 @@ public enum SynologyFileSortDirection: String {
     case descending = "desc"
 }
 
-struct SynologyCGI {
+struct CGI {
+    static let entry = "entry.cgi"
     static let auth = "auth.cgi"
     static let query = "query.cgi"
     static let info = "info.cgi"

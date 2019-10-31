@@ -6,14 +6,36 @@
 //
 
 import Foundation
+import Alamofire
 
-struct SynologyRequest {
+protocol SynologyRequest {
+    
+    var path: String { get }
+    
+    var params: Parameters? { get set }
+    
+    var headers: HTTPHeaders? { get set }
+    
+    func asURLRequest() -> URLRequestConvertible
+}
+
+extension SynologyRequest {
+    var params: Parameters? { return nil }
+    
+    var headers: HTTPHeaders? { return nil }
+}
+
+struct SynologyBasicRequest: SynologyRequest {
+    
+    var params: Parameters? = nil
+    
+    var headers: HTTPHeaders? = nil
     
     /// Name of the API requested
     var api: SynologyAPI
     
     /// Method of the API requested
-    var method: Method
+    var method: SynologyMethod
     
     /// Version of the API requested
     var version: Int
@@ -21,32 +43,43 @@ struct SynologyRequest {
     /// path of the API. The path information can be retrieved by requesting SYNO.API.Info
     var path: String
     
-    func urlString() -> String {
+    func urlQuery() -> String {
         return "webapi/\(path)?api=\(api.rawValue)&version=\(version)&method=\(method)"
     }
     
-    enum Method: String {
-        case add
-        case clear_invalid
-        case clear_finished
-        case clean
-        case create
-        case delete
-        case download
-        case edit
-        case get
-        case getinfo
-        case list
-        case list_share
-        case login
-        case logout
-        case query
-        case rename
-        case start
-        case status
-        case stop
-        case write
+    func asURLRequest() -> URLRequestConvertible {
+        do {
+            let urlString = SynologyKit.requestUrlString(path: urlQuery())
+            let request = try URLRequest(url: urlString, method: .post, headers: headers)
+            let encodedRequest = try URLEncoding.default.encode(request, with: params)
+            return encodedRequest
+        } catch {
+            fatalError(error.localizedDescription)
+        }
     }
+}
+
+enum SynologyMethod: String {
+    case add
+    case clear_invalid
+    case clear_finished
+    case clean
+    case create
+    case delete
+    case download
+    case edit
+    case get
+    case getinfo
+    case list
+    case list_share
+    case login
+    case logout
+    case query
+    case rename
+    case start
+    case status
+    case stop
+    case write
 }
 
 public struct SynologyAdditionalOptions: OptionSet {
