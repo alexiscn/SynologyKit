@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
   s.name         = 'SynologyKit'
-  s.version      = '0.0.2'
-  s.license = 'MIT'
+  s.version      = '0.0.3'
+  s.license      = 'MIT'
   s.requires_arc = true
-  s.source = {:path => 'DevelopmentPods/SynologyKit'}
+  s.source = { :git => 'https://github.com/alexiscn/SynologyKit.git', :tag => s.version.to_s }
 
-  s.summary = 'SynologyKit'
-  s.homepage = 'SynologyKit'
+  s.summary = 'Synology File Station SDK for Swift'
+  s.homepage = 'https://github.com/alexiscn/SynologyKit'
   s.author       = { 'xushuifeng' => 'https://github.com/alexiscn' }
   s.platform     = :ios
   s.ios.deployment_target = '11.0'
