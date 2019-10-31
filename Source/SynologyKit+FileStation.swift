@@ -10,6 +10,18 @@ import Alamofire
 
 extension SynologyKit {
     
+    public class func login(account: String, passwd: String, session: String, completion: @escaping SynologyKitCompletion<AuthResponse>) {
+        let api = SynologyRequest(api: .auth, method: .login, version: 3, path: "auth.cgi")
+        var paramters: Parameters = [:]
+        paramters["account"] = account
+        paramters["passwd"] = passwd
+        paramters["session"] = session
+        getJSON(path: api.urlString(), parameters: paramters, completion: completion)
+    }
+    
+    public class func logout(session: String) {
+        //let request = SynologyRequest(api: .Auth, method: .logout, version: 1, path: "auth.cgi")
+    }
     
     /// List all shared folders, enumerate files in a shared folder, and get detailed file information.
     /// - Parameter offset: Optional. Specify how many shared folders are skipped before beginning to return listed shared folders.
@@ -22,7 +34,7 @@ extension SynologyKit {
                                        limit: Int = 0,
                                        sortBy: SynologyFileSort = .name,
                                        sortDirection: SynologyFileSortDirection = .ascending,
-                                       additional: SynologyFileAdditionalOptions = .default,
+                                       additional: SynologyAdditionalOptions = .default,
                                        completion: @escaping SynologyKitCompletion<SharedFolders>) {
         let api = SynologyRequest(api: .list, method: .list_share, version: 2, path: EntryCGI)
         var params: Parameters = [:]
@@ -33,7 +45,6 @@ extension SynologyKit {
         params["additional"] = additional.value()
         getJSON(path: api.urlString(), parameters: params, completion: completion)
     }
-    
     
     /// Enumerate files in a given folder
     /// - Parameter folder: A listed folder path started with a shared folder.
@@ -48,7 +59,7 @@ extension SynologyKit {
                                  limit: Int = 0,
                                  sortBy: SynologyFileSort = .name,
                                  sortDirection: SynologyFileSortDirection = .ascending,
-                                 additional: SynologyFileAdditionalOptions = .default,
+                                 additional: SynologyAdditionalOptions = .default,
                                  completion: @escaping SynologyKitCompletion<Files>) {
         let api = SynologyRequest(api: .list, method: .list, version: 2, path: EntryCGI)
         var params: Parameters = [:]
@@ -75,7 +86,11 @@ extension SynologyKit {
     /// - Parameter additional: Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
     /// - Parameter searchTaskId: A unique ID for the search task which is obtained from start method. It is used to update the renamed file in the search result
     public class func rename(path: String, name: String, additional: String? = nil, searchTaskId: String? = nil) {
-        
+//        let api = SynologyRequest(api: .rename, method: .rename, version: 2, path: SynologyCGI.fileRename)
+//        let params = [
+//            "path": path
+//        ]
+        //getJSON(path: api.urlString(), parameters: params, completion: <#T##(SynologyKitResponse<SynologyKitProtocol>) -> Void#>)
     }
     
     

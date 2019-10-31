@@ -17,7 +17,6 @@ public typealias SynologyKitCompletion<T> = (SynologyKitResponse<T>) -> Void whe
 /// SynologyKit for File Station
 public class SynologyKit {
     
-    static let FileStationSession = "FileStation"
     static let EntryCGI = "entry.cgi"
     
     public static var userAgent = "DS audio 5.13.2 rv:323 (iPhone; iOS 11.0; en_CN)"
@@ -77,21 +76,4 @@ public class SynologyKit {
         print(urlString)
         return Alamofire.download(urlString, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil, to: destination)
     }
-}
-
-extension SynologyKit {
-    
-    public class func login(account: String, passwd: String, session: String, completion: @escaping SynologyKitCompletion<AuthResponse>) {
-        let api = SynologyRequest(api: .auth, method: .login, version: 3, path: "auth.cgi")
-        var paramters: Parameters = [:]
-        paramters["account"] = account
-        paramters["passwd"] = passwd
-        paramters["session"] = session
-        getJSON(path: api.urlString(), parameters: paramters, completion: completion)
-    }
-    
-    public class func logout(session: String) {
-        //let request = SynologyRequest(api: .Auth, method: .logout, version: 1, path: "auth.cgi")
-    }
-    
 }

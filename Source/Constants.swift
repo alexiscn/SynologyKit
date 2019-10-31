@@ -8,7 +8,7 @@
 import Foundation
 
 public enum SynologyAPI: String {
-    
+    /// Perform login and logout.
     case auth = "SYNO.API.Auth"
     /// Provide File Station info.
     case info = "SYNO.API.Info"
@@ -55,7 +55,7 @@ public enum SynologyAPI: String {
     case backgroundTask = "SYNO.FileStation.BackgroundTask"
 }
 
-public enum SynologyError: Int, CustomStringConvertible {
+public enum SynologyErrorCode: Int, CustomStringConvertible {
     case unknown = 100
     case invalid = 101
     case noneExistAPI = 102
@@ -142,4 +142,28 @@ public enum SynologyFileSort: String {
 public enum SynologyFileSortDirection: String {
     case ascending = "asc"
     case descending = "desc"
+}
+
+struct SynologyCGI {
+    static let auth = "auth.cgi"
+    static let query = "query.cgi"
+    static let info = "info.cgi"
+    static let fileShare = "file_share.cgi"
+    static let fileFind = "file_find.cgi"
+    static let fileVirtual = "file_virtual.cgi"
+    static let fileFavorite = "file_favorite.cgi"
+    static let fileThumb = "file_thumb.cgi"
+    static let fileDirSize = "file_dirSize.cgi"
+    static let fileMD5 = "file_md5.cgi"
+    static let filePermission = "file_permission.cgi"
+    static let file_download = "file_download.cgi"
+    static let file_sharing = "file_sharing.cgi"
+    static let file_crtfdr = ""
+    static let fileRename = "file_rename.cgi"
+    static let file_MVCP = ""
+    static let file_delete = "file_delete.cgi"
+    static let file_extract = "file_extract.cgi"
+    static let fileCompress = "file_compress.cgi"
+    static let backgroundTask = "background_task.cgi"
+    static let apiUpload = "api_upload.cgi"
 }
