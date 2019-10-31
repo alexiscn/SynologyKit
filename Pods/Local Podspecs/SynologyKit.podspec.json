@@ -1,0 +1,23 @@
+{
+  "name": "SynologyKit",
+  "version": "0.1.0",
+  "license": "MIT",
+  "requires_arc": true,
+  "source": {
+    "path": "DevelopmentPods/SynologyKit"
+  },
+  "summary": "SynologyKit",
+  "homepage": "SynologyKit",
+  "authors": {
+    "xushuifeng": "https://github.com/alexiscn"
+  },
+  "platforms": {
+    "ios": "11.0"
+  },
+  "source_files": "Source/*.swift",
+  "dependencies": {
+    "Alamofire": [
+
+    ]
+  }
+}

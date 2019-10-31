@@ -1,0 +1,23 @@
+PODS:
+  - Alamofire (4.9.1)
+  - SynologyKit (0.1.0):
+    - Alamofire
+
+DEPENDENCIES:
+  - SynologyKit (from `.`)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+
+EXTERNAL SOURCES:
+  SynologyKit:
+    :path: "."
+
+SPEC CHECKSUMS:
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  SynologyKit: 79f4eeb505e071c283312b8db5cf1627cf32e1dd
+
+PODFILE CHECKSUM: a3827737406767849322d416c9c44b6a8b91624b
+
+COCOAPODS: 1.8.4

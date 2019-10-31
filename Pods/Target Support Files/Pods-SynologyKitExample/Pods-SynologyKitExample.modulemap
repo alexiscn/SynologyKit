@@ -1,0 +1,6 @@
+framework module Pods_SynologyKitExample {
+  umbrella header "Pods-SynologyKitExample-umbrella.h"
+
+  export *
+  module * { export * }
+}

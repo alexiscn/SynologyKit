@@ -1,0 +1,414 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A3B1B416236A8F27001D76E2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B1B415236A8F27001D76E2 /* AppDelegate.swift */; };
+		A3B1B418236A8F27001D76E2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B1B417236A8F27001D76E2 /* SceneDelegate.swift */; };
+		A3B1B41A236A8F27001D76E2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B1B419236A8F27001D76E2 /* ViewController.swift */; };
+		A3B1B41D236A8F27001D76E2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3B1B41B236A8F27001D76E2 /* Main.storyboard */; };
+		A3B1B41F236A8F27001D76E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3B1B41E236A8F27001D76E2 /* Assets.xcassets */; };
+		A3B1B422236A8F27001D76E2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3B1B420236A8F27001D76E2 /* LaunchScreen.storyboard */; };
+		BEFD84A8E09D9FDBF9C9CFE0 /* Pods_SynologyKitExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C509ADDE7FAB4118B51DD7A5 /* Pods_SynologyKitExample.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		9FB844C6BFB9F98500C924BC /* Pods-SynologyKitExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SynologyKitExample.debug.xcconfig"; path = "Target Support Files/Pods-SynologyKitExample/Pods-SynologyKitExample.debug.xcconfig"; sourceTree = "<group>"; };
+		A3B1B412236A8F27001D76E2 /* SynologyKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SynologyKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3B1B415236A8F27001D76E2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A3B1B417236A8F27001D76E2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		A3B1B419236A8F27001D76E2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A3B1B41C236A8F27001D76E2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A3B1B41E236A8F27001D76E2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A3B1B421236A8F27001D76E2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A3B1B423236A8F27001D76E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C509ADDE7FAB4118B51DD7A5 /* Pods_SynologyKitExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SynologyKitExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E82327A473CFDE47557CD299 /* Pods-SynologyKitExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SynologyKitExample.release.xcconfig"; path = "Target Support Files/Pods-SynologyKitExample/Pods-SynologyKitExample.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A3B1B40F236A8F27001D76E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BEFD84A8E09D9FDBF9C9CFE0 /* Pods_SynologyKitExample.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		86671CC87C91DE5E5973BD29 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9FB844C6BFB9F98500C924BC /* Pods-SynologyKitExample.debug.xcconfig */,
+				E82327A473CFDE47557CD299 /* Pods-SynologyKitExample.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		A3B1B409236A8F27001D76E2 = {
+			isa = PBXGroup;
+			children = (
+				A3B1B414236A8F27001D76E2 /* SynologyKitExample */,
+				A3B1B413236A8F27001D76E2 /* Products */,
+				86671CC87C91DE5E5973BD29 /* Pods */,
+				EBE37B78F4B77172BD895CF6 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		A3B1B413236A8F27001D76E2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A3B1B412236A8F27001D76E2 /* SynologyKitExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A3B1B414236A8F27001D76E2 /* SynologyKitExample */ = {
+			isa = PBXGroup;
+			children = (
+				A3B1B415236A8F27001D76E2 /* AppDelegate.swift */,
+				A3B1B417236A8F27001D76E2 /* SceneDelegate.swift */,
+				A3B1B419236A8F27001D76E2 /* ViewController.swift */,
+				A3B1B41B236A8F27001D76E2 /* Main.storyboard */,
+				A3B1B41E236A8F27001D76E2 /* Assets.xcassets */,
+				A3B1B420236A8F27001D76E2 /* LaunchScreen.storyboard */,
+				A3B1B423236A8F27001D76E2 /* Info.plist */,
+			);
+			path = SynologyKitExample;
+			sourceTree = "<group>";
+		};
+		EBE37B78F4B77172BD895CF6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C509ADDE7FAB4118B51DD7A5 /* Pods_SynologyKitExample.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A3B1B411236A8F27001D76E2 /* SynologyKitExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A3B1B426236A8F27001D76E2 /* Build configuration list for PBXNativeTarget "SynologyKitExample" */;
+			buildPhases = (
+				C96C0E54F1452354ADC315EF /* [CP] Check Pods Manifest.lock */,
+				A3B1B40E236A8F27001D76E2 /* Sources */,
+				A3B1B40F236A8F27001D76E2 /* Frameworks */,
+				A3B1B410236A8F27001D76E2 /* Resources */,
+				0ED3CCDB85949E28AE1CD2DD /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SynologyKitExample;
+			productName = SynologyKitExample;
+			productReference = A3B1B412236A8F27001D76E2 /* SynologyKitExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A3B1B40A236A8F27001D76E2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1110;
+				LastUpgradeCheck = 1110;
+				ORGANIZATIONNAME = alexiscn;
+				TargetAttributes = {
+					A3B1B411236A8F27001D76E2 = {
+						CreatedOnToolsVersion = 11.1;
+					};
+				};
+			};
+			buildConfigurationList = A3B1B40D236A8F27001D76E2 /* Build configuration list for PBXProject "SynologyKitExample" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A3B1B409236A8F27001D76E2;
+			productRefGroup = A3B1B413236A8F27001D76E2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A3B1B411236A8F27001D76E2 /* SynologyKitExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A3B1B410236A8F27001D76E2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3B1B422236A8F27001D76E2 /* LaunchScreen.storyboard in Resources */,
+				A3B1B41F236A8F27001D76E2 /* Assets.xcassets in Resources */,
+				A3B1B41D236A8F27001D76E2 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0ED3CCDB85949E28AE1CD2DD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SynologyKitExample/Pods-SynologyKitExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SynologyKitExample/Pods-SynologyKitExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SynologyKitExample/Pods-SynologyKitExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C96C0E54F1452354ADC315EF /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SynologyKitExample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A3B1B40E236A8F27001D76E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3B1B41A236A8F27001D76E2 /* ViewController.swift in Sources */,
+				A3B1B416236A8F27001D76E2 /* AppDelegate.swift in Sources */,
+				A3B1B418236A8F27001D76E2 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A3B1B41B236A8F27001D76E2 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A3B1B41C236A8F27001D76E2 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		A3B1B420236A8F27001D76E2 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A3B1B421236A8F27001D76E2 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A3B1B424236A8F27001D76E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A3B1B425236A8F27001D76E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A3B1B427236A8F27001D76E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9FB844C6BFB9F98500C924BC /* Pods-SynologyKitExample.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LX863G777H;
+				INFOPLIST_FILE = SynologyKitExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.shuifeng.SynologyKitExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A3B1B428236A8F27001D76E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E82327A473CFDE47557CD299 /* Pods-SynologyKitExample.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LX863G777H;
+				INFOPLIST_FILE = SynologyKitExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.shuifeng.SynologyKitExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A3B1B40D236A8F27001D76E2 /* Build configuration list for PBXProject "SynologyKitExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A3B1B424236A8F27001D76E2 /* Debug */,
+				A3B1B425236A8F27001D76E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A3B1B426236A8F27001D76E2 /* Build configuration list for PBXNativeTarget "SynologyKitExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A3B1B427236A8F27001D76E2 /* Debug */,
+				A3B1B428236A8F27001D76E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A3B1B40A236A8F27001D76E2 /* Project object */;
+}

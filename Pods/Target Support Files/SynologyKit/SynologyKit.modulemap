@@ -1,0 +1,6 @@
+framework module SynologyKit {
+  umbrella header "SynologyKit-umbrella.h"
+
+  export *
+  module * { export * }
+}
