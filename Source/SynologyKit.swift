@@ -172,6 +172,31 @@ extension SynologyKit {
         return download(path: request.urlQuery(), parameters: params, to: to)
     }
     
+    
+    /// Create folders.
+    /// - Parameter folderPath: One or more shared folder paths, separated by commas.
+    ///           If force_parent is "true," and folder_path does not exist, the folder_path will be created.
+    ///           If force_parent is "false," folder_path must exist or a false value will be returned.
+    ///           The number of paths must be the same as the number of names in the name parameter.
+    ///           The first folder_path parameter corresponds to the first name parameter.
+    /// - Parameter name: One or more new folder names, separated by commas “,”.
+    ///           The number of names must be the same as the number of folder paths in the folder_path parameter.
+    ///           The first name parameter corresponding to the first folder_path parameter.
+    /// - Parameter forceParent: Optional. “true”: no error occurs if a folder exists and make parent folders as needed; “false”: parent folders are not created.
+    /// - Parameter additional: Optional. Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
+    /// - Parameter completion: callback closure.
+    public class func createFolder(_ folderPath: String, name: String, forceParent: Bool = false, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+        var params: Parameters = [:]
+        params["folder_path"] = folderPath
+        params["name"] = name
+        params["force_parent"] = forceParent
+        if let additional = additional {
+            params["additional"] = additional
+        }
+        let request = SynologyBasicRequest(path: CGI.file_crtfdr, api: .createFolder, method: .create, params: params, version: 1, headers: nil)
+        post(request, queue: nil, completion: completion)
+    }
+    
     /// Rename a file/folder.
     /// - Parameter path: One or more paths of files/folders to be renamed, separated by commas “,”.
     ///                   The number of paths must be the same as the number of names in the name parameter.
