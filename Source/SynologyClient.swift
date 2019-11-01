@@ -1,5 +1,5 @@
 //
-//  SynologyKit.swift
+//  SynologyClient.swift
 //  SynologyKit
 //
 //  Created by xu.shuifeng on 19/09/2017.
@@ -15,46 +15,45 @@ public typealias SynologyCompletion<T: Codable> = (Swift.Result<T, SynologyError
 public typealias QuickConnectCompletion = (Swift.Result<QuickIDResponse, SynologyError>) -> Void
 
 /// SynologyKit for File Station
-public class SynologyKit {
+public class SynologyClient {
     
-    public static var userAgent = "DS audio 5.13.2 rv:323 (iPhone; iOS 11.0; en_CN)"
+    public var userAgent = "DS audio 5.13.2 rv:323 (iPhone; iOS 11.0; en_CN)"
     
-    public static var host: String?
+    public var sessionid: String?
     
-    public static var port: Int?
+    public var connected: Bool { return sessionid != nil }
     
-    public static var sessionid: String?
+    private var host: String
+    private var port: Int?
+    private var enableHTTPS = false
+    private let Session = "FileStation"
     
-    public static var enableHTTPS = false
-    
-    private static let Session = "FileStation"
-    
-    class func baseURLString() -> String {
-        
-        guard let host = host else {
-            return ""
-        }
-        
+    func baseURLString() -> String {
         let scheme = enableHTTPS ? "https": "http"
-        
         if let port = port {
             return "\(scheme)://\(host):\(port)/"
         }
         return "\(scheme)://\(host)/"
     }
     
-    class func requestUrlString(path: String) -> String {
+    public init(host: String, port: Int? = nil, enableHTTPS: Bool = false) {
+        self.host = host
+        self.port = port
+        self.enableHTTPS = enableHTTPS
+    }
+    
+    func requestUrlString(path: String) -> String {
         return baseURLString().appending(path)
     }
         
     @discardableResult
-    class func post<T: Codable>(_ request: SynologyRequest, queue: DispatchQueue?, completion: @escaping SynologyCompletion<T>) -> DataRequest {
+    func post<T: Codable>(_ request: SynologyRequest, queue: DispatchQueue?, completion: @escaping SynologyCompletion<T>) -> DataRequest {
         return SessionManager.default.request(request.asURLRequest()).response(queue: queue) { response in
             self.handleDataResponse(response, completion: completion)
         }
     }
     
-    class func handleDataResponse<T>(_ response: DefaultDataResponse, completion: @escaping SynologyCompletion<T>) {
+    func handleDataResponse<T>(_ response: DefaultDataResponse, completion: @escaping SynologyCompletion<T>) {
         guard let data = response.data else {
             completion(.failure(.invalidResponse(response)))
             return
@@ -64,8 +63,8 @@ public class SynologyKit {
             if let data = decodedRes.data {
                 completion(.success(data))
             } else if let code = decodedRes.error {
-                let error = SynologyError.ErrorCode(rawValue: code) ?? .unknown
-                completion(.failure(.serverError(error, response)))
+                let message = SynologyErrorMapper[code] ?? "Unknown error"
+                completion(.failure(.serverError(code, message, response)))
             }
         } catch {
             let text = String(data: data, encoding: .utf8)
@@ -73,36 +72,53 @@ public class SynologyKit {
         }
     }
     
-    public class func download(path: String, parameters: Parameters, to destination: DownloadRequest.DownloadFileDestination?) -> DownloadRequest {
+    public func download(path: String, parameters: Parameters, to destination: DownloadRequest.DownloadFileDestination?) -> DownloadRequest {
         let urlString = baseURLString().appending("\(path)")
         print(urlString)
         return Alamofire.download(urlString, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil, to: destination)
     }
 }
 
-extension SynologyKit {
+// MARK: - Public functions
+extension SynologyClient {
     
     /// Login to your synology
     /// - Parameters:
     ///   - account: Login account name.
     ///   - passwd: Login account password.
     ///   - completion: Callback closure.
-    public class func login(account: String, passwd: String, completion: @escaping SynologyCompletion<AuthResponse>) {
-        var parameters: Parameters = [:]
-        parameters["account"] = account
-        parameters["passwd"] = passwd
-        parameters["session"] = Session
-        var request = SynologyBasicRequest(path: .auth, api: .auth, method: .login ,params: parameters)
-        request.version = 3
-        post(request, queue: nil, completion: completion)
+    public func login(account: String, passwd: String, completion: @escaping SynologyCompletion<AuthResponse>) {
+        
+        if host.contains(".") {
+            var parameters: Parameters = [:]
+            parameters["account"] = account
+            parameters["passwd"] = passwd
+            parameters["session"] = Session
+            var request = SynologyBasicRequest(baseURLString: baseURLString(), path: .auth, api: .auth, method: .login ,params: parameters)
+            request.version = 3
+            post(request, queue: nil, completion: completion)
+        } else {
+            getServerInfo(quickID: host) { response in
+                switch response {
+                case .success(let quickIdRes):
+                    if let host = quickIdRes.service?.relayIP, let port = quickIdRes.service?.relayPort {
+                        self.host = host
+                        self.port = port
+                        self.login(account: account, passwd: passwd, completion: completion)
+                    }
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
     }
     
     /// Logout
     /// - Parameters:
     ///   - completion: Callback closure.
-    public class func logout(completion: @escaping SynologyCompletion<EmptyResponse>) {
+    public func logout(completion: @escaping SynologyCompletion<EmptyResponse>) {
         let params = ["session": Session]
-        let request = SynologyBasicRequest(path: .auth, api: .auth, method: .logout, params: params)
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .auth, api: .auth, method: .logout, params: params)
         post(request, queue: nil, completion: completion)
     }
     
@@ -115,7 +131,7 @@ extension SynologyKit {
     /// - Parameter direction: Optional. Specify to sort ascending or to sort descending.
     /// - Parameter additional: Optional. Additional requested file information, separated by a comma, “,”. When an additional option is requested, responded objects will be provided in the specified additional option
     /// - Parameter completion: callback closure.
-    public class func listVirtualFolder(type: VirtualFolderType, offset: Int = 0, limit: Int = 0, sortBy: SynologyFileSort = .name, direction: SynologyFileSortDirection = .ascending, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func listVirtualFolder(type: VirtualFolderType, offset: Int = 0, limit: Int = 0, sortBy: SynologyFileSort = .name, direction: SynologyFileSortDirection = .ascending, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
         var params: Parameters = [:]
         params["type"] = type.rawValue
         params["offset"] = offset
@@ -125,7 +141,7 @@ extension SynologyKit {
         if let additional = additional {
             params["additional"] = additional
         }
-        let request = SynologyBasicRequest(path: .fileVirtual, api: .virtualFolder, method: .list, params: params)
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileVirtual, api: .virtualFolder, method: .list, params: params)
         post(request, queue: nil, completion: completion)
     }
     
@@ -136,7 +152,7 @@ extension SynologyKit {
     /// - Parameter sortDirection: Optional. Specify to sort ascending or to sort descending.
     /// - Parameter additional: Optional. Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
     /// - Parameter completion: callback closure.
-    public class func listShareFolders(offset: Int = 0,
+    public func listShareFolders(offset: Int = 0,
                                        limit: Int = 0,
                                        sortBy: SynologyFileSort = .name,
                                        sortDirection: SynologyFileSortDirection = .ascending,
@@ -148,7 +164,7 @@ extension SynologyKit {
         params["sort_by"] = sortBy.rawValue
         params["sort_direction"] = sortDirection.rawValue
         params["additional"] = additional.value()
-        var request = SynologyBasicRequest(path: .entry, api: .list, method: .list_share, params: params)
+        var request = SynologyBasicRequest(baseURLString: baseURLString(), path: .entry, api: .list, method: .list_share, params: params)
         request.version = 2
         post(request, queue: nil, completion: completion)
     }
@@ -161,7 +177,7 @@ extension SynologyKit {
     /// - Parameter sortDirection: Optional. Specify to sort ascending or to sort descending. Default value is `asc`.
     /// - Parameter additional: Optional. Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
     /// - Parameter completion: callback closure.
-    public class func listFolder(_ folder: String,
+    public func listFolder(_ folder: String,
                                  offset: Int = 0,
                                  limit: Int = 0,
                                  sortBy: SynologyFileSort = .name,
@@ -175,14 +191,14 @@ extension SynologyKit {
         params["sort_by"] = sortBy.rawValue
         params["sort_direction"] = sortDirection.rawValue
         params["additional"] = additional.value()
-        var request = SynologyBasicRequest(path: .entry, api: .list, method: .list, params: params)
+        var request = SynologyBasicRequest(baseURLString: baseURLString(), path: .entry, api: .list, method: .list, params: params)
         request.version = 2
         post(request, queue: nil, completion: completion)
     }
     
-    public class func downloadFile(path: String, to: @escaping DownloadRequest.DownloadFileDestination) -> DownloadRequest {
+    public func downloadFile(path: String, to: @escaping DownloadRequest.DownloadFileDestination) -> DownloadRequest {
         let params = ["path": path, "mode": "open"]
-        var request = SynologyBasicRequest(path: .entry, api: .download, method: .download, params: params)
+        var request = SynologyBasicRequest(baseURLString: baseURLString(), path: .entry, api: .download, method: .download, params: params)
         request.version = 2
         return download(path: request.urlQuery(), parameters: params, to: to)
     }
@@ -200,7 +216,7 @@ extension SynologyKit {
     /// - Parameter forceParent: Optional. “true”: no error occurs if a folder exists and make parent folders as needed; “false”: parent folders are not created.
     /// - Parameter additional: Optional. Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
     /// - Parameter completion: callback closure.
-    public class func createFolder(_ folderPath: String, name: String, forceParent: Bool = false, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func createFolder(_ folderPath: String, name: String, forceParent: Bool = false, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
         // TODO - check status
         var params: Parameters = [:]
         params["folder_path"] = folderPath
@@ -209,7 +225,7 @@ extension SynologyKit {
         if let additional = additional {
             params["additional"] = additional
         }
-        let request = SynologyBasicRequest(path: .file_crtfdr, api: .createFolder, method: .create, params: params)
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .file_crtfdr, api: .createFolder, method: .create, params: params)
         post(request, queue: nil, completion: completion)
     }
     
@@ -220,7 +236,7 @@ extension SynologyKit {
     /// - Parameter name: One or more new names, separated by commas “,”. The number of names must be the same as the number of folder paths in the path parameter. The first name parameter corresponding to the first path parameter.
     /// - Parameter additional: Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
     /// - Parameter searchTaskId: A unique ID for the search task which is obtained from start method. It is used to update the renamed file in the search result
-    public class func rename(path: String, name: String, additional: Additional? = nil, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<Files>) {
+    public func rename(path: String, name: String, additional: Additional? = nil, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<Files>) {
         // TODO - check status
         var params: [String: Any] = [:]
         params["path"] = path
@@ -231,7 +247,7 @@ extension SynologyKit {
         if let taskId = searchTaskId {
             params["search_taskid"] = taskId
         }
-        let request = SynologyBasicRequest(path: .fileRename, api: .rename, method: .rename, params: params)
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileRename, api: .rename, method: .rename, params: params)
         post(request, queue: nil, completion: completion)
     }
     
@@ -245,7 +261,7 @@ extension SynologyKit {
     /// - Parameter removeSource: Optional. “true”: move filess/folders;”false”: copy files/folders
     /// - Parameter accurateProgress: Optional. “true”: calculate the progress by each moved/copied file within subfolder. “false”: calculate the progress by files which you give in path parameters. This calculates the progress faster, but is less precise.
     /// - Parameter searchTaskid: Optional. A unique ID for the search task which is gotten from SYNO.FileSation.Search API with start method. This is used to update the search result.
-    public class func copyMove(path: String, destFolderPath: String, overrite: Bool, removeSource: Bool = false, accurateProgress: Bool, searchTaskid: String? = nil) {
+    public func copyMove(path: String, destFolderPath: String, overrite: Bool, removeSource: Bool = false, accurateProgress: Bool, searchTaskid: String? = nil) {
         // TODO
     }
     
@@ -263,7 +279,7 @@ extension SynologyKit {
     /// - Parameter searchTaskid: Optional. A unique ID for the search task which is gotten from start method.
     ///                        It’s used to delete the file in the search result.
     /// - Parameter completion: Callback closure.
-    public class func delete(path: String, accurateProgress: Bool = true, recursive: Bool = true, searchTaskid: String? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func delete(path: String, accurateProgress: Bool = true, recursive: Bool = true, searchTaskid: String? = nil, completion: @escaping SynologyCompletion<String>) {
         var params: [String: Any] = [:]
         params["path"] = path
         params["accurate_progress"] = accurateProgress
@@ -271,11 +287,22 @@ extension SynologyKit {
         if let taskId = searchTaskid {
             params["search_taskid"] = taskId
         }
-        let request = SynologyBasicRequest(path: .fileDelete, api: .delete, method: .start, params: params)
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileDelete, api: .delete, method: .start, params: params)
         post(request, queue: nil, completion: completion)
     }
     
-    public class func extract(filePath: String, destinationFolderPath: String, overwrite: Bool = false, keepDirectory: Bool = true, createSubFolder: Bool = false, password: String? = nil, completion: @escaping SynologyCompletion<String>) {
+    
+    /// Extract an archive and perform operations on archive files
+    /// Note: Supported extensions of archives: zip, gz, tar, tgz, tbz, bz2, rar, 7z, iso
+    /// - Parameters:
+    ///   - filePath: A file path of an archive to be extracted, starting with a shared folder
+    ///   - destinationFolderPath: A destination folder path starting with a shared folder to which the archive will be extracted.
+    ///   - overwrite: Optional. Whether or not to overwrite if the extracted file exists in the destination folder
+    ///   - keepDirectory: Optional. Whether to keep the folder structure within an archive.
+    ///   - createSubFolder: Optional. Whether to create a subfolder with an archive name which archived files are extracted to.
+    ///   - password: Optional. The password for extracting the file.
+    ///   - completion: Callback closure.
+    public func extract(filePath: String, destinationFolderPath: String, overwrite: Bool = false, keepDirectory: Bool = true, createSubFolder: Bool = false, password: String? = nil, completion: @escaping SynologyCompletion<String>) {
         var parameters = Parameters()
         parameters["file_path"] = filePath
         parameters["dest_folder_path"] = destinationFolderPath
@@ -285,9 +312,9 @@ extension SynologyKit {
         if let password = password {
             parameters["password"] = password
         }
-        
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileExtract, api: .extract, method: .start, params: parameters)
+        post(request, queue: nil, completion: completion)
     }
-    
     
     /// Compress file(s)/folder(s).
     /// This is a non-blocking API. You need to start to compress files with the start method.
@@ -299,7 +326,7 @@ extension SynologyKit {
     /// - Parameter format: Optional. The compress format.
     /// - Parameter password: Optional. The password for the archive.
     /// - Parameter completion: Callback closure.
-    public class func compress(path: String, destinationFilePath: String, level: CompressLevel = .moderate, mode: CompressMode = .add, format: CompressFormat, password: String? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func compress(path: String, destinationFilePath: String, level: CompressLevel = .moderate, mode: CompressMode = .add, format: CompressFormat, password: String? = nil, completion: @escaping SynologyCompletion<String>) {
         var params: Parameters = [:]
         params["path"] = path
         params["dest_file_path"] = destinationFilePath
@@ -309,18 +336,18 @@ extension SynologyKit {
         if let password = password {
             params["password"] = password
         }
-        let request = SynologyBasicRequest(path: .fileCompress, api: .compress, method: .start, params: params)
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileCompress, api: .compress, method: .start, params: params)
         post(request, queue: nil, completion: completion)
     }
 }
 
 // MARK: - QuickID
-extension SynologyKit {
+extension SynologyClient {
     
     /// Get Synology server information via Quick Connect
     /// - Parameter quickID: quickID of your Synology
     /// - Parameter completion: callback closure
-    public class func getGlobalServerInfo(quickID: String, completion: @escaping SynologyCompletion<QuickIDResponse>) {
+    func getGlobalServerInfo(quickID: String, completion: @escaping SynologyCompletion<QuickIDResponse>) {
         let baseUrl = "https://global.QuickConnect.to"
         var params: [String: Any] = [:]
         params["id"] = "audio_http"
@@ -338,7 +365,7 @@ extension SynologyKit {
     /// - Parameter quickID: quickID of your Synology
     /// - Parameter platform: platform
     /// - Parameter completion: callback closure
-    public class func getServerInfo(quickID: String, platform: String = "iPhone9,1", completion: @escaping QuickConnectCompletion) {
+    func getServerInfo(quickID: String, platform: String = "iPhone9,1", completion: @escaping QuickConnectCompletion) {
         let url = "https://cnc.quickconnect.to"
         var params: [String: Any] = [:]
         params["location"] = "en_CN"
@@ -354,7 +381,7 @@ extension SynologyKit {
         }
     }
     
-    class func handleQuickConnectResponse(_ response: DefaultDataResponse, completion: @escaping QuickConnectCompletion) {
+    func handleQuickConnectResponse(_ response: DefaultDataResponse, completion: @escaping QuickConnectCompletion) {
         guard let data = response.data else {
             completion(.failure(.invalidResponse(response)))
             return
@@ -369,13 +396,13 @@ extension SynologyKit {
     }
 }
 
-extension SynologyKit {
+extension SynologyClient {
     
-    class func asyncAwait() {
-        
+    func asyncAwait() {
+        // TODO
     }
     
-    class func checkMD5RequestStatus(_ request: SynologyBasicRequest) -> String? {
+    func checkMD5RequestStatus(_ request: SynologyBasicRequest) -> String? {
         var finished: Bool = false
         var statusRequest = request
         statusRequest.method = .status

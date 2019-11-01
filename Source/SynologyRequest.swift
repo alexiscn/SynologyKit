@@ -10,6 +10,8 @@ import Alamofire
 
 public protocol SynologyRequest {
     
+    var baseURLString: String { get set }
+    
     var path: String { get }
     
     var params: Parameters { get set }
@@ -20,6 +22,8 @@ public protocol SynologyRequest {
 }
 
 struct SynologyBasicRequest: SynologyRequest {
+    
+    var baseURLString: String
     
     /// path of the API. The path information can be retrieved by requesting SYNO.API.Info
     var path: String
@@ -43,7 +47,7 @@ struct SynologyBasicRequest: SynologyRequest {
     
     func asURLRequest() -> URLRequestConvertible {
         do {
-            let urlString = SynologyKit.requestUrlString(path: "webapi/\(path)")
+            let urlString = "" //SynologyClient.requestUrlString(path: "webapi/\(path)")
             var parameter = params
             parameter["api"] = api.rawValue
             parameter["version"] = version
@@ -56,7 +60,8 @@ struct SynologyBasicRequest: SynologyRequest {
         }
     }
     
-    init(path: SynologyCGI, api: SynologyAPI, method: SynologyMethod, params: Parameters) {
+    init(baseURLString: String, path: SynologyCGI, api: SynologyAPI, method: SynologyMethod, params: Parameters) {
+        self.baseURLString = baseURLString
         self.path = path.rawValue
         self.api = api
         self.method = method

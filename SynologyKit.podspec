@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SynologyKit'
-  s.version      = '0.0.8'
+  s.version      = '0.0.10'
   s.license      = 'MIT'
   s.requires_arc = true
   s.swift_versions = '5.0'
