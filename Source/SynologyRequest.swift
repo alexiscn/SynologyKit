@@ -12,17 +12,11 @@ public protocol SynologyRequest {
     
     var path: String { get }
     
-    var params: Parameters? { get set }
+    var params: Parameters { get set }
     
     var headers: HTTPHeaders? { get set }
     
     func asURLRequest() -> URLRequestConvertible
-}
-
-extension SynologyRequest {
-    var params: Parameters? { return nil }
-    
-    var headers: HTTPHeaders? { return nil }
 }
 
 struct SynologyBasicRequest: SynologyRequest {
@@ -36,12 +30,12 @@ struct SynologyBasicRequest: SynologyRequest {
     /// Method of the API requested
     var method: SynologyMethod
     
-    var params: Parameters? = nil
+    var params: Parameters
     
     /// Version of the API requested
     var version: Int = 1
     
-    var headers: HTTPHeaders? = nil
+    var headers: HTTPHeaders?
     
     func urlQuery() -> String {
         return "webapi/\(path)?api=\(api.rawValue)&version=\(version)&method=\(method)"
@@ -49,16 +43,20 @@ struct SynologyBasicRequest: SynologyRequest {
     
     func asURLRequest() -> URLRequestConvertible {
         do {
-            let urlString = SynologyKit.requestUrlString(path: urlQuery())
+            let urlString = SynologyKit.requestUrlString(path: "webapi/\(path)")
+            var parameter = params
+            parameter["api"] = api.rawValue
+            parameter["version"] = version
+            parameter["method"] = method
             let request = try URLRequest(url: urlString, method: .post, headers: headers)
-            let encodedRequest = try URLEncoding.default.encode(request, with: params)
+            let encodedRequest = try URLEncoding.default.encode(request, with: parameter)
             return encodedRequest
         } catch {
             fatalError(error.localizedDescription)
         }
     }
     
-    init(path: SynologyCGI, api: SynologyAPI, method: SynologyMethod, params: Parameters?) {
+    init(path: SynologyCGI, api: SynologyAPI, method: SynologyMethod, params: Parameters) {
         self.path = path.rawValue
         self.api = api
         self.method = method
@@ -72,7 +70,7 @@ struct QuickConnectRequest: SynologyRequest {
     
     var path: String
     
-    var params: Parameters?
+    var params: Parameters
     
     var headers: HTTPHeaders?
     
