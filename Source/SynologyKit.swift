@@ -85,7 +85,8 @@ extension SynologyKit {
         parameters["account"] = account
         parameters["passwd"] = passwd
         parameters["session"] = "FileStationSession"
-        let request = SynologyBasicRequest(path: CGI.auth, api: .auth, method: .login ,params: parameters, version: 3, headers: nil)
+        var request = SynologyBasicRequest(path: .auth, api: .auth, method: .login ,params: parameters)
+        request.version = 3
         post(request, queue: nil, completion: completion)
     }
     
@@ -113,7 +114,7 @@ extension SynologyKit {
         if let additional = additional {
             params["additional"] = additional
         }
-        let request = SynologyBasicRequest(path: CGI.fileVirtual, api: .virtualFolder, method: .list, params: params, version: 1, headers: nil)
+        let request = SynologyBasicRequest(path: .fileVirtual, api: .virtualFolder, method: .list, params: params)
         post(request, queue: nil, completion: completion)
     }
     
@@ -136,7 +137,8 @@ extension SynologyKit {
         params["sort_by"] = sortBy.rawValue
         params["sort_direction"] = sortDirection.rawValue
         params["additional"] = additional.value()
-        let request = SynologyBasicRequest(path: CGI.entry, api: .list, method: .list_share, params: params, version: 2, headers: nil)
+        var request = SynologyBasicRequest(path: .entry, api: .list, method: .list_share, params: params)
+        request.version = 2
         post(request, queue: nil, completion: completion)
     }
     
@@ -162,13 +164,15 @@ extension SynologyKit {
         params["sort_by"] = sortBy.rawValue
         params["sort_direction"] = sortDirection.rawValue
         params["additional"] = additional.value()
-        let request = SynologyBasicRequest(path: CGI.entry, api: .list, method: .list, params: params, version: 2, headers: nil)
+        var request = SynologyBasicRequest(path: .entry, api: .list, method: .list, params: params)
+        request.version = 2
         post(request, queue: nil, completion: completion)
     }
     
     public class func downloadFile(path: String, to: @escaping DownloadRequest.DownloadFileDestination) -> DownloadRequest {
         let params = ["path": path, "mode": "open"]
-        let request = SynologyBasicRequest(path: CGI.entry, api: .download, method: .download, params: params, version: 2, headers: nil)
+        var request = SynologyBasicRequest(path: .entry, api: .download, method: .download, params: params)
+        request.version = 2
         return download(path: request.urlQuery(), parameters: params, to: to)
     }
     
@@ -186,6 +190,7 @@ extension SynologyKit {
     /// - Parameter additional: Optional. Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
     /// - Parameter completion: callback closure.
     public class func createFolder(_ folderPath: String, name: String, forceParent: Bool = false, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+        // TODO - check status
         var params: Parameters = [:]
         params["folder_path"] = folderPath
         params["name"] = name
@@ -193,7 +198,7 @@ extension SynologyKit {
         if let additional = additional {
             params["additional"] = additional
         }
-        let request = SynologyBasicRequest(path: CGI.file_crtfdr, api: .createFolder, method: .create, params: params, version: 1, headers: nil)
+        let request = SynologyBasicRequest(path: .file_crtfdr, api: .createFolder, method: .create, params: params)
         post(request, queue: nil, completion: completion)
     }
     
@@ -215,7 +220,7 @@ extension SynologyKit {
         if let taskId = searchTaskId {
             params["search_taskid"] = taskId
         }
-        let request = SynologyBasicRequest(path: CGI.fileRename, api: .rename, method: .rename, params: params, version: 1, headers: nil)
+        let request = SynologyBasicRequest(path: .fileRename, api: .rename, method: .rename, params: params)
         post(request, queue: nil, completion: completion)
     }
     
@@ -246,7 +251,7 @@ extension SynologyKit {
     ///                        If a deleted folder contains any file, an error occurs because the folder can’t be directly deleted
     /// - Parameter searchTaskid: Optional. A unique ID for the search task which is gotten from start method.
     ///                        It’s used to delete the file in the search result.
-    /// - Parameter completion: callback closure.
+    /// - Parameter completion: Callback closure.
     public class func delete(path: String, accurateProgress: Bool = true, recursive: Bool = true, searchTaskid: String? = nil, completion: @escaping SynologyCompletion<String>) {
         var params: [String: Any] = [:]
         params["path"] = path
@@ -255,7 +260,45 @@ extension SynologyKit {
         if let taskId = searchTaskid {
             params["search_taskid"] = taskId
         }
-        let request = SynologyBasicRequest(path: CGI.file_delete, api: .delete, method: .start, params: params, version: 1, headers: nil)
+        let request = SynologyBasicRequest(path: .fileDelete, api: .delete, method: .start, params: params)
+        post(request, queue: nil, completion: completion)
+    }
+    
+    public class func extract(filePath: String, destinationFolderPath: String, overwrite: Bool = false, keepDirectory: Bool = true, createSubFolder: Bool = false, password: String? = nil, completion: @escaping SynologyCompletion<String>) {
+        var parameters = Parameters()
+        parameters["file_path"] = filePath
+        parameters["dest_folder_path"] = destinationFolderPath
+        parameters["overwrite"] = overwrite
+        parameters["keep_dir"] = keepDirectory
+        parameters["create_subfolder"] = createSubFolder
+        if let password = password {
+            parameters["password"] = password
+        }
+        
+    }
+    
+    
+    /// Compress file(s)/folder(s).
+    /// This is a non-blocking API. You need to start to compress files with the start method.
+    /// Then, you should poll requests with the status method to get compress status, or make a request with the stop method to cancel the operation.
+    /// - Parameter path: One or more file paths to be compressed, separated by commas “,”. The path should start with a shared folder.
+    /// - Parameter destinationFilePath: A destination file path (including file name) of an archive for the compressed archive.
+    /// - Parameter level: Optional. Compress level used.
+    /// - Parameter mode: Optional. Compress mode used.
+    /// - Parameter format: Optional. The compress format.
+    /// - Parameter password: Optional. The password for the archive.
+    /// - Parameter completion: Callback closure.
+    public class func compress(path: String, destinationFilePath: String, level: CompressLevel = .moderate, mode: CompressMode = .add, format: CompressFormat, password: String? = nil, completion: @escaping SynologyCompletion<String>) {
+        var params: Parameters = [:]
+        params["path"] = path
+        params["dest_file_path"] = destinationFilePath
+        params["level"] = level.rawValue
+        params["mode"] = mode.rawValue
+        params["format"] = format.rawValue
+        if let password = password {
+            params["password"] = password
+        }
+        let request = SynologyBasicRequest(path: .fileCompress, api: .compress, method: .start, params: params)
         post(request, queue: nil, completion: completion)
     }
 }

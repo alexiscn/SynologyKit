@@ -39,7 +39,7 @@ struct SynologyBasicRequest: SynologyRequest {
     var params: Parameters? = nil
     
     /// Version of the API requested
-    var version: Int
+    var version: Int = 1
     
     var headers: HTTPHeaders? = nil
     
@@ -56,6 +56,13 @@ struct SynologyBasicRequest: SynologyRequest {
         } catch {
             fatalError(error.localizedDescription)
         }
+    }
+    
+    init(path: SynologyCGI, api: SynologyAPI, method: SynologyMethod, params: Parameters?) {
+        self.path = path.rawValue
+        self.api = api
+        self.method = method
+        self.params = params
     }
 }
 
@@ -156,4 +163,34 @@ public struct SynologyAdditionalOptions: OptionSet {
 public enum VirtualFolderType: String {
     case cifs
     case iso
+}
+
+/// Compress level. default is moderate
+public enum CompressLevel: String {
+    /// moderate compression and normal compression speed
+    case moderate
+    /// pack files with no compress
+    case store
+    /// fastest compression speed but less compression
+    case fastest
+    /// slowest compression speed but optimal compression
+    case best
+}
+
+
+/// CompressMode, default is add
+public enum CompressMode: String {
+    /// Update existing items and add new files. If an archive does not exist, a new one is created.
+    case add
+    /// Update existing items if newer on the file system and add new files. If the archive does not exist create a new archive.
+    case update
+    ///  Update existing items of an archive if newer on the file system. Does not add new files to the archive.
+    case refreshen
+    /// Update older files in the archive and add files that are not already in the archive.
+    case synchronize
+}
+
+public enum CompressFormat: String {
+    case zip
+    case sevenZ = "7z"
 }

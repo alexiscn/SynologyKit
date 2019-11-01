@@ -150,6 +150,11 @@ public extension SynologyKit {
         public var supportVirtualProtocol: Bool
     }
     
+    /// Common Non-Blocking Task Response
+    struct Task: Codable {
+        public let taskid: String?
+    }
+    
     struct SharedFolders: Codable {
         
         /// Total number of shared folders.
