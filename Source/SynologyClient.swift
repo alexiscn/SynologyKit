@@ -47,6 +47,10 @@ public class SynologyClient {
         self.enableHTTPS = enableHTTPS
     }
     
+    public func updateSessionID(_ sessionID: String) {
+        self.sessionid = sessionID
+    }
+    
     func requestUrlString(path: String) -> String {
         return baseURLString().appending(path)
     }
@@ -77,6 +81,12 @@ public class SynologyClient {
         }
     }
     
+    
+    /// Download file from synology
+    /// - Parameters:
+    ///   - path: file path
+    ///   - parameters: additional parameters
+    ///   - destination: Callback closure.
     public func download(path: String, parameters: Parameters, to destination: DownloadRequest.DownloadFileDestination?) -> DownloadRequest {
         let urlString = baseURLString().appending("\(path)")
         print(urlString)
