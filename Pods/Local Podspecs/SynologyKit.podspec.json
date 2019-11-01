@@ -1,13 +1,15 @@
 {
   "name": "SynologyKit",
-  "version": "0.0.2",
+  "version": "0.0.6",
   "license": "MIT",
   "requires_arc": true,
+  "swift_versions": "5.0",
   "source": {
-    "path": "DevelopmentPods/SynologyKit"
+    "git": "https://github.com/alexiscn/SynologyKit.git",
+    "tag": "0.0.6"
   },
-  "summary": "SynologyKit",
-  "homepage": "SynologyKit",
+  "summary": "Synology File Station SDK for Swift",
+  "homepage": "https://github.com/alexiscn/SynologyKit",
   "authors": {
     "xushuifeng": "https://github.com/alexiscn"
   },
@@ -19,5 +21,6 @@
     "Alamofire": [
 
     ]
-  }
+  },
+  "swift_version": "5.0"
 }

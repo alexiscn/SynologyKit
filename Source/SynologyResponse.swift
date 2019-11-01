@@ -126,6 +126,10 @@ public extension SynologyKit {
         public let sid: String
     }
     
+    struct EmptyResponse: Codable {
+        
+    }
+    
     struct FileStationInfo: Codable {
         
         enum CodingKeys: String, CodingKey {

@@ -71,7 +71,7 @@ public class SynologyKit {
         }
     }
     
-    class func download(path: String, parameters: Parameters, to destination: DownloadRequest.DownloadFileDestination?) -> DownloadRequest {
+    public class func download(path: String, parameters: Parameters, to destination: DownloadRequest.DownloadFileDestination?) -> DownloadRequest {
         let urlString = baseURLString().appending("\(path)")
         print(urlString)
         return Alamofire.download(urlString, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil, to: destination)
@@ -80,6 +80,11 @@ public class SynologyKit {
 
 extension SynologyKit {
     
+    /// Login to your synology
+    /// - Parameters:
+    ///   - account: Login account name.
+    ///   - passwd: Login account password.
+    ///   - completion: Callback closure.
     public class func login(account: String, passwd: String, completion: @escaping SynologyCompletion<AuthResponse>) {
         var parameters: Parameters = [:]
         parameters["account"] = account
@@ -90,10 +95,14 @@ extension SynologyKit {
         post(request, queue: nil, completion: completion)
     }
     
-    public class func logout(session: String) {
-        //let request = SynologyRequest(api: .auth, method: .logout, version: 1, path: CGI.auth)
+    /// Logout
+    /// - Parameters:
+    ///   - completion: Callback closure.
+    public class func logout(completion: @escaping SynologyCompletion<EmptyResponse>) {
+        let params = ["session": "FileStationSession"]
+        let request = SynologyBasicRequest(path: .auth, api: .auth, method: .logout, params: params)
+        post(request, queue: nil, completion: completion)
     }
-    
     
     /// List all mount point folders on one given type of virtual file system
     /// - Parameter type: A type of virtual file systems, ex: CIFS or ISO.
@@ -355,5 +364,38 @@ extension SynologyKit {
             let text = String(data: data, encoding: .utf8)
             completion(.failure(.decodeDataError(response, text)))
         }
+    }
+}
+
+extension SynologyKit {
+    
+    class func asyncAwait() {
+        
+    }
+    
+    class func checkMD5RequestStatus(_ request: SynologyBasicRequest) -> String? {
+        var finished: Bool = false
+        var statusRequest = request
+        statusRequest.method = .status
+        let seamphore = DispatchSemaphore(value: 0)
+        var md5: String? = nil
+        while !finished {
+            post(statusRequest, queue: nil) { (response: Swift.Result<MD5Status, SynologyError>) in
+                switch response {
+                case .success(let res):
+                    print(res.finished)
+                    if let md5 = res.md5 {
+                        print("GOT MD5:\(md5)")
+                    }
+                    finished = res.finished
+                    md5 = res.md5
+                case .failure(let error):
+                    print(error)
+                }
+                seamphore.signal()
+            }
+            seamphore.wait()
+        }
+        return md5
     }
 }
