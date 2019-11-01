@@ -36,6 +36,11 @@ public class SynologyClient {
         return "\(scheme)://\(host)/"
     }
     
+    /// Init a client
+    /// - Parameters:
+    ///   - host: IP or QuickConnect ID
+    ///   - port: port
+    ///   - enableHTTPS: enableHTTPS, default is false.
     public init(host: String, port: Int? = nil, enableHTTPS: Bool = false) {
         self.host = host
         self.port = port
