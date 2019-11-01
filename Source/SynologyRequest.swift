@@ -47,7 +47,7 @@ struct SynologyBasicRequest: SynologyRequest {
     
     func asURLRequest() -> URLRequestConvertible {
         do {
-            let urlString = "" //SynologyClient.requestUrlString(path: "webapi/\(path)")
+            let urlString = "\(baseURLString)webapi/\(path)"
             var parameter = params
             parameter["api"] = api.rawValue
             parameter["version"] = version
