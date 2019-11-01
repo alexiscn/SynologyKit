@@ -27,6 +27,8 @@ public class SynologyKit {
     
     public static var enableHTTPS = false
     
+    private static let Session = "FileStation"
+    
     class func baseURLString() -> String {
         
         guard let host = host else {
@@ -89,7 +91,7 @@ extension SynologyKit {
         var parameters: Parameters = [:]
         parameters["account"] = account
         parameters["passwd"] = passwd
-        parameters["session"] = "FileStationSession"
+        parameters["session"] = Session
         var request = SynologyBasicRequest(path: .auth, api: .auth, method: .login ,params: parameters)
         request.version = 3
         post(request, queue: nil, completion: completion)
@@ -99,7 +101,7 @@ extension SynologyKit {
     /// - Parameters:
     ///   - completion: Callback closure.
     public class func logout(completion: @escaping SynologyCompletion<EmptyResponse>) {
-        let params = ["session": "FileStationSession"]
+        let params = ["session": Session]
         let request = SynologyBasicRequest(path: .auth, api: .auth, method: .logout, params: params)
         post(request, queue: nil, completion: completion)
     }
