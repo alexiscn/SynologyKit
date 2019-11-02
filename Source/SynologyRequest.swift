@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-public protocol SynologyRequest {
+protocol SynologyRequest {
     
     var baseURLString: String { get set }
     
@@ -91,109 +91,111 @@ struct QuickConnectRequest: SynologyRequest {
     }
 }
 
-enum SynologyMethod: String {
-    case add
-    case clear_invalid
-    case clear_finished
-    case clean
-    case create
-    case delete
-    case download
-    case edit
-    case get
-    case getinfo
-    case list
-    case list_share
-    case login
-    case logout
-    case query
-    case rename
-    case start
-    case status
-    case stop
-    case write
-}
-
-public struct SynologyAdditionalOptions: OptionSet {
+public extension SynologyClient {
     
-    public let rawValue: Int
-    
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
+    enum FileSortBy: String {
+        case name = "name"
+        /// file owner
+        case user = "user"
+        /// file group
+        case group = "group"
+        ///  last modified time
+        case lastModifiedtime = "mtime"
+        ///  last access time
+        case lastAccessTime = "atime"
+        ///  last change time
+        case lastChangeTime = "ctime"
+        /// create time
+        case createTime = "crtime"
+        /// POSIX permission
+        case posix = "posix"
     }
     
-    public static let realPath = SynologyAdditionalOptions(rawValue: 1 << 0)
-    public static let size = SynologyAdditionalOptions(rawValue: 1 << 1)
-    public static let owner = SynologyAdditionalOptions(rawValue: 1 << 2)
-    public static let time = SynologyAdditionalOptions(rawValue: 1 << 3)
-    public static let perm = SynologyAdditionalOptions(rawValue: 1 << 4)
-    public static let mountPointType = SynologyAdditionalOptions(rawValue: 1 << 5)
-    public static let volumeStatus = SynologyAdditionalOptions(rawValue: 1 << 6)
-    public static let type = SynologyAdditionalOptions(rawValue: 1 << 7)
-    public static let `default`: SynologyAdditionalOptions = [.size, .time, .type]
+    enum FileSortDirection: String {
+        case ascending = "asc"
+        case descending = "desc"
+    }
     
-    func value() -> String {
+    struct AdditionalOptions: OptionSet {
         
-        var result: [String] = []
-        if self.contains(.realPath) {
-            result.append("real_path")
+        public let rawValue: Int
+        
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
         }
-        if contains(.size) {
-            result.append("size")
+        
+        public static let realPath = AdditionalOptions(rawValue: 1 << 0)
+        public static let size = AdditionalOptions(rawValue: 1 << 1)
+        public static let owner = AdditionalOptions(rawValue: 1 << 2)
+        public static let time = AdditionalOptions(rawValue: 1 << 3)
+        public static let perm = AdditionalOptions(rawValue: 1 << 4)
+        public static let mountPointType = AdditionalOptions(rawValue: 1 << 5)
+        public static let volumeStatus = AdditionalOptions(rawValue: 1 << 6)
+        public static let type = AdditionalOptions(rawValue: 1 << 7)
+        public static let `default`: AdditionalOptions = [.size, .time, .type]
+        
+        func value() -> String {
+            
+            var result: [String] = []
+            if self.contains(.realPath) {
+                result.append("real_path")
+            }
+            if contains(.size) {
+                result.append("size")
+            }
+            if contains(.owner) {
+                result.append("owner")
+            }
+            if contains(.time) {
+                result.append("time")
+            }
+            if contains(.perm) {
+                result.append("perm")
+            }
+            if contains(.mountPointType) {
+                result.append("mount_point_type")
+            }
+            if contains(.volumeStatus) {
+                result.append("volume_status")
+            }
+            if contains(.type) {
+                result.append("type")
+            }
+            return result.description
         }
-        if contains(.owner) {
-            result.append("owner")
-        }
-        if contains(.time) {
-            result.append("time")
-        }
-        if contains(.perm) {
-            result.append("perm")
-        }
-        if contains(.mountPointType) {
-            result.append("mount_point_type")
-        }
-        if contains(.volumeStatus) {
-            result.append("volume_status")
-        }
-        if contains(.type) {
-            result.append("type")
-        }
-        return result.description
     }
-}
 
-public enum VirtualFolderType: String {
-    case cifs
-    case iso
-}
+    enum VirtualFolderType: String {
+        case cifs
+        case iso
+    }
+    
+    /// Compress level. default is moderate
+    enum CompressLevel: String {
+        /// moderate compression and normal compression speed
+        case moderate
+        /// pack files with no compress
+        case store
+        /// fastest compression speed but less compression
+        case fastest
+        /// slowest compression speed but optimal compression
+        case best
+    }
+    
+    /// CompressMode, default is add
+    enum CompressMode: String {
+        /// Update existing items and add new files. If an archive does not exist, a new one is created.
+        case add
+        /// Update existing items if newer on the file system and add new files. If the archive does not exist create a new archive.
+        case update
+        ///  Update existing items of an archive if newer on the file system. Does not add new files to the archive.
+        case refreshen
+        /// Update older files in the archive and add files that are not already in the archive.
+        case synchronize
+    }
 
-/// Compress level. default is moderate
-public enum CompressLevel: String {
-    /// moderate compression and normal compression speed
-    case moderate
-    /// pack files with no compress
-    case store
-    /// fastest compression speed but less compression
-    case fastest
-    /// slowest compression speed but optimal compression
-    case best
-}
-
-
-/// CompressMode, default is add
-public enum CompressMode: String {
-    /// Update existing items and add new files. If an archive does not exist, a new one is created.
-    case add
-    /// Update existing items if newer on the file system and add new files. If the archive does not exist create a new archive.
-    case update
-    ///  Update existing items of an archive if newer on the file system. Does not add new files to the archive.
-    case refreshen
-    /// Update older files in the archive and add files that are not already in the archive.
-    case synchronize
-}
-
-public enum CompressFormat: String {
-    case zip
-    case sevenZ = "7z"
+    enum CompressFormat: String {
+        case zip
+        case sevenZ = "7z"
+    }
 }

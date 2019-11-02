@@ -146,7 +146,7 @@ extension SynologyClient {
     /// - Parameter direction: Optional. Specify to sort ascending or to sort descending.
     /// - Parameter additional: Optional. Additional requested file information, separated by a comma, “,”. When an additional option is requested, responded objects will be provided in the specified additional option
     /// - Parameter completion: callback closure.
-    public func listVirtualFolder(type: VirtualFolderType, offset: Int = 0, limit: Int = 0, sortBy: SynologyFileSort = .name, direction: SynologyFileSortDirection = .ascending, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func listVirtualFolder(type: VirtualFolderType, offset: Int = 0, limit: Int = 0, sortBy: FileSortBy = .name, direction: FileSortDirection = .ascending, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
         var params: Parameters = [:]
         params["type"] = type.rawValue
         params["offset"] = offset
@@ -169,9 +169,9 @@ extension SynologyClient {
     /// - Parameter completion: callback closure.
     public func listShareFolders(offset: Int = 0,
                                        limit: Int = 0,
-                                       sortBy: SynologyFileSort = .name,
-                                       sortDirection: SynologyFileSortDirection = .ascending,
-                                       additional: SynologyAdditionalOptions = .default,
+                                       sortBy: FileSortBy = .name,
+                                       sortDirection: FileSortDirection = .ascending,
+                                       additional: AdditionalOptions = .default,
                                        completion: @escaping SynologyCompletion<SharedFolders>) {
         var params: Parameters = [:]
         params["offset"] = offset
@@ -195,9 +195,9 @@ extension SynologyClient {
     public func listFolder(_ folder: String,
                                  offset: Int = 0,
                                  limit: Int = 0,
-                                 sortBy: SynologyFileSort = .name,
-                                 sortDirection: SynologyFileSortDirection = .ascending,
-                                 additional: SynologyAdditionalOptions = .default,
+                                 sortBy: FileSortBy = .name,
+                                 sortDirection: FileSortDirection = .ascending,
+                                 additional: AdditionalOptions = .default,
                                  completion: @escaping SynologyCompletion<Files>) {
         var params: Parameters = [:]
         params["folder_path"] = folder
@@ -231,7 +231,7 @@ extension SynologyClient {
     /// - Parameter forceParent: Optional. “true”: no error occurs if a folder exists and make parent folders as needed; “false”: parent folders are not created.
     /// - Parameter additional: Optional. Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
     /// - Parameter completion: callback closure.
-    public func createFolder(_ folderPath: String, name: String, forceParent: Bool = false, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func createFolder(_ folderPath: String, name: String, forceParent: Bool = false, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<String>) {
         // TODO - check status
         var params: Parameters = [:]
         params["folder_path"] = folderPath
