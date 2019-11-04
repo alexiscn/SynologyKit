@@ -131,7 +131,7 @@ public extension SynologyClient {
         public let path: String
         
         /// Name of a shared folder.
-        public let name: String?
+        public let name: String
         
         /// Shared-folder additional object.
         public let additional: Additional?
@@ -158,7 +158,7 @@ public extension SynologyClient {
         public let path: String
         
         /// Name of a mount point folder
-        public let name: String?
+        public let name: String
         
         /// Virtual folder additional object.
         public let additional: Additional?
@@ -182,7 +182,7 @@ public extension SynologyClient {
         public let path: String
         
         /// File name
-        public let name: String?
+        public let name: String
         
         /// If this file is folder or not
         public let isdir: Bool

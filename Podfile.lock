@@ -1,6 +1,6 @@
 PODS:
   - Alamofire (4.9.1)
-  - SynologyKit (0.1.2):
+  - SynologyKit (0.1.3):
     - Alamofire
 
 DEPENDENCIES:
@@ -16,7 +16,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
-  SynologyKit: b0da29cbaf9297953cf38906da1e14a3fb0126f7
+  SynologyKit: 64877460c3601dcf9741d65d1a8e2e5c47ed3c43
 
 PODFILE CHECKSUM: a3827737406767849322d416c9c44b6a8b91624b
 

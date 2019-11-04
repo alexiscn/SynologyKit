@@ -50,8 +50,8 @@ struct SynologyBasicRequest: SynologyRequest {
             let urlString = "\(baseURLString)webapi/\(path)"
             var parameter = params
             parameter["api"] = api.rawValue
+            parameter["method"] = method.rawValue
             parameter["version"] = version
-            parameter["method"] = method
             let request = try URLRequest(url: urlString, method: .post, headers: headers)
             let encodedRequest = try URLEncoding.default.encode(request, with: parameter)
             return encodedRequest
