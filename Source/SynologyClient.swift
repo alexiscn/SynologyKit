@@ -63,6 +63,11 @@ public class SynologyClient {
     }
     
     func handleDataResponse<T>(_ response: DefaultDataResponse, completion: @escaping SynologyCompletion<T>) {
+        if let error = response.error {
+            let code = response.response?.statusCode ?? -1
+            completion(.failure(.serverError(code, error.localizedDescription, response)))
+            return
+        }
         guard let data = response.data else {
             completion(.failure(.invalidResponse(response)))
             return
