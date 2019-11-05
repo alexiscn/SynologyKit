@@ -142,26 +142,11 @@ extension SynologyClient {
         post(request, queue: nil, completion: completion)
     }
     
-    /// List all mount point folders on one given type of virtual file system
-    /// - Parameter type: A type of virtual file systems, ex: CIFS or ISO.
-    /// - Parameter offset: Optional. Specify how many mount point folders are skipped before
-    /// beginning to return listed mount point folders in virtual file system.
-    /// - Parameter limit: Optional. Number of mount point folders requested. 0 indicates to list all mount point folders in virtual file system.
-    /// - Parameter sortBy: Optional. Specify which file information to sort on.
-    /// - Parameter direction: Optional. Specify to sort ascending or to sort descending.
-    /// - Parameter additional: Optional. Additional requested file information, separated by a comma, “,”. When an additional option is requested, responded objects will be provided in the specified additional option
-    /// - Parameter completion: callback closure.
-    public func listVirtualFolder(type: VirtualFolderType, offset: Int = 0, limit: Int = 0, sortBy: FileSortBy = .name, direction: FileSortDirection = .ascending, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
-        var params: Parameters = [:]
-        params["type"] = type.rawValue
-        params["offset"] = offset
-        params["limit"] = limit
-        params["sort_by"] = sortBy.rawValue
-        params["sort_direction"] = direction.rawValue
-        if let additional = additional {
-            params["additional"] = additional
-        }
-        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileVirtual, api: .virtualFolder, method: .list, params: params)
+    
+    /// Provide File Station information
+    /// - Parameter completion: Callback closure.
+    public func getInfo(completion: @escaping SynologyCompletion<FileStationInfo>) {
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .info, api: .info, method: .getinfo, params: Parameters())
         post(request, queue: nil, completion: completion)
     }
     
@@ -216,6 +201,125 @@ extension SynologyClient {
         post(request, queue: nil, completion: completion)
     }
     
+    
+    /// Get information of file(s)
+    /// - Parameters:
+    ///   - path: One or more folder/file path(s) started with a shared folder, separated by a comma, “,”.
+    ///   - additional: Optional. Additional requested file information, separated by a comma, “,”.
+    ///           When an additional option is requested, responded objects will be provided in the specified additional option.
+    ///   - completion: Callback closure.
+    public func getFileInfo(atPath path: String, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+        var parameters = Parameters()
+        parameters["path"] = path
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileShare, api: .list, method: .getinfo, params: parameters)
+        post(request, queue: nil, completion: completion)
+    }
+    
+    
+    /// Search files according to given criteria
+    /// - Parameters:
+    ///   - folderPath: A searched folder path starting with a shared folder.
+    ///   - options: Search options.
+    ///   - recursive: Optional. If searching files within a folder and subfolders recursively or not.
+    public func search(atFolderPath folderPath: String, options: SearchOptions, recursive: Bool = true, completion: @escaping SynologyCompletion<String>) {
+        // TODO: check status
+        var parameters = Parameters()
+        parameters["folder_path"] = folderPath
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFind, api: .search, method: .start, params: parameters)
+        post(request, queue: nil, completion: completion)
+    }
+    
+    /// List all mount point folders on one given type of virtual file system
+    /// - Parameter type: A type of virtual file systems, ex: CIFS or ISO.
+    /// - Parameter offset: Optional. Specify how many mount point folders are skipped before
+    /// beginning to return listed mount point folders in virtual file system.
+    /// - Parameter limit: Optional. Number of mount point folders requested. 0 indicates to list all mount point folders in virtual file system.
+    /// - Parameter sortBy: Optional. Specify which file information to sort on.
+    /// - Parameter direction: Optional. Specify to sort ascending or to sort descending.
+    /// - Parameter additional: Optional. Additional requested file information, separated by a comma, “,”. When an additional option is requested, responded objects will be provided in the specified additional option
+    /// - Parameter completion: Callback closure.
+    public func listVirtualFolder(type: VirtualFolderType, offset: Int = 0, limit: Int = 0, sortBy: FileSortBy = .name, direction: FileSortDirection = .ascending, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+        var params: Parameters = [:]
+        params["type"] = type.rawValue
+        params["offset"] = offset
+        params["limit"] = limit
+        params["sort_by"] = sortBy.rawValue
+        params["sort_direction"] = direction.rawValue
+        if let additional = additional {
+            params["additional"] = additional
+        }
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileVirtual, api: .virtualFolder, method: .list, params: params)
+        post(request, queue: nil, completion: completion)
+    }
+    
+    /// List user’s favorites
+    /// - Parameters:
+    ///   - offset: Optional. Specify how many favorites are skipped before beginning to return user’s favorites.
+    ///   - limit: Optional. Number of favorites requested. 0 indicates to list all favorites.
+    ///   - statusFilter: Optional. Show favorites with a given favorite status.
+    ///   - additional: Optional. Additional requested information of a folder which a favorite links to, separated by a comma, “,”.
+    ///                 When an additional option is requested, responded objects will be provided in the specified additional option.
+    ///   - completion: Callback closure.
+    public func listFavorites(offset: Int = 0, limit: Int = 0, statusFilter: FavoriteStatus = .all, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+        var parameters = Parameters()
+        parameters["offset"] = offset
+        parameters["limit"] = limit
+        parameters["status_filter"] = statusFilter.rawValue
+        if let additional = additional {
+            parameters["additional"] = additional
+        }
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .list, params: parameters)
+        post(request, queue: nil, completion: completion)
+    }
+    
+    /// Add a folder to user’s favorites
+    /// - Parameters:
+    ///   - path: A folder path starting with a shared folder is added to the user’s favorites.
+    ///   - name: A favorite name.
+    ///   - index: Optional. Index of location of an added favorite.
+    ///            If it’s equal to -1, the favorite will be added to the last one in user’s favoirete.
+    ///            If it’s between 0 ~ total number of favorites-1, the favorite will be inserted into user’s favorites by the index.
+    ///   - completion: Callback closure.
+    public func addFavorite(path: String, name: String, index: Int = -1, completion: @escaping SynologyCompletion<EmptyResponse>) {
+        var parameters = Parameters()
+        parameters["path"] = path
+        parameters["name"] = name
+        parameters["index"] = index
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .add, params: parameters)
+        post(request, queue: nil, completion: completion)
+    }
+    
+    /// Delete a favorite in user’s favorites.
+    /// - Parameters:
+    ///   - path: A folder path starting with a shared folder is deleted from a user’s favorites.
+    ///   - completion: Callback closure.
+    public func deleteFavorite(path: String, completion: @escaping SynologyCompletion<EmptyResponse>) {
+        var parameters = Parameters()
+        parameters["path"] = path
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .delete, params: parameters)
+        post(request, queue: nil, completion: completion)
+    }
+    
+    /// Delete all broken statuses of favorites.
+    /// - Parameter completion: Callback closure.
+    public func clearBrokenFavorites(completion: @escaping SynologyCompletion<EmptyResponse>) {
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .clean, params: Parameters())
+        post(request, queue: nil, completion: completion)
+    }
+    
+    /// Edit a favorite name
+    /// - Parameters:
+    ///   - path: A folder path starting with a shared folder is edited from a user’s favorites.
+    ///   - name: New favorite name.
+    ///   - completion: Callback closure.
+    public func editFavorite(path: String, name: String, completion: @escaping SynologyCompletion<EmptyResponse>) {
+        var parameters = Parameters()
+        parameters["path"] = path
+        parameters["name"] = name
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .edit, params: parameters)
+        post(request, queue: nil, completion: completion)
+    }
+    
     public func downloadFile(path: String, to: @escaping DownloadRequest.DownloadFileDestination) -> DownloadRequest {
         let params = ["path": path, "mode": "open"]
         var request = SynologyBasicRequest(baseURLString: baseURLString(), path: .entry, api: .download, method: .download, params: params)
@@ -235,9 +339,8 @@ extension SynologyClient {
     ///           The first name parameter corresponding to the first folder_path parameter.
     /// - Parameter forceParent: Optional. “true”: no error occurs if a folder exists and make parent folders as needed; “false”: parent folders are not created.
     /// - Parameter additional: Optional. Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
-    /// - Parameter completion: callback closure.
-    public func createFolder(_ folderPath: String, name: String, forceParent: Bool = false, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<String>) {
-        // TODO - check status
+    /// - Parameter completion: Callback closure.
+    public func createFolder(_ folderPath: String, name: String, forceParent: Bool = false, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<FolderOperationResponse>) {
         var params: Parameters = [:]
         params["folder_path"] = folderPath
         params["name"] = name
@@ -256,8 +359,7 @@ extension SynologyClient {
     /// - Parameter name: One or more new names, separated by commas “,”. The number of names must be the same as the number of folder paths in the path parameter. The first name parameter corresponding to the first path parameter.
     /// - Parameter additional: Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
     /// - Parameter searchTaskId: A unique ID for the search task which is obtained from start method. It is used to update the renamed file in the search result
-    public func rename(path: String, name: String, additional: Additional? = nil, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<Files>) {
-        // TODO - check status
+    public func rename(path: String, name: String, additional: Additional? = nil, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<FolderOperationResponse>) {
         var params: [String: Any] = [:]
         params["path"] = path
         params["name"] = name
@@ -277,12 +379,25 @@ extension SynologyClient {
     /// method to get the progress status, or make a request with stop method to cancel the operation.
     /// - Parameter path: One or more copied/moved file/folder path(s) starting with a shared folder, separated by commas “,”.
     /// - Parameter destFolderPath: A desitination folder path where files/folders are copied/moved.
-    /// - Parameter overrite: Optional. “true”: overwrite all existing files with the same name; “false”: skip all existing files with the same name; (None): do not overwrite or skip existed files. If there is any existing files, an error occurs (error code: 1003).
+    /// - Parameter overwrite: Optional. “true”: overwrite all existing files with the same name; “false”: skip all existing files with the same name; (None): do not overwrite or skip existed files. If there is any existing files, an error occurs (error code: 1003).
     /// - Parameter removeSource: Optional. “true”: move filess/folders;”false”: copy files/folders
     /// - Parameter accurateProgress: Optional. “true”: calculate the progress by each moved/copied file within subfolder. “false”: calculate the progress by files which you give in path parameters. This calculates the progress faster, but is less precise.
-    /// - Parameter searchTaskid: Optional. A unique ID for the search task which is gotten from SYNO.FileSation.Search API with start method. This is used to update the search result.
-    public func copyMove(path: String, destFolderPath: String, overrite: Bool, removeSource: Bool = false, accurateProgress: Bool, searchTaskid: String? = nil) {
-        // TODO
+    /// - Parameter searchTaskId: Optional. A unique ID for the search task which is gotten from SYNO.FileSation.Search API with start method. This is used to update the search result.
+    public func copyMove(path: String, destFolderPath: String, overwrite: Bool? = nil, removeSource: Bool = false, accurateProgress: Bool = true, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<String>) {
+        // TODO - check status, report progress
+        var parameters = Parameters()
+        parameters["path"] = path
+        parameters["dest_folder_path"] = destFolderPath
+        if let overwrite = overwrite {
+            parameters["overwrite"] = overwrite
+        }
+        parameters["remove_src"] = removeSource
+        parameters["accurate_progress"] = accurateProgress
+        if let taskId = searchTaskId {
+            parameters["search_taskid"] = taskId
+        }
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileMoveCopy, api: .copyMove, method: .start, params: parameters)
+        post(request, queue: nil, completion: completion)
     }
     
     /// Delete file(s)/folder(s).
@@ -300,6 +415,7 @@ extension SynologyClient {
     ///                        It’s used to delete the file in the search result.
     /// - Parameter completion: Callback closure.
     public func delete(path: String, accurateProgress: Bool = true, recursive: Bool = true, searchTaskid: String? = nil, completion: @escaping SynologyCompletion<String>) {
+        // TODO: check status
         var params: [String: Any] = [:]
         params["path"] = path
         params["accurate_progress"] = accurateProgress
@@ -310,7 +426,6 @@ extension SynologyClient {
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileDelete, api: .delete, method: .start, params: params)
         post(request, queue: nil, completion: completion)
     }
-    
     
     /// Extract an archive and perform operations on archive files
     /// Note: Supported extensions of archives: zip, gz, tar, tgz, tbz, bz2, rar, 7z, iso

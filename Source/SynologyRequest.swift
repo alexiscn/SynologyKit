@@ -198,4 +198,62 @@ public extension SynologyClient {
         case zip
         case sevenZ = "7z"
     }
+    
+    struct SearchOptions {
+        
+        public enum FileType {
+            case file
+            case directory
+            case all
+        }
+        
+        /// Optional. Search for files whose names and extensions match a case-insensitive glob pattern.
+        /// Note:
+        ///      1. If the pattern doesn’t contain any glob syntax (? and *), * of glob syntax will be
+        ///      added at begin and end of the string automatically for partially matching the pattern
+        ///      2. You can use “,” to separate multiple glob patterns.
+        public var pattern: String? = nil
+        
+        /// Optional. Search for files whose extensions match a file type pattern in a case-insensitive glob pattern.
+        /// If you give this criterion, folders aren’t matched.
+        /// Note: You can use commas “,” to separate multiple glob patterns.
+        public var `extension`: String? = nil
+        
+        /// Optional. “file”: enumerate regular files;
+        ///           “dir”: enumerate folders;
+        ///           “all” enumerate regular files and folders.
+        public var fileType: FileType = .all
+        
+        /// Optional. Search for files whose sizes are greater than the given byte size.
+        public var sizeFrom: Int64? = nil
+        
+        /// Optional. Search for files whose sizes are less than the given byte size.
+        public var sizeTo: Int64? = nil
+        
+        /// Optional. Search for files whose last modified time after the given Linux timestamp in second.
+        public var lastModifiedTimeFrom: TimeInterval? = nil
+        
+        /// Optional. Search for files whose last modified time before the given Linux timestamp in second.
+        public var lastModifiedTimeTo: TimeInterval? = nil
+        
+        /// Optional. Search for files whose create time after the given Linux timestamp in second.
+        public var createTimeFrom: TimeInterval? = nil
+        
+        /// Optional. Search for files whose create time before the given Linux timestamp in second.
+        public var createTimeTo: TimeInterval? = nil
+        
+        /// Optional. Search for files whose last access time after the given Linux timestamp in second.
+        public var lastAccesTimeFrom: TimeInterval? = nil
+        
+        /// Optional. Search for files whose last access time before the given Linux timestamp in second.
+        public var lastAccessTimeTo: TimeInterval? = nil
+        
+        /// Optional. Search for files whose user name matches this criterion. This criterion is case-insensitive.
+        public var owner: String? = nil
+        
+        /// Optional. Search for files whose group name matches this criterion. This criterion is case-insensitive.
+        public var group: String? = nil
+        
+        public init() {}
+    }
 }
