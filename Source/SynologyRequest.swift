@@ -256,4 +256,19 @@ public extension SynologyClient {
         
         public init() {}
     }
+    
+    enum FileThumbSize: String {
+        case small
+        case medium
+        case large
+        case original
+    }
+    
+    enum FileThumbRotation: Int {
+        case none = 0
+        case rotate90 = 1
+        case rotate180 = 2
+        case rotate270 = 3
+        case rotate360 = 4
+    }
 }

@@ -172,6 +172,7 @@ enum SynologyMethod: String {
     case logout
     case query
     case rename
+    case replace_all
     case start
     case status
     case stop

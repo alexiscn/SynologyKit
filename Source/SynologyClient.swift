@@ -12,6 +12,8 @@ import Alamofire
 
 public typealias SynologyCompletion<T: Codable> = (Swift.Result<T, SynologyError>) -> Void
 
+public typealias SynologyStreamCompletion = (Swift.Result<Data, SynologyError>) -> Void
+
 public typealias QuickConnectCompletion = (Swift.Result<QuickIDResponse, SynologyError>) -> Void
 
 /// SynologyKit for File Station
@@ -59,6 +61,22 @@ public class SynologyClient {
     func post<T: Codable>(_ request: SynologyRequest, queue: DispatchQueue?, completion: @escaping SynologyCompletion<T>) -> DataRequest {
         return SessionManager.default.request(request.asURLRequest()).response(queue: queue) { response in
             self.handleDataResponse(response, completion: completion)
+        }
+    }
+    
+    @discardableResult
+    func getStreamData(_ request: SynologyRequest, queue: DispatchQueue?, completion: @escaping SynologyStreamCompletion) -> DataRequest {
+        return SessionManager.default.request(request.asURLRequest()).response(queue: queue) { response in
+            if let error = response.error {
+                let code = response.response?.statusCode ?? -1
+                completion(.failure(.serverError(code, error.localizedDescription, response)))
+                return
+            }
+            guard let data = response.data else {
+                completion(.failure(.invalidResponse(response)))
+                return
+            }
+            completion(.success(data))
         }
     }
     
@@ -318,6 +336,90 @@ extension SynologyClient {
         parameters["name"] = name
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .edit, params: parameters)
         post(request, queue: nil, completion: completion)
+    }
+    
+    
+    /// Replace multiple favorites of folders to the existed user’s favorites
+    /// - Parameters:
+    ///   - path: One or more folder paths starting with a shared folder, separated by a comma “,” is added to the user’s favorites.
+    ///           The number of paths must be the same as the number of favorite names in the name parameter.
+    ///           The first path parameter corresponds to the first name parameter.
+    ///   - name: One or more new favrorite names, separated by a comma “, “.
+    ///           The number of favorite names must be the same as the number of folder paths in the path parameter.
+    ///           The first name parameter corresponding to the first path parameter.
+    ///   - completion: Callback closure.
+    public func replaceAllFavorite(path: String, name: String, completion: @escaping SynologyCompletion<EmptyResponse>) {
+        var parameters = Parameters()
+        parameters["path"] = path
+        parameters["name"] = name
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .replace_all, params: parameters)
+        post(request, queue: nil, completion: completion)
+    }
+    
+    /// Get a thumbnail of a file.
+    /// Note:
+    ///      1. Supported image formats: jpg, jpeg, jpe, bmp, png, tif, tiff, gif, arw, srf, sr2, dcr, k25, kdc, cr2, crw, nef,
+    ///         mrw, ptx, pef, raf, 3fr, erf, mef, mos, orf, rw2, dng, x3f, raw
+    ///      2. Supported video formats in an indexed folder: 3gp, 3g2, asf, dat, divx, dvr-ms, m2t, m2ts, m4v,mkv, mp4, mts,
+    ///         mov, qt, tp, trp, ts, vob, wmv, xvid, ac3, amr, rm, rmvb, ifo, mpeg, mpg, mpe, m1v, m2v, mpeg1, mpeg2, mpeg4,
+    ///         ogv, webm, flv, f4v, avi, swf, vdr, iso
+    ///         PS: Video thumbnails exist only if video files are placed in the “photo” shared folder or users' home folders.
+    /// - Parameters:
+    ///   - path: A file path started with a shared folder.
+    ///   - size: Optional. Return different size thumbnail.
+    ///   - rotate: Optional. Return rotated thumbnail.
+    ///   - completion: Callback closure.
+    public func getThumbOfFile(path: String, size: FileThumbSize = .small, rotate: FileThumbRotation = .none, completion: @escaping SynologyStreamCompletion) {
+        var parameters = Parameters()
+        parameters["path"] = path
+        parameters["size"] = size.rawValue
+        parameters["rotate"] = rotate.rawValue
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileThumb, api: .thumb, method: .get, params: parameters)
+        getStreamData(request, queue: nil, completion: completion)
+    }
+    
+    
+    /// Get the accumulated size of files/folders within folder(s).
+    /// - Parameters:
+    ///   - path: One or more file/folder paths starting with a shared folder for calculating cumulative size, separated by a comma, “,”.
+    ///   - completion: Callback closure.
+    public func getDirectorySize(atPath path: String, completion: @escaping SynologyCompletion<String>) {
+        // TODO: - check status
+        var parameters = Parameters()
+        parameters["path"] = path
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileDirSize, api: .dirSize, method: .start, params: parameters)
+        post(request, queue: nil, completion: completion)
+    }
+    
+    
+    /// Get MD5 of a file.
+    /// - Parameters:
+    ///   - filePath: A file path starting with a shared folder for calculating MD5 value.
+    ///   - completion: Callback closure.
+    public func md5(ofFile filePath: String, completion: @escaping SynologyCompletion<String>) {
+        // TODO: - check status
+        var parameters = Parameters()
+        parameters["file_path"] = filePath
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileMD5, api: .md5, method: .start, params: parameters)
+        post(request, queue: nil, completion: completion)
+    }
+    
+    
+    /// Check if a logged-in user has a permission to do file operations on a given folder/file.
+    /// - Parameters:
+    ///   - path: A folder path starting with a shared folder to check write permission.
+    ///   - createOnly: Optional. True by default. If set to true, the permission will be allowed when there is non-existent file/folder.
+    ///   - completion: Callback closure.
+    public func checkPermission(path: String, createOnly: Bool = true, completion: @escaping SynologyCompletion<String>) {
+        var parameters = Parameters()
+        parameters["path"] = path
+        parameters["create_only"] = createOnly
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .filePermission, api: .checkPermission, method: .write, params: parameters)
+        post(request, queue: nil, completion: completion)
+    }
+    
+    public func upload(data: Data, destinationFolderPath: String, createParents: Bool, overwrites: Bool? = nil) {
+        // TODO
     }
     
     public func downloadFile(path: String, to: @escaping DownloadRequest.DownloadFileDestination) -> DownloadRequest {
