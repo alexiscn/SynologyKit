@@ -1,5 +1,9 @@
 # SynologyKit
 
+Note
+==
+This project is still under developing
+
 Features
 ==
 * Support QuickConnect Sign In
