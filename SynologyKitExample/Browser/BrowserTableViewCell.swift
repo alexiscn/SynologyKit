@@ -8,7 +8,13 @@
 
 import UIKit
 
+protocol BrowserTableViewCellDelegate: class {
+    func didTapMoreButton(model: BrowserModel)
+}
+
 class BrowserTableViewCell: UITableViewCell {
+    
+    weak var delegate: BrowserTableViewCellDelegate?
     
     private let iconImageView: UIImageView
         
@@ -17,6 +23,8 @@ class BrowserTableViewCell: UITableViewCell {
     private let titleLabel: UILabel
     
     private let subTitleLabel: UILabel
+    
+    private var model: BrowserModel?
         
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         
@@ -52,21 +60,28 @@ class BrowserTableViewCell: UITableViewCell {
             make.trailing.equalToSuperview().offset(-72)
             make.centerY.equalToSuperview()
         }
+        
+        let moreButton = UIButton(type: .custom)
+        moreButton.addTarget(self, action: #selector(handleMoreButtonClicked), for: .touchUpInside)
+        moreButton.frame.size = CGSize(width: 36, height: 36)
+        moreButton.setImage(UIImage(named: "More_40x40_"), for: .normal)
+        accessoryView = moreButton
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func update(_ model: BrowserModel) {
-        if model.isDirectory {
-            iconImageView.image = UIImage(named: "Folder_40x40_")
-        } else {
-            iconImageView.image = UIImage(named: "File_40x40_")
+    @objc private func handleMoreButtonClicked() {
+        if let model = model {
+            delegate?.didTapMoreButton(model: model)
         }
+    }
+    
+    func update(_ model: BrowserModel) {
+        self.model = model
+        iconImageView.image = model.isDirectory ? UIImage(named: "Folder_40x40_"): UIImage(named: "File_40x40_")
         titleLabel.text = model.name
         //subTitleLabel.text = // TODO
-        accessoryType = model.isDirectory ? .disclosureIndicator: .none
     }
-
 }

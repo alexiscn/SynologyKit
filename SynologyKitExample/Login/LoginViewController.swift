@@ -54,23 +54,28 @@ class LoginViewController: UIViewController {
         let accountValue = dataSource.first(where: { $0.field == .account })?.stringValue
         let passwordValue = dataSource.first(where: { $0.field == .password })?.stringValue
         let allowHTTPSValue = dataSource.first(where: { $0.field == .allowHTTPS })?.boolValue
+        let rememberValue = dataSource.first(where: { $0.field == .remember })?.boolValue
         guard let address = addressValue,
             let account = accountValue,
             let password = passwordValue,
-            let allowHTTPS = allowHTTPSValue else {
+            let allowHTTPS = allowHTTPSValue,
+            let remember = rememberValue else {
                 return
         }
         if address.contains(".") {
             let port = allowHTTPS ? 5001: 5000
             client = SynologyClient(host: address, port: port, enableHTTPS: allowHTTPS)
-            
         } else {
              client = SynologyClient(host: address)
         }
         client?.login(account: account, passwd: password) { [weak self] response in
             switch response {
             case .success(let authRes):
+                self?.client?.updateSessionID(authRes.sid)
                 self?.handleLoginSuccess()
+                if remember {
+                    LoginManager.shared.save(address: address, username: account, password: password)
+                }
                 print(authRes.sid)
             case .failure(let error):
                 print(error.description)
@@ -112,7 +117,7 @@ class LoginViewController: UIViewController {
         allowHTTPS.boolValue = LoginManager.shared.allowHTTPS
 
         let remember = LoginModel(field: .remember, title: "Remember me")
-        remember.boolValue = LoginManager.shared.rememberMe
+        remember.boolValue = true
 
         dataSource = [address, username, password, allowHTTPS, remember]
     }

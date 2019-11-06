@@ -32,7 +32,7 @@ public class SynologyClient {
     private var port: Int?
     private var enableHTTPS = false
     private let Session = "FileStation"
-    private let queue = DispatchQueue(label: "me.shuifeng.SynologyKit")//, qos: .background, attributes: .concurrent)
+    private let queue = DispatchQueue(label: "me.shuifeng.SynologyKit", qos: .background, attributes: .concurrent)
     
     func baseURLString() -> String {
         let scheme = enableHTTPS ? "https": "http"
@@ -57,52 +57,64 @@ public class SynologyClient {
         self.sessionid = sessionID
     }
     
-    @discardableResult
-    func post<T: Codable>(_ request: SynologyRequest, queue: DispatchQueue?, completion: @escaping SynologyCompletion<T>) -> DataRequest {
-        return SessionManager.default.request(request.asURLRequest()).response(queue: queue) { response in
-            self.handleDataResponse(response, completion: completion)
+    func post<T: Codable>(_ request: SynologyRequest, completion: @escaping SynologyCompletion<T>) {
+        var _request = request
+        if let sessionId = sessionid {
+            var parameters = request.params
+            parameters["_sid"] = sessionId
+            _request.params = parameters
+        }
+        queue.async {
+            SessionManager.default.request(_request.asURLRequest()).response { response in
+                self.handleDataResponse(response, completion: completion)
+            }
         }
     }
     
-    @discardableResult
-    func getStreamData(_ request: SynologyRequest, queue: DispatchQueue?, completion: @escaping SynologyStreamCompletion) -> DataRequest {
-        return SessionManager.default.request(request.asURLRequest()).response(queue: queue) { response in
-            if let error = response.error {
-                let code = response.response?.statusCode ?? -1
-                completion(.failure(.serverError(code, error.localizedDescription, response)))
-                return
+    func getStreamData(_ request: SynologyRequest, completion: @escaping SynologyStreamCompletion) {
+        var actualRequest = request
+        if let sessionId = sessionid {
+            var parameters = request.params
+            parameters["_sid"] = sessionId
+            actualRequest.params = parameters
+        }
+        queue.async {
+            SessionManager.default.request(actualRequest.asURLRequest()).response { response in
+                if let error = response.error {
+                    let code = response.response?.statusCode ?? -1
+                    completion(.failure(.serverError(code, error.localizedDescription, response)))
+                    return
+                }
+                guard let data = response.data else {
+                    completion(.failure(.invalidResponse(response)))
+                    return
+                }
+                completion(.success(data))
             }
-            guard let data = response.data else {
-                completion(.failure(.invalidResponse(response)))
-                return
-            }
-            completion(.success(data))
         }
     }
     
     func handleDataResponse<T>(_ response: DefaultDataResponse, completion: @escaping SynologyCompletion<T>) {
-        DispatchQueue.main.async {
-            if let error = response.error {
-                let code = response.response?.statusCode ?? -1
-                completion(.failure(.serverError(code, error.localizedDescription, response)))
-                return
+        if let error = response.error {
+            let code = response.response?.statusCode ?? -1
+            completion(.failure(.serverError(code, error.localizedDescription, response)))
+            return
+        }
+        guard let data = response.data else {
+            completion(.failure(.invalidResponse(response)))
+            return
+        }
+        do {
+            let decodedRes = try JSONDecoder().decode(SynologyResponse<T>.self, from: data)
+            if let data = decodedRes.data {
+                completion(.success(data))
+            } else if let code = decodedRes.error {
+                let message = SynologyErrorMapper[code] ?? "Unknown error"
+                completion(.failure(.serverError(code, message, response)))
             }
-            guard let data = response.data else {
-                completion(.failure(.invalidResponse(response)))
-                return
-            }
-            do {
-                let decodedRes = try JSONDecoder().decode(SynologyResponse<T>.self, from: data)
-                if let data = decodedRes.data {
-                    completion(.success(data))
-                } else if let code = decodedRes.error {
-                    let message = SynologyErrorMapper[code] ?? "Unknown error"
-                    completion(.failure(.serverError(code, message, response)))
-                }
-            } catch {
-                let text = String(data: data, encoding: .utf8)
-                completion(.failure(.decodeDataError(response, text)))
-            }
+        } catch {
+            let text = String(data: data, encoding: .utf8)
+            completion(.failure(.decodeDataError(response, text)))
         }
     }
 }
@@ -124,7 +136,7 @@ extension SynologyClient {
             parameters["session"] = Session
             var request = SynologyBasicRequest(baseURLString: baseURLString(), path: .auth, api: .auth, method: .login ,params: parameters)
             request.version = 3
-            post(request, queue: queue, completion: completion)
+            post(request, completion: completion)
         } else {
             getServerInfo(quickID: host) { response in
                 switch response {
@@ -147,14 +159,14 @@ extension SynologyClient {
     public func logout(completion: @escaping SynologyCompletion<EmptyResponse>) {
         let params = ["session": Session]
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .auth, api: .auth, method: .logout, params: params)
-        post(request, queue: queue, completion: completion)
+        post(request, completion: completion)
     }
     
     /// Provide File Station information
     /// - Parameter completion: Callback closure.
     public func getInfo(completion: @escaping SynologyCompletion<FileStationInfo>) {
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .info, api: .info, method: .getinfo, params: Parameters())
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// List all shared folders, enumerate files in a shared folder, and get detailed file information.
@@ -178,7 +190,7 @@ extension SynologyClient {
         params["additional"] = additional.value()
         var request = SynologyBasicRequest(baseURLString: baseURLString(), path: .entry, api: .list, method: .list_share, params: params)
         request.version = 2
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// Enumerate files in a given folder
@@ -205,7 +217,7 @@ extension SynologyClient {
         params["additional"] = additional.value()
         var request = SynologyBasicRequest(baseURLString: baseURLString(), path: .entry, api: .list, method: .list, params: params)
         request.version = 2
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// Get information of file(s)
@@ -221,7 +233,7 @@ extension SynologyClient {
             parameters["additional"] = options.value()
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileShare, api: .list, method: .getinfo, params: parameters)
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// Search files according to given criteria
@@ -256,7 +268,7 @@ extension SynologyClient {
             params["additional"] = additional.value()
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileVirtual, api: .virtualFolder, method: .list, params: params)
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// List user’s favorites
@@ -276,7 +288,7 @@ extension SynologyClient {
             parameters["additional"] = additional.value()
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .list, params: parameters)
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// Add a folder to user’s favorites
@@ -293,7 +305,7 @@ extension SynologyClient {
         parameters["name"] = name
         parameters["index"] = index
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .add, params: parameters)
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// Delete a favorite in user’s favorites.
@@ -304,14 +316,14 @@ extension SynologyClient {
         var parameters = Parameters()
         parameters["path"] = path
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .delete, params: parameters)
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// Delete all broken statuses of favorites.
     /// - Parameter completion: Callback closure.
     public func clearBrokenFavorites(completion: @escaping SynologyCompletion<EmptyResponse>) {
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .clean, params: Parameters())
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// Edit a favorite name
@@ -324,9 +336,8 @@ extension SynologyClient {
         parameters["path"] = path
         parameters["name"] = name
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .edit, params: parameters)
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
-    
     
     /// Replace multiple favorites of folders to the existed user’s favorites
     /// - Parameters:
@@ -342,7 +353,7 @@ extension SynologyClient {
         parameters["path"] = path
         parameters["name"] = name
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .replace_all, params: parameters)
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// Get a thumbnail of a file.
@@ -364,7 +375,7 @@ extension SynologyClient {
         parameters["size"] = size.rawValue
         parameters["rotate"] = rotate.rawValue
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileThumb, api: .thumb, method: .get, params: parameters)
-        getStreamData(request, queue: nil, completion: completion)
+        getStreamData(request, completion: completion)
     }
     
     /// Get the accumulated size of files/folders within folder(s).
@@ -385,7 +396,7 @@ extension SynologyClient {
     public func md5(ofFile filePath: String, completion: @escaping SynologyCompletion<MD5Task>) {
         var parameters = Parameters()
         parameters["file_path"] = filePath
-        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileMD5, api: .md5, method: .start, params: parameters)
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .entry, api: .md5, method: .start, params: parameters)
         postNonBlockingRequest(request, completion: completion)
     }
     
@@ -399,7 +410,7 @@ extension SynologyClient {
         parameters["path"] = path
         parameters["create_only"] = createOnly
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .filePermission, api: .checkPermission, method: .write, params: parameters)
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     public func upload(data: Data, destinationFolderPath: String, createParents: Bool, overwrites: Bool? = nil) {
@@ -449,7 +460,7 @@ extension SynologyClient {
             params["additional"] = additional
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .file_crtfdr, api: .createFolder, method: .create, params: params)
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// Rename a file/folder.
@@ -470,7 +481,7 @@ extension SynologyClient {
             params["search_taskid"] = taskId
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileRename, api: .rename, method: .rename, params: params)
-        post(request, queue: nil, completion: completion)
+        post(request, completion: completion)
     }
     
     /// Start to copy/move files
@@ -592,7 +603,7 @@ extension SynologyClient {
             parameters[v.key] = v.value
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .backgroundTask, api: .backgroundTask, method: .list, params: parameters)
-        post(request, queue: queue, completion: completion)
+        post(request, completion: completion)
     }
 
     /// Delete all finished background tasks.
@@ -606,7 +617,7 @@ extension SynologyClient {
             parameters["taskid"] = taskid
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .backgroundTask, api: .backgroundTask, method: .clear_finished, params: parameters)
-        post(request, queue: queue, completion: completion)
+        post(request, completion: completion)
     }
 }
 
@@ -672,15 +683,17 @@ extension SynologyClient {
         
     // TODO: Add timeout
     func postNonBlockingRequest<T: SynologyTask>(_ request: SynologyBasicRequest, progressHandler: SynologyProgressHandler<T> = nil, completion: @escaping SynologyCompletion<T>, method: SynologyMethod = .status) {
-        post(request, queue: queue) { (response: Swift.Result<TaskResult, SynologyError>) in
+        post(request) { (response: Swift.Result<TaskResult, SynologyError>) in
             switch response {
             case .success(let task):
-                let result: Swift.Result<T, SynologyError> = self.checkTaskStatus(task, request: request, method: method, progressHandler: progressHandler)
-                switch result {
-                case .success(let status):
-                    completion(.success(status))
-                case .failure(let error):
-                    completion(.failure(error))
+                self.queue.async {
+                    let result: Swift.Result<T, SynologyError> = self.checkTaskStatus(task, request: request, method: method, progressHandler: progressHandler)
+                    switch result {
+                    case .success(let status):
+                        completion(.success(status))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
                 }
             case .failure(let error):
                 completion(.failure(error))
@@ -698,7 +711,8 @@ extension SynologyClient {
         var error: SynologyError? = nil
         var status: T!
         while !finished {
-            post(statusRequest, queue: queue) { (response: Swift.Result<T, SynologyError>) in
+            post(statusRequest) { (response: Swift.Result<T, SynologyError>) in
+                seamphore.signal()
                 switch response {
                 case .success(let statusResponse):
                     progressHandler?(statusResponse)

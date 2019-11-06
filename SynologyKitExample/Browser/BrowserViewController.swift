@@ -66,7 +66,7 @@ class BrowserViewController: UIViewController {
             switch response {
             case .success(let result):
                 if let files = result.files {
-                    self.dataSource = files.map { BrowserModel(name: $0.name, path: $0.path, isDirectory: true) }
+                    self.dataSource = files.map { BrowserModel(name: $0.name, path: $0.path, isDirectory: $0.isdir) }
                     self.tableView.reloadData()
                 }
             case .failure(let error):
@@ -98,6 +98,7 @@ class BrowserViewController: UIViewController {
     }
 }
 
+// MARK: - UITableViewDelegate & UITableViewDataSource
 extension BrowserViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -109,8 +110,8 @@ extension BrowserViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(BrowserTableViewCell.self), for: indexPath) as! BrowserTableViewCell
+        cell.delegate = self
         let model = dataSource[indexPath.row]
         cell.update(model)
         return cell
@@ -127,5 +128,30 @@ extension BrowserViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 56.0
+    }
+}
+
+// MARK: - BrowserTableViewCellDelegate
+extension BrowserViewController: BrowserTableViewCellDelegate {
+    
+    func didTapMoreButton(model: BrowserModel) {
+        let actionSheet = WXActionSheet(cancelButtonTitle: "Cancel")
+        actionSheet.add(WXActionSheetItem(title: "MD5", handler: { [weak self] _ in
+            self?.calculateMD5(of: model)
+        }))
+        actionSheet.show()
+    }
+    
+    private func calculateMD5(of file: BrowserModel) {
+        client.md5(ofFile: file.path) { response in
+            switch response {
+            case .success(let task):
+                if let md5 = task.md5 {
+                    print(md5)
+                }
+            case .failure(let error):
+                print(error.description)
+            }
+        }
     }
 }

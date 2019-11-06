@@ -30,8 +30,6 @@ class LoginSwitchViewCell: UITableViewCell {
             switch model.field {
             case .allowHTTPS:
                 LoginManager.shared.allowHTTPS = switchButton.isOn
-            case .remember:
-                LoginManager.shared.rememberMe = switchButton.isOn
             default:
                 break
             }
