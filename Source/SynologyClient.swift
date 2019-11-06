@@ -29,8 +29,7 @@ public class SynologyClient {
     private var port: Int?
     private var enableHTTPS = false
     private let Session = "FileStation"
-    
-    private var tasks: [String: AsyncSynologyTask] = [:]
+    private let queue = DispatchQueue(label: "me.shuifeng.SynologyKit")
     
     func baseURLString() -> String {
         let scheme = enableHTTPS ? "https": "http"
@@ -380,32 +379,27 @@ extension SynologyClient {
         getStreamData(request, queue: nil, completion: completion)
     }
     
-    
     /// Get the accumulated size of files/folders within folder(s).
     /// - Parameters:
     ///   - path: One or more file/folder paths starting with a shared folder for calculating cumulative size, separated by a comma, “,”.
     ///   - completion: Callback closure.
-    public func getDirectorySize(atPath path: String, completion: @escaping SynologyCompletion<String>) {
-        // TODO: - check status
+    public func getDirectorySize(atPath path: String, completion: @escaping SynologyCompletion<DirectorySizeTask>) {
         var parameters = Parameters()
         parameters["path"] = path
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileDirSize, api: .dirSize, method: .start, params: parameters)
-        post(request, queue: nil, completion: completion)
+        postNonBlockingRequest(request, completion: completion)
     }
-    
     
     /// Get MD5 of a file.
     /// - Parameters:
     ///   - filePath: A file path starting with a shared folder for calculating MD5 value.
     ///   - completion: Callback closure.
-    public func md5(ofFile filePath: String, completion: @escaping SynologyCompletion<String>) {
-        // TODO: - check status
+    public func md5(ofFile filePath: String, completion: @escaping SynologyCompletion<MD5Task>) {
         var parameters = Parameters()
         parameters["file_path"] = filePath
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileMD5, api: .md5, method: .start, params: parameters)
-        post(request, queue: nil, completion: completion)
+        postNonBlockingRequest(request, completion: completion)
     }
-    
     
     /// Check if a logged-in user has a permission to do file operations on a given folder/file.
     /// - Parameters:
@@ -431,6 +425,9 @@ extension SynologyClient {
         return download(path: request.urlQuery(), parameters: params, to: to)
     }
     
+    public func getSharingList(offset: Int = 0, limit: Int = 0) {
+        
+    }
     
     /// Create folders.
     /// - Parameter folderPath: One or more shared folder paths, separated by commas.
@@ -487,8 +484,7 @@ extension SynologyClient {
     /// - Parameter removeSource: Optional. “true”: move filess/folders;”false”: copy files/folders
     /// - Parameter accurateProgress: Optional. “true”: calculate the progress by each moved/copied file within subfolder. “false”: calculate the progress by files which you give in path parameters. This calculates the progress faster, but is less precise.
     /// - Parameter searchTaskId: Optional. A unique ID for the search task which is gotten from SYNO.FileSation.Search API with start method. This is used to update the search result.
-    public func copyMove(path: String, destFolderPath: String, overwrite: Bool? = nil, removeSource: Bool = false, accurateProgress: Bool = true, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<String>) {
-        // TODO - check status, report progress
+    public func copyMove(path: String, destFolderPath: String, overwrite: Bool? = nil, removeSource: Bool = false, accurateProgress: Bool = true, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<CopyMoveTask>) {
         var parameters = Parameters()
         parameters["path"] = path
         parameters["dest_folder_path"] = destFolderPath
@@ -501,7 +497,7 @@ extension SynologyClient {
             parameters["search_taskid"] = taskId
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileMoveCopy, api: .copyMove, method: .start, params: parameters)
-        post(request, queue: nil, completion: completion)
+        postNonBlockingRequest(request, completion: completion)
     }
     
     /// Delete file(s)/folder(s).
@@ -518,8 +514,7 @@ extension SynologyClient {
     /// - Parameter searchTaskid: Optional. A unique ID for the search task which is gotten from start method.
     ///                        It’s used to delete the file in the search result.
     /// - Parameter completion: Callback closure.
-    public func delete(path: String, accurateProgress: Bool = true, recursive: Bool = true, searchTaskid: String? = nil, completion: @escaping SynologyCompletion<String>) {
-        // TODO: check status
+    public func delete(path: String, accurateProgress: Bool = true, recursive: Bool = true, searchTaskid: String? = nil, completion: @escaping SynologyCompletion<DeletionTask>) {
         var params: [String: Any] = [:]
         params["path"] = path
         params["accurate_progress"] = accurateProgress
@@ -528,7 +523,7 @@ extension SynologyClient {
             params["search_taskid"] = taskId
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileDelete, api: .delete, method: .start, params: params)
-        post(request, queue: nil, completion: completion)
+        postNonBlockingRequest(request, completion: completion)
     }
     
     /// Extract an archive and perform operations on archive files
@@ -541,7 +536,7 @@ extension SynologyClient {
     ///   - createSubFolder: Optional. Whether to create a subfolder with an archive name which archived files are extracted to.
     ///   - password: Optional. The password for extracting the file.
     ///   - completion: Callback closure.
-    public func extract(filePath: String, destinationFolderPath: String, overwrite: Bool = false, keepDirectory: Bool = true, createSubFolder: Bool = false, password: String? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func extract(filePath: String, destinationFolderPath: String, overwrite: Bool = false, keepDirectory: Bool = true, createSubFolder: Bool = false, password: String? = nil, completion: @escaping SynologyCompletion<ExtractTask>) {
         var parameters = Parameters()
         parameters["file_path"] = filePath
         parameters["dest_folder_path"] = destinationFolderPath
@@ -552,7 +547,7 @@ extension SynologyClient {
             parameters["password"] = password
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileExtract, api: .extract, method: .start, params: parameters)
-        post(request, queue: nil, completion: completion)
+        postNonBlockingRequest(request, completion: completion)
     }
     
     /// Compress file(s)/folder(s).
@@ -565,7 +560,7 @@ extension SynologyClient {
     /// - Parameter format: Optional. The compress format.
     /// - Parameter password: Optional. The password for the archive.
     /// - Parameter completion: Callback closure.
-    public func compress(path: String, destinationFilePath: String, level: CompressLevel = .moderate, mode: CompressMode = .add, format: CompressFormat, password: String? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func compress(path: String, destinationFilePath: String, level: CompressLevel = .moderate, mode: CompressMode = .add, format: CompressFormat, password: String? = nil, completion: @escaping SynologyCompletion<CompressionTask>) {
         var params: Parameters = [:]
         params["path"] = path
         params["dest_file_path"] = destinationFilePath
@@ -576,7 +571,7 @@ extension SynologyClient {
             params["password"] = password
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileCompress, api: .compress, method: .start, params: params)
-        post(request, queue: nil, completion: completion)
+        postNonBlockingRequest(request, completion: completion)
     }
 }
 
@@ -635,52 +630,53 @@ extension SynologyClient {
     }
 }
 
+// MARK: - Non-Blocking Operations
 extension SynologyClient {
-    
-    func asyncAwait() {
-        // TODO
-    }
-    
-    func checkTaskStatus<T: SynologyTaskStatus>(_ taskRequest: SynologyBasicRequest) -> T? {
-        return nil
-    }
-    
-    func checkMD5RequestStatus(_ request: SynologyBasicRequest) -> String? {
-        var finished: Bool = false
-        var statusRequest = request
-        statusRequest.method = .status
-        let seamphore = DispatchSemaphore(value: 0)
-        var md5: String? = nil
-        while !finished {
-            post(statusRequest, queue: nil) { (response: Swift.Result<MD5Status, SynologyError>) in
-                switch response {
-                case .success(let res):
-                    print(res.finished)
-                    if let md5 = res.md5 {
-                        print("GOT MD5:\(md5)")
-                    }
-                    finished = res.finished
-                    md5 = res.md5
+        
+    // TODO: Add timeout
+    func postNonBlockingRequest<T: SynologyTask>(_ request: SynologyBasicRequest, completion: @escaping SynologyCompletion<T>) {
+        post(request, queue: queue) { (response: Swift.Result<TaskResult, SynologyError>) in
+            switch response {
+            case .success(let task):
+                let result: Swift.Result<T, SynologyError> = self.checkTaskStatus(task, request: request)
+                switch result {
+                case .success(let status):
+                    completion(.success(status))
                 case .failure(let error):
-                    print(error)
+                    completion(.failure(error))
                 }
-                seamphore.signal()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func checkTaskStatus<T: SynologyTask>(_ task: TaskResult, request: SynologyBasicRequest) -> Swift.Result<T, SynologyError> {
+        var statusRequest = request
+        statusRequest.params.removeAll()
+        statusRequest.params["taskid"] = task.taskid
+        var finished: Bool = false
+        let seamphore = DispatchSemaphore(value: 0)
+        var error: SynologyError? = nil
+        var status: T!
+        while !finished {
+            post(statusRequest, queue: queue) { (response: Swift.Result<T, SynologyError>) in
+                switch response {
+                case .success(let statusResponse):
+                    if statusResponse.finished {
+                        finished = true
+                        status = statusResponse
+                    }
+                case .failure(let err):
+                    finished = true
+                    error = err
+                }
             }
             seamphore.wait()
         }
-        return md5
-    }
-}
-
-protocol SynologyTaskStatus {
-    var finished: Bool { get set }
-}
-
-class AsyncSynologyTask {
-    
-    var taskId: String
-    
-    init(taskId: String) {
-        self.taskId = taskId
+        if let error = error {
+            return .failure(error)
+        }
+        return .success(status)
     }
 }

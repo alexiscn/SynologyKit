@@ -7,41 +7,42 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		02139C8A35365D265943B0647DBA2404 /* SynologyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43878155C92057CCAC4F0352FB4FA540 /* SynologyClient.swift */; };
 		07AEE4F7BF117BC7F05BD33309FE01D2 /* Pods-SynologyKitExample-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 02927989011F4FAFBB15CC7C8E69182D /* Pods-SynologyKitExample-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0C087EFEC14CCF83957A646AF4082974 /* Pods-SynologyKitExample-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B33F68399C33CDB4D2E3A1AD76FC476 /* Pods-SynologyKitExample-dummy.m */; };
 		0C5E11DE24DAA737704B355F5F2F3426 /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D01BA8472F25D39F718F71557EDC8DD /* ParameterEncoding.swift */; };
-		0E49D4E36E391011CF4A525324363588 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B03B07DFA7C8BB60693AE1DE30731E2 /* Alamofire.framework */; };
 		132E0F619E4338E5D1B27E4C72076B3F /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06639F7A76DB8A9D0D0E41CDD7A6684 /* Notifications.swift */; };
 		1945CD5D63A1C164AEAAA9A33E85571E /* Alamofire-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 341BDAD0026CDA8E7BCE35AC122E1C8C /* Alamofire-dummy.m */; };
 		1986B50C74F1697EA43F68335C93CEB3 /* MultipartFormData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCE3D7EDCA41F256D471B40BBFD3FCE /* MultipartFormData.swift */; };
+		1D7169DC4BE5997D34C7CAF65A1E46FC /* SynologyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B76173BC31DF983669FFEBF7C0BC3 /* SynologyTask.swift */; };
 		2C61B040BA6A9A7AE66C4D9BA26D5520 /* SessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F640F61D5BEE8132009BAEAA65B587A4 /* SessionDelegate.swift */; };
-		308086F18858B5AFAFCCDE075CF3482B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69DAB41DE6AF59D8362CBC670CDF0EEC /* Foundation.framework */; };
 		3571F958A3907B3A806E62D50C2550D4 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5460AD0F6241621B45A17AB23A8E5B7 /* NetworkReachabilityManager.swift */; };
 		53791F5E5F07400F92CFDFC89A432305 /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33115EC2A5164913C68F8BD170389EEE /* Validation.swift */; };
+		5F71B80C2CEF4ED5FC74C54377BD2345 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497BA5637D20AEB906C913CA0A7D54BA /* Constants.swift */; };
 		64744C911253C3E01461FAD7C935C8D7 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD807F155301ECA538A2C1C296E1186D /* Result.swift */; };
-		6F1E42A9B2231B8B42E0307C63AA45AD /* SynologyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A2DE09CFCABDCE985FDDF0B9193AE2 /* SynologyRequest.swift */; };
 		7664FD4F59A0C00866CBAE60B0A3AD64 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69DAB41DE6AF59D8362CBC670CDF0EEC /* Foundation.framework */; };
+		7FC724A825B50FF67A167F3CF95BC018 /* SynologyKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D5446F1BF92AC6AD2A09CCC649022A9 /* SynologyKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		83956E20859CDBBE7BC38ABADE0170FB /* AFError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5A0E300C04A6DF88D620788FE38780 /* AFError.swift */; };
+		88901F9E5576AD7BCB77C05D5178215E /* SynologyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6CAA32EC4BC906151070128E769F1B /* SynologyRequest.swift */; };
+		8A9467EAA72BB15EE7C2557234FD50E9 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B03B07DFA7C8BB60693AE1DE30731E2 /* Alamofire.framework */; };
 		931BBB8230A25161D5C37528A8F9FECF /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E25E371731FAE44F46A9F392CB5D5 /* SessionManager.swift */; };
 		933FDA5970AA525D6CB92BFEBA2BAB4A /* Timeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DB5272AD01ECD0B09A86818A7754C4 /* Timeline.swift */; };
 		98A929C8E9012AB167672714FFD2113C /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D59E1AD3CC394A93392FF3DC8CF2961 /* Request.swift */; };
+		AB027C2A5A019A272589907089AB5156 /* SynologyKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C0D1AC0C0F062D7E1FE340379CDFA /* SynologyKit-dummy.m */; };
 		AFC64B1097F7355FF423D6A73E9C7210 /* TaskDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C759635F88377BD7E2DEDE04C23C62 /* TaskDelegate.swift */; };
+		BC5CD1B1C4CD8FA1DFCCC0D9A035339A /* SynologyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63BF4D5F557E0E7985D3C7EB7E10A29 /* SynologyResponse.swift */; };
 		BEE6B677416CA71C981D1D3F60B18C96 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C15C076B531E2E7744C358418A0C0B5 /* Alamofire.swift */; };
-		C25F9665A95043CBBF8C12EA10D0C4D2 /* SynologyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7F2071E02BF662FEF374711DE2C974 /* SynologyResponse.swift */; };
-		D003FC131FB29893DCDFCD991B4FA5EA /* SynologyKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = DA376FF59D47822DE6B0FCE2EB0B4E65 /* SynologyKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C40E1FDB04BF7DA40897C82DDE03B979 /* SynologyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4507D610D2AC3D101F41DCFE8B5BB4B /* SynologyClient.swift */; };
 		D264EFB4945D7AF546723EA52B0C829C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69DAB41DE6AF59D8362CBC670CDF0EEC /* Foundation.framework */; };
 		D3D8C379C6E4FB487E5ABD6800AD7B7E /* DispatchQueue+Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF7F7716086D54E6308EE52C8227B87 /* DispatchQueue+Alamofire.swift */; };
+		D625EB18C17C37D09984A1F6AB765D18 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69DAB41DE6AF59D8362CBC670CDF0EEC /* Foundation.framework */; };
 		D65C254F5ABF2CB5ECEE50FE8F8E1A80 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC6858C85690F7AFEA7F6542EE9A69A /* Response.swift */; };
-		DF9529918214BEFC54051E76DDF7594D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4819FB348996AA55AF543FA7CA46A67 /* Constants.swift */; };
 		E3747EC31FCCA97D75A81FC700CF7E24 /* ResponseSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B03859BDC36782899379E222720A297 /* ResponseSerialization.swift */; };
-		E74DF7CDD5575E163700D13A3B32A3C7 /* SynologyKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC3C5734B4805B5671C7CDF30D60B63 /* SynologyKit-dummy.m */; };
 		F13F2AA7F2E6D95A181CAB99B900D531 /* ServerTrustPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4453BE339B79900FDC53E34FE5589CB /* ServerTrustPolicy.swift */; };
 		F7B74645E07C39771156A1FA413B98D4 /* Alamofire-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D54AEF5647A987180EDAD7E1CEF7387B /* Alamofire-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4BAFD92F051A3E357FD8E2FA7921704B /* PBXContainerItemProxy */ = {
+		B9BDA46A8714CBA7DCB8D40AC5F699E8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
@@ -67,53 +68,54 @@
 /* Begin PBXFileReference section */
 		02927989011F4FAFBB15CC7C8E69182D /* Pods-SynologyKitExample-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SynologyKitExample-umbrella.h"; sourceTree = "<group>"; };
 		0D01BA8472F25D39F718F71557EDC8DD /* ParameterEncoding.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ParameterEncoding.swift; path = Source/ParameterEncoding.swift; sourceTree = "<group>"; };
+		17C71930B3692E74BFA113A8DC09B625 /* SynologyKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SynologyKit-prefix.pch"; sourceTree = "<group>"; };
 		1BC12B257B4CE7E02687A8271622EFE5 /* Pods-SynologyKitExample.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-SynologyKitExample.modulemap"; sourceTree = "<group>"; };
 		1C15C076B531E2E7744C358418A0C0B5 /* Alamofire.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Alamofire.swift; path = Source/Alamofire.swift; sourceTree = "<group>"; };
-		1CC3C5734B4805B5671C7CDF30D60B63 /* SynologyKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SynologyKit-dummy.m"; sourceTree = "<group>"; };
 		24FED544F964ABD6203FB5A103E5FED6 /* Pods-SynologyKitExample-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SynologyKitExample-acknowledgements.plist"; sourceTree = "<group>"; };
 		2B33F68399C33CDB4D2E3A1AD76FC476 /* Pods-SynologyKitExample-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-SynologyKitExample-dummy.m"; sourceTree = "<group>"; };
 		32DB5272AD01ECD0B09A86818A7754C4 /* Timeline.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Timeline.swift; path = Source/Timeline.swift; sourceTree = "<group>"; };
-		330BE926B52C1EA5EBD9737D95B1A321 /* SynologyKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SynologyKit-prefix.pch"; sourceTree = "<group>"; };
 		33115EC2A5164913C68F8BD170389EEE /* Validation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Validation.swift; path = Source/Validation.swift; sourceTree = "<group>"; };
 		341B2DCD67A53B125ECFF3AB9D35FB73 /* Pods-SynologyKitExample-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SynologyKitExample-Info.plist"; sourceTree = "<group>"; };
 		341BDAD0026CDA8E7BCE35AC122E1C8C /* Alamofire-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Alamofire-dummy.m"; sourceTree = "<group>"; };
+		341C0C366AC520F0D8CD0F233F7754B5 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		3B066DBF3352C6C1F686302AB14D5B0A /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		3B680684F92DC7DFF09653154530D49C /* SynologyKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SynologyKit.xcconfig; sourceTree = "<group>"; };
+		3D7C0D1AC0C0F062D7E1FE340379CDFA /* SynologyKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SynologyKit-dummy.m"; sourceTree = "<group>"; };
 		3D7E25E371731FAE44F46A9F392CB5D5 /* SessionManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionManager.swift; path = Source/SessionManager.swift; sourceTree = "<group>"; };
-		43878155C92057CCAC4F0352FB4FA540 /* SynologyClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SynologyClient.swift; path = Source/SynologyClient.swift; sourceTree = "<group>"; };
+		497BA5637D20AEB906C913CA0A7D54BA /* Constants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = Source/Constants.swift; sourceTree = "<group>"; };
 		4B03B07DFA7C8BB60693AE1DE30731E2 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		58A2DE09CFCABDCE985FDDF0B9193AE2 /* SynologyRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SynologyRequest.swift; path = Source/SynologyRequest.swift; sourceTree = "<group>"; };
+		5B6CAA32EC4BC906151070128E769F1B /* SynologyRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SynologyRequest.swift; path = Source/SynologyRequest.swift; sourceTree = "<group>"; };
 		5D797E9A5C5782CE845840781FA1CC81 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alamofire.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		69DAB41DE6AF59D8362CBC670CDF0EEC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		74465A8E1E7D8268A1A32116705C9125 /* SynologyKit-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SynologyKit-Info.plist"; sourceTree = "<group>"; };
 		75C759635F88377BD7E2DEDE04C23C62 /* TaskDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TaskDelegate.swift; path = Source/TaskDelegate.swift; sourceTree = "<group>"; };
-		778D247D1D6393953966991C7B01F7F1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
 		78AEE4ADF60DDD0D6D0F6862BB87E24A /* Pods-SynologyKitExample-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SynologyKitExample-frameworks.sh"; sourceTree = "<group>"; };
 		7B03859BDC36782899379E222720A297 /* ResponseSerialization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ResponseSerialization.swift; path = Source/ResponseSerialization.swift; sourceTree = "<group>"; };
-		812B9C56A72D8CA51F2B936B1185134E /* SynologyKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SynologyKit.xcconfig; sourceTree = "<group>"; };
 		8D5A0E300C04A6DF88D620788FE38780 /* AFError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AFError.swift; path = Source/AFError.swift; sourceTree = "<group>"; };
-		8F7F2071E02BF662FEF374711DE2C974 /* SynologyResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SynologyResponse.swift; path = Source/SynologyResponse.swift; sourceTree = "<group>"; };
+		8D9232ED5216369C6AAE7201888E76BD /* SynologyKit.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = SynologyKit.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		92BB724B64A1206680BC3470109F7241 /* Pods-SynologyKitExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SynologyKitExample.debug.xcconfig"; sourceTree = "<group>"; };
 		985417470B9341C92A5160D4B2FF2B08 /* Alamofire.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Alamofire.xcconfig; sourceTree = "<group>"; };
+		9D5446F1BF92AC6AD2A09CCC649022A9 /* SynologyKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SynologyKit-umbrella.h"; sourceTree = "<group>"; };
 		9D59E1AD3CC394A93392FF3DC8CF2961 /* Request.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Request.swift; path = Source/Request.swift; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		AD8710F26B62AABFF387E9CA4F6899A4 /* Alamofire.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Alamofire.modulemap; sourceTree = "<group>"; };
+		ADEF03B04DB7B4702BD946DB51662B69 /* SynologyKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SynologyKit.modulemap; sourceTree = "<group>"; };
 		AFF7F7716086D54E6308EE52C8227B87 /* DispatchQueue+Alamofire.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "DispatchQueue+Alamofire.swift"; path = "Source/DispatchQueue+Alamofire.swift"; sourceTree = "<group>"; };
 		B06639F7A76DB8A9D0D0E41CDD7A6684 /* Notifications.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Notifications.swift; path = Source/Notifications.swift; sourceTree = "<group>"; };
-		B509347B5F8D8149C6C05C034E3884CF /* SynologyKit-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SynologyKit-Info.plist"; sourceTree = "<group>"; };
-		B61F22442DF36E925B71D7D290C077A8 /* SynologyKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SynologyKit.modulemap; sourceTree = "<group>"; };
 		BFCE3D7EDCA41F256D471B40BBFD3FCE /* MultipartFormData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultipartFormData.swift; path = Source/MultipartFormData.swift; sourceTree = "<group>"; };
 		C4453BE339B79900FDC53E34FE5589CB /* ServerTrustPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ServerTrustPolicy.swift; path = Source/ServerTrustPolicy.swift; sourceTree = "<group>"; };
+		C57B76173BC31DF983669FFEBF7C0BC3 /* SynologyTask.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SynologyTask.swift; path = Source/SynologyTask.swift; sourceTree = "<group>"; };
 		C9C3EF964FFA8A9F78851B59A8D4FFBC /* Alamofire-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alamofire-prefix.pch"; sourceTree = "<group>"; };
 		CCC6858C85690F7AFEA7F6542EE9A69A /* Response.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Response.swift; path = Source/Response.swift; sourceTree = "<group>"; };
 		D2517C9F5B7C625397BBEAAB503DB527 /* Pods_SynologyKitExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_SynologyKitExample.framework; path = "Pods-SynologyKitExample.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4EEA36630C86DDAFE827D8B45D7D233 /* SynologyKit.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = SynologyKit.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		D4507D610D2AC3D101F41DCFE8B5BB4B /* SynologyClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SynologyClient.swift; path = Source/SynologyClient.swift; sourceTree = "<group>"; };
 		D54AEF5647A987180EDAD7E1CEF7387B /* Alamofire-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alamofire-umbrella.h"; sourceTree = "<group>"; };
 		D604C046F799A3D5CF9C1E18BB0AE0F3 /* Pods-SynologyKitExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SynologyKitExample.release.xcconfig"; sourceTree = "<group>"; };
-		DA376FF59D47822DE6B0FCE2EB0B4E65 /* SynologyKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SynologyKit-umbrella.h"; sourceTree = "<group>"; };
 		DD807F155301ECA538A2C1C296E1186D /* Result.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Result.swift; path = Source/Result.swift; sourceTree = "<group>"; };
 		DE36AED4DF687B2D37BD230D9D2F69B6 /* Alamofire-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Alamofire-Info.plist"; sourceTree = "<group>"; };
-		E59185993B6A4CDC0DAE2A06D69F8DCE /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
 		E95E505050F84EC7DD9A8B4DD7E0C66A /* Pods-SynologyKitExample-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-SynologyKitExample-acknowledgements.markdown"; sourceTree = "<group>"; };
-		F4819FB348996AA55AF543FA7CA46A67 /* Constants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = Source/Constants.swift; sourceTree = "<group>"; };
 		F5460AD0F6241621B45A17AB23A8E5B7 /* NetworkReachabilityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NetworkReachabilityManager.swift; path = Source/NetworkReachabilityManager.swift; sourceTree = "<group>"; };
+		F63BF4D5F557E0E7985D3C7EB7E10A29 /* SynologyResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SynologyResponse.swift; path = Source/SynologyResponse.swift; sourceTree = "<group>"; };
 		F640F61D5BEE8132009BAEAA65B587A4 /* SessionDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionDelegate.swift; path = Source/SessionDelegate.swift; sourceTree = "<group>"; };
 		F8F41E949DA61C2826C66CE29E7272CA /* SynologyKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SynologyKit.framework; path = SynologyKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -127,12 +129,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0CD184C4FC293777369A20255A3AADEB /* Frameworks */ = {
+		46ACE354F41B4425E08953372B1959D5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E49D4E36E391011CF4A525324363588 /* Alamofire.framework in Frameworks */,
-				308086F18858B5AFAFCCDE075CF3482B /* Foundation.framework in Frameworks */,
+				8A9467EAA72BB15EE7C2557234FD50E9 /* Alamofire.framework in Frameworks */,
+				D625EB18C17C37D09984A1F6AB765D18 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,6 +166,35 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3932F25527846578D3ABA885723BD264 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				ADEF03B04DB7B4702BD946DB51662B69 /* SynologyKit.modulemap */,
+				3B680684F92DC7DFF09653154530D49C /* SynologyKit.xcconfig */,
+				3D7C0D1AC0C0F062D7E1FE340379CDFA /* SynologyKit-dummy.m */,
+				74465A8E1E7D8268A1A32116705C9125 /* SynologyKit-Info.plist */,
+				17C71930B3692E74BFA113A8DC09B625 /* SynologyKit-prefix.pch */,
+				9D5446F1BF92AC6AD2A09CCC649022A9 /* SynologyKit-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "Pods/Target Support Files/SynologyKit";
+			sourceTree = "<group>";
+		};
+		4391470C7AFDD3E00BFA0CC6AF55DBD0 /* SynologyKit */ = {
+			isa = PBXGroup;
+			children = (
+				497BA5637D20AEB906C913CA0A7D54BA /* Constants.swift */,
+				D4507D610D2AC3D101F41DCFE8B5BB4B /* SynologyClient.swift */,
+				5B6CAA32EC4BC906151070128E769F1B /* SynologyRequest.swift */,
+				F63BF4D5F557E0E7985D3C7EB7E10A29 /* SynologyResponse.swift */,
+				C57B76173BC31DF983669FFEBF7C0BC3 /* SynologyTask.swift */,
+				AE272AA128A06CBDCB1C8D6BCB63DD13 /* Pod */,
+				3932F25527846578D3ABA885723BD264 /* Support Files */,
+			);
+			name = SynologyKit;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		5C26875CAEBEFEDA19F66418CD7AE5DB /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -186,14 +217,6 @@
 				F8F41E949DA61C2826C66CE29E7272CA /* SynologyKit.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		8DEA4A024E493A4AF39D2C70260FD5CD /* Development Pods */ = {
-			isa = PBXGroup;
-			children = (
-				D8C0E21DCE7F2FD030AAC91EF361FCE5 /* SynologyKit */,
-			);
-			name = "Development Pods";
 			sourceTree = "<group>";
 		};
 		90FDDC7F5D24472360CA259A8D40AE98 /* Pods */ = {
@@ -219,6 +242,14 @@
 			);
 			name = "Pods-SynologyKitExample";
 			path = "Target Support Files/Pods-SynologyKitExample";
+			sourceTree = "<group>";
+		};
+		AA9270FFFD03C414CEE0FBF834E0C70E /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4391470C7AFDD3E00BFA0CC6AF55DBD0 /* SynologyKit */,
+			);
+			name = "Development Pods";
 			sourceTree = "<group>";
 		};
 		ABBD6121E62B33A53CF07892A75F2030 /* Alamofire */ = {
@@ -247,44 +278,26 @@
 			path = Alamofire;
 			sourceTree = "<group>";
 		};
-		CB8A2E8E87B5F15AE9DAA25AD70CAB9C /* Support Files */ = {
+		AE272AA128A06CBDCB1C8D6BCB63DD13 /* Pod */ = {
 			isa = PBXGroup;
 			children = (
-				B61F22442DF36E925B71D7D290C077A8 /* SynologyKit.modulemap */,
-				812B9C56A72D8CA51F2B936B1185134E /* SynologyKit.xcconfig */,
-				1CC3C5734B4805B5671C7CDF30D60B63 /* SynologyKit-dummy.m */,
-				B509347B5F8D8149C6C05C034E3884CF /* SynologyKit-Info.plist */,
-				330BE926B52C1EA5EBD9737D95B1A321 /* SynologyKit-prefix.pch */,
-				DA376FF59D47822DE6B0FCE2EB0B4E65 /* SynologyKit-umbrella.h */,
+				3B066DBF3352C6C1F686302AB14D5B0A /* LICENSE */,
+				341C0C366AC520F0D8CD0F233F7754B5 /* README.md */,
+				8D9232ED5216369C6AAE7201888E76BD /* SynologyKit.podspec */,
 			);
-			name = "Support Files";
-			path = "Pods/Target Support Files/SynologyKit";
+			name = Pod;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
-				8DEA4A024E493A4AF39D2C70260FD5CD /* Development Pods */,
+				AA9270FFFD03C414CEE0FBF834E0C70E /* Development Pods */,
 				2F2A6FCCD7293377A61DF5D10894ACF2 /* Frameworks */,
 				90FDDC7F5D24472360CA259A8D40AE98 /* Pods */,
 				6E002F5151B9B8FA113113F756EA92E5 /* Products */,
 				10E8EF04481D25E4AB4C764FC9952479 /* Targets Support Files */,
 			);
-			sourceTree = "<group>";
-		};
-		D8C0E21DCE7F2FD030AAC91EF361FCE5 /* SynologyKit */ = {
-			isa = PBXGroup;
-			children = (
-				F4819FB348996AA55AF543FA7CA46A67 /* Constants.swift */,
-				43878155C92057CCAC4F0352FB4FA540 /* SynologyClient.swift */,
-				58A2DE09CFCABDCE985FDDF0B9193AE2 /* SynologyRequest.swift */,
-				8F7F2071E02BF662FEF374711DE2C974 /* SynologyResponse.swift */,
-				F52163F1CF796BF30C55F83961C9DA35 /* Pod */,
-				CB8A2E8E87B5F15AE9DAA25AD70CAB9C /* Support Files */,
-			);
-			name = SynologyKit;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		DBBD239EB7C1C83EA80124D1A53485AB /* iOS */ = {
@@ -295,19 +308,17 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		F52163F1CF796BF30C55F83961C9DA35 /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				E59185993B6A4CDC0DAE2A06D69F8DCE /* LICENSE */,
-				778D247D1D6393953966991C7B01F7F1 /* README.md */,
-				D4EEA36630C86DDAFE827D8B45D7D233 /* SynologyKit.podspec */,
-			);
-			name = Pod;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		12F5433DE68FD437C86A5EC3DB2A38BF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7FC724A825B50FF67A167F3CF95BC018 /* SynologyKit-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2582784E4FA6A1AC5D23FC53AC3F6EE2 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -321,14 +332,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				07AEE4F7BF117BC7F05BD33309FE01D2 /* Pods-SynologyKitExample-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		EECC695DC7CEDF3BDCF6DEEDA78D655A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D003FC131FB29893DCDFCD991B4FA5EA /* SynologyKit-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,17 +360,17 @@
 		};
 		7F1D8220102A0DDE1C252210A1AEECBD /* SynologyKit */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0872B9382F25628B288833E501EC9EE4 /* Build configuration list for PBXNativeTarget "SynologyKit" */;
+			buildConfigurationList = 09ED831F3A05F10AE17075CCF701A41A /* Build configuration list for PBXNativeTarget "SynologyKit" */;
 			buildPhases = (
-				EECC695DC7CEDF3BDCF6DEEDA78D655A /* Headers */,
-				E3FDFB3211F4A65A23A3EF05A1F957E3 /* Sources */,
-				0CD184C4FC293777369A20255A3AADEB /* Frameworks */,
-				C35137CBB8CBC8A614F293F5A8DEC495 /* Resources */,
+				12F5433DE68FD437C86A5EC3DB2A38BF /* Headers */,
+				26EEED7D1F7C55110AA2327DF4B7CA43 /* Sources */,
+				46ACE354F41B4425E08953372B1959D5 /* Frameworks */,
+				7B3DC090C38F7DF6EEA67B2694673173 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				50511E29B34D505A294792239BBBBC41 /* PBXTargetDependency */,
+				DA7DB1A2ED5EE3BDA21686328FD67B6D /* PBXTargetDependency */,
 			);
 			name = SynologyKit;
 			productName = SynologyKit;
@@ -428,7 +431,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C35137CBB8CBC8A614F293F5A8DEC495 /* Resources */ = {
+		7B3DC090C38F7DF6EEA67B2694673173 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -445,6 +448,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		26EEED7D1F7C55110AA2327DF4B7CA43 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F71B80C2CEF4ED5FC74C54377BD2345 /* Constants.swift in Sources */,
+				C40E1FDB04BF7DA40897C82DDE03B979 /* SynologyClient.swift in Sources */,
+				AB027C2A5A019A272589907089AB5156 /* SynologyKit-dummy.m in Sources */,
+				88901F9E5576AD7BCB77C05D5178215E /* SynologyRequest.swift in Sources */,
+				BC5CD1B1C4CD8FA1DFCCC0D9A035339A /* SynologyResponse.swift in Sources */,
+				1D7169DC4BE5997D34C7CAF65A1E46FC /* SynologyTask.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2DDFD9AC10F181CD7130BDF5F9E0502B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -478,32 +494,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E3FDFB3211F4A65A23A3EF05A1F957E3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DF9529918214BEFC54051E76DDF7594D /* Constants.swift in Sources */,
-				02139C8A35365D265943B0647DBA2404 /* SynologyClient.swift in Sources */,
-				E74DF7CDD5575E163700D13A3B32A3C7 /* SynologyKit-dummy.m in Sources */,
-				6F1E42A9B2231B8B42E0307C63AA45AD /* SynologyRequest.swift in Sources */,
-				C25F9665A95043CBBF8C12EA10D0C4D2 /* SynologyResponse.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		50511E29B34D505A294792239BBBBC41 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Alamofire;
-			target = EAAA1AD3A8A1B59AB91319EE40752C6D /* Alamofire */;
-			targetProxy = 4BAFD92F051A3E357FD8E2FA7921704B /* PBXContainerItemProxy */;
-		};
 		9C71E20980FA3BCCA78EA1C2A8724BB9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Alamofire;
 			target = EAAA1AD3A8A1B59AB91319EE40752C6D /* Alamofire */;
 			targetProxy = BB39488C2825A0B46806DFAC513AA4F0 /* PBXContainerItemProxy */;
+		};
+		DA7DB1A2ED5EE3BDA21686328FD67B6D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Alamofire;
+			target = EAAA1AD3A8A1B59AB91319EE40752C6D /* Alamofire */;
+			targetProxy = B9BDA46A8714CBA7DCB8D40AC5F699E8 /* PBXContainerItemProxy */;
 		};
 		E7F9BDAD3D48EE28AC4B4B4FDA3FD418 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -612,9 +616,9 @@
 			};
 			name = Debug;
 		};
-		73D0364D42B68CBABDD240F468FF118D /* Debug */ = {
+		3FC740ABF5BBB3712542E8E658556339 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 812B9C56A72D8CA51F2B936B1185134E /* SynologyKit.xcconfig */;
+			baseConfigurationReference = 3B680684F92DC7DFF09653154530D49C /* SynologyKit.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -643,10 +647,11 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = Release;
 		};
 		75BBB760DFD877E344322B54D29DFE64 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -722,9 +727,9 @@
 			};
 			name = Release;
 		};
-		BE0B8AAAB700925BDF89C337CEB0D6A4 /* Release */ = {
+		C21F9942C703EF05CA47A4CCC0FB0EE7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 812B9C56A72D8CA51F2B936B1185134E /* SynologyKit.xcconfig */;
+			baseConfigurationReference = 3B680684F92DC7DFF09653154530D49C /* SynologyKit.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -753,11 +758,10 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Debug;
 		};
 		DD8F832993327D1DD8046C3CBCBD97CD /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -862,11 +866,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0872B9382F25628B288833E501EC9EE4 /* Build configuration list for PBXNativeTarget "SynologyKit" */ = {
+		09ED831F3A05F10AE17075CCF701A41A /* Build configuration list for PBXNativeTarget "SynologyKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				73D0364D42B68CBABDD240F468FF118D /* Debug */,
-				BE0B8AAAB700925BDF89C337CEB0D6A4 /* Release */,
+				C21F9942C703EF05CA47A4CCC0FB0EE7 /* Debug */,
+				3FC740ABF5BBB3712542E8E658556339 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
