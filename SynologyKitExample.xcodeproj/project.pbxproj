@@ -3,10 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A3AD405D23729AFA00F38D14 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD405C23729AFA00F38D14 /* LoginViewController.swift */; };
+		A3AD406023729C4000F38D14 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD405F23729C4000F38D14 /* LoginModel.swift */; };
+		A3AD406323729CAD00F38D14 /* LoginTextFieldViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD406223729CAD00F38D14 /* LoginTextFieldViewCell.swift */; };
+		A3AD406523729CF400F38D14 /* LoginSwitchViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD406423729CF400F38D14 /* LoginSwitchViewCell.swift */; };
+		A3AD406723729EFE00F38D14 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD406623729EFE00F38D14 /* LoginManager.swift */; };
+		A3AD406A2372A0BD00F38D14 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD40692372A0BD00F38D14 /* BrowserViewController.swift */; };
+		A3AD406C2372A11700F38D14 /* BrowserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD406B2372A11700F38D14 /* BrowserTableViewCell.swift */; };
+		A3AD406E2372A3E700F38D14 /* BrowserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD406D2372A3E700F38D14 /* BrowserModel.swift */; };
 		A3B1B416236A8F27001D76E2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B1B415236A8F27001D76E2 /* AppDelegate.swift */; };
 		A3B1B418236A8F27001D76E2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B1B417236A8F27001D76E2 /* SceneDelegate.swift */; };
 		A3B1B41A236A8F27001D76E2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B1B419236A8F27001D76E2 /* ViewController.swift */; };
@@ -18,6 +26,14 @@
 
 /* Begin PBXFileReference section */
 		9FB844C6BFB9F98500C924BC /* Pods-SynologyKitExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SynologyKitExample.debug.xcconfig"; path = "Target Support Files/Pods-SynologyKitExample/Pods-SynologyKitExample.debug.xcconfig"; sourceTree = "<group>"; };
+		A3AD405C23729AFA00F38D14 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		A3AD405F23729C4000F38D14 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
+		A3AD406223729CAD00F38D14 /* LoginTextFieldViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTextFieldViewCell.swift; sourceTree = "<group>"; };
+		A3AD406423729CF400F38D14 /* LoginSwitchViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSwitchViewCell.swift; sourceTree = "<group>"; };
+		A3AD406623729EFE00F38D14 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
+		A3AD40692372A0BD00F38D14 /* BrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
+		A3AD406B2372A11700F38D14 /* BrowserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTableViewCell.swift; sourceTree = "<group>"; };
+		A3AD406D2372A3E700F38D14 /* BrowserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserModel.swift; sourceTree = "<group>"; };
 		A3B1B412236A8F27001D76E2 /* SynologyKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SynologyKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3B1B415236A8F27001D76E2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A3B1B417236A8F27001D76E2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -48,8 +64,40 @@
 				9FB844C6BFB9F98500C924BC /* Pods-SynologyKitExample.debug.xcconfig */,
 				E82327A473CFDE47557CD299 /* Pods-SynologyKitExample.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		A3AD405E23729B0100F38D14 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A3B1B423236A8F27001D76E2 /* Info.plist */,
+				A3B1B420236A8F27001D76E2 /* LaunchScreen.storyboard */,
+				A3B1B41B236A8F27001D76E2 /* Main.storyboard */,
+				A3B1B41E236A8F27001D76E2 /* Assets.xcassets */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A3AD406123729C9200F38D14 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				A3AD405F23729C4000F38D14 /* LoginModel.swift */,
+				A3AD405C23729AFA00F38D14 /* LoginViewController.swift */,
+				A3AD406223729CAD00F38D14 /* LoginTextFieldViewCell.swift */,
+				A3AD406423729CF400F38D14 /* LoginSwitchViewCell.swift */,
+				A3AD406623729EFE00F38D14 /* LoginManager.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		A3AD40682372A06800F38D14 /* Browser */ = {
+			isa = PBXGroup;
+			children = (
+				A3AD40692372A0BD00F38D14 /* BrowserViewController.swift */,
+				A3AD406B2372A11700F38D14 /* BrowserTableViewCell.swift */,
+				A3AD406D2372A3E700F38D14 /* BrowserModel.swift */,
+			);
+			path = Browser;
 			sourceTree = "<group>";
 		};
 		A3B1B409236A8F27001D76E2 = {
@@ -73,13 +121,12 @@
 		A3B1B414236A8F27001D76E2 /* SynologyKitExample */ = {
 			isa = PBXGroup;
 			children = (
+				A3AD40682372A06800F38D14 /* Browser */,
+				A3AD406123729C9200F38D14 /* Login */,
 				A3B1B415236A8F27001D76E2 /* AppDelegate.swift */,
 				A3B1B417236A8F27001D76E2 /* SceneDelegate.swift */,
 				A3B1B419236A8F27001D76E2 /* ViewController.swift */,
-				A3B1B41B236A8F27001D76E2 /* Main.storyboard */,
-				A3B1B41E236A8F27001D76E2 /* Assets.xcassets */,
-				A3B1B420236A8F27001D76E2 /* LaunchScreen.storyboard */,
-				A3B1B423236A8F27001D76E2 /* Info.plist */,
+				A3AD405E23729B0100F38D14 /* Supporting Files */,
 			);
 			path = SynologyKitExample;
 			sourceTree = "<group>";
@@ -207,8 +254,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3AD406023729C4000F38D14 /* LoginModel.swift in Sources */,
+				A3AD406A2372A0BD00F38D14 /* BrowserViewController.swift in Sources */,
+				A3AD406723729EFE00F38D14 /* LoginManager.swift in Sources */,
+				A3AD405D23729AFA00F38D14 /* LoginViewController.swift in Sources */,
 				A3B1B41A236A8F27001D76E2 /* ViewController.swift in Sources */,
+				A3AD406E2372A3E700F38D14 /* BrowserModel.swift in Sources */,
 				A3B1B416236A8F27001D76E2 /* AppDelegate.swift in Sources */,
+				A3AD406C2372A11700F38D14 /* BrowserTableViewCell.swift in Sources */,
+				A3AD406323729CAD00F38D14 /* LoginTextFieldViewCell.swift in Sources */,
+				A3AD406523729CF400F38D14 /* LoginSwitchViewCell.swift in Sources */,
 				A3B1B418236A8F27001D76E2 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,7 +411,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LX863G777H;
-				INFOPLIST_FILE = SynologyKitExample/Info.plist;
+				INFOPLIST_FILE = "SynologyKitExample/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -375,7 +430,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LX863G777H;
-				INFOPLIST_FILE = SynologyKitExample/Info.plist;
+				INFOPLIST_FILE = "SynologyKitExample/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
