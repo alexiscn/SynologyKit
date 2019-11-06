@@ -59,7 +59,11 @@ class BrowserTableViewCell: UITableViewCell {
     }
     
     func update(_ model: BrowserModel) {
-        //iconImageView.image = // TODO
+        if model.isDirectory {
+            iconImageView.image = UIImage(named: "Folder_40x40_")
+        } else {
+            iconImageView.image = UIImage(named: "File_40x40_")
+        }
         titleLabel.text = model.name
         //subTitleLabel.text = // TODO
         accessoryType = model.isDirectory ? .disclosureIndicator: .none

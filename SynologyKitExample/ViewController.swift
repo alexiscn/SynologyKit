@@ -10,17 +10,21 @@ import UIKit
 import SynologyKit
 
 class ViewController: UIViewController {
-
-    private let quickID = "YOUR_QUICK_ID"
-    
-    private let username = "YOUR_USER_NAME"
-    
-    private let password = "PASSWORD"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
     
+    @IBAction func loginButtonClicked(_ sender: Any) {
+        let loginViewController = LoginViewController()
+        let navigationController = UINavigationController(rootViewController: loginViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true, completion: nil)
+    }
+    
+    @IBAction func cleanButtonClicked(_ sender: Any) {
+        LoginManager.shared.clean()
+    }
 }
 

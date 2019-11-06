@@ -32,7 +32,7 @@ public class SynologyClient {
     private var port: Int?
     private var enableHTTPS = false
     private let Session = "FileStation"
-    private let queue = DispatchQueue(label: "me.shuifeng.SynologyKit", qos: .background, attributes: .concurrent)
+    private let queue = DispatchQueue(label: "me.shuifeng.SynologyKit")//, qos: .background, attributes: .concurrent)
     
     func baseURLString() -> String {
         let scheme = enableHTTPS ? "https": "http"
@@ -81,26 +81,28 @@ public class SynologyClient {
     }
     
     func handleDataResponse<T>(_ response: DefaultDataResponse, completion: @escaping SynologyCompletion<T>) {
-        if let error = response.error {
-            let code = response.response?.statusCode ?? -1
-            completion(.failure(.serverError(code, error.localizedDescription, response)))
-            return
-        }
-        guard let data = response.data else {
-            completion(.failure(.invalidResponse(response)))
-            return
-        }
-        do {
-            let decodedRes = try JSONDecoder().decode(SynologyResponse<T>.self, from: data)
-            if let data = decodedRes.data {
-                completion(.success(data))
-            } else if let code = decodedRes.error {
-                let message = SynologyErrorMapper[code] ?? "Unknown error"
-                completion(.failure(.serverError(code, message, response)))
+        DispatchQueue.main.async {
+            if let error = response.error {
+                let code = response.response?.statusCode ?? -1
+                completion(.failure(.serverError(code, error.localizedDescription, response)))
+                return
             }
-        } catch {
-            let text = String(data: data, encoding: .utf8)
-            completion(.failure(.decodeDataError(response, text)))
+            guard let data = response.data else {
+                completion(.failure(.invalidResponse(response)))
+                return
+            }
+            do {
+                let decodedRes = try JSONDecoder().decode(SynologyResponse<T>.self, from: data)
+                if let data = decodedRes.data {
+                    completion(.success(data))
+                } else if let code = decodedRes.error {
+                    let message = SynologyErrorMapper[code] ?? "Unknown error"
+                    completion(.failure(.serverError(code, message, response)))
+                }
+            } catch {
+                let text = String(data: data, encoding: .utf8)
+                completion(.failure(.decodeDataError(response, text)))
+            }
         }
     }
 }
@@ -649,16 +651,18 @@ extension SynologyClient {
     }
     
     func handleQuickConnectResponse(_ response: DefaultDataResponse, completion: @escaping QuickConnectCompletion) {
-        guard let data = response.data else {
-            completion(.failure(.invalidResponse(response)))
-            return
-        }
-        do {
-            let decodedRes = try JSONDecoder().decode(QuickIDResponse.self, from: data)
-            completion(.success(decodedRes))
-        } catch {
-            let text = String(data: data, encoding: .utf8)
-            completion(.failure(.decodeDataError(response, text)))
+        DispatchQueue.main.async {
+            guard let data = response.data else {
+                completion(.failure(.invalidResponse(response)))
+                return
+            }
+            do {
+                let decodedRes = try JSONDecoder().decode(QuickIDResponse.self, from: data)
+                completion(.success(decodedRes))
+            } catch {
+                let text = String(data: data, encoding: .utf8)
+                completion(.failure(.decodeDataError(response, text)))
+            }
         }
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SynologyKit
 
 class LoginViewController: UIViewController {
     
@@ -18,35 +19,73 @@ class LoginViewController: UIViewController {
     
     private var loginButton: UIBarButtonItem?
     
+    private var client: SynologyClient?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupDataSource()
+        title = "Sign in"
         
+        setupDataSource()
         setupTableView()
-                
-        let doneButton = UIBarButtonItem(title: "Login",
-                                         style: .plain,
-                                         target: self,
-                                         action: #selector(handleDoneButtonClicked))
+        
+        let closeButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(handleCloseButtonClicked))
+        navigationItem.leftBarButtonItem = closeButton
+        
+        let doneButton = UIBarButtonItem(title: "Login", style: .done, target: self, action: #selector(handleDoneButtonClicked))
         doneButton.isEnabled = false
         navigationItem.rightBarButtonItem = doneButton
         self.loginButton = doneButton
         
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(handleTextFieldDidChangedNotification(_:)),
-                                               name: UITextField.textDidChangeNotification,
-                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleTextFieldDidChangedNotification(_:)), name: UITextField.textDidChangeNotification, object: nil)
         
         checkLoginButton()
+    }
+    
+    @objc private func handleCloseButtonClicked() {
+        dismiss(animated: true, completion: nil)
     }
     
     @objc private func handleDoneButtonClicked() {
         
+        self.becomeFirstResponder()
+        
+        let addressValue = dataSource.first(where: { $0.field == .address })?.stringValue
+        let accountValue = dataSource.first(where: { $0.field == .account })?.stringValue
+        let passwordValue = dataSource.first(where: { $0.field == .password })?.stringValue
+        let allowHTTPSValue = dataSource.first(where: { $0.field == .allowHTTPS })?.boolValue
+        guard let address = addressValue,
+            let account = accountValue,
+            let password = passwordValue,
+            let allowHTTPS = allowHTTPSValue else {
+                return
+        }
+        if address.contains(".") {
+            let port = allowHTTPS ? 5001: 5000
+            client = SynologyClient(host: address, port: port, enableHTTPS: allowHTTPS)
+            
+        } else {
+             client = SynologyClient(host: address)
+        }
+        client?.login(account: account, passwd: password) { [weak self] response in
+            switch response {
+            case .success(let authRes):
+                self?.handleLoginSuccess()
+                print(authRes.sid)
+            case .failure(let error):
+                print(error.description)
+            }
+        }
     }
     
     @objc private func handleTextFieldDidChangedNotification(_ notification: Notification) {
         checkLoginButton()
+    }
+    
+    private func handleLoginSuccess() {
+        guard let client = client else { return }
+        let browserVC = BrowserViewController(client: client)
+        navigationController?.setViewControllers([browserVC], animated: true)
     }
     
     private func checkLoginButton() {
@@ -80,7 +119,6 @@ class LoginViewController: UIViewController {
     
     private func setupTableView() {
         tableView = UITableView(frame: view.bounds, style: .grouped)
-        tableView.backgroundColor = .clear
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
@@ -89,6 +127,10 @@ class LoginViewController: UIViewController {
         tableView.register(LoginTextFieldViewCell.self, forCellReuseIdentifier: NSStringFromClass(LoginTextFieldViewCell.self))
         tableView.register(LoginSwitchViewCell.self, forCellReuseIdentifier: NSStringFromClass(LoginSwitchViewCell.self))
         view.addSubview(tableView)
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
     }
 }
 

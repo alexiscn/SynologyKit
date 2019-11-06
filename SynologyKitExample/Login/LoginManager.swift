@@ -91,5 +91,13 @@ class LoginManager {
     
     private init() {}
     
+ 
+    func clean() {
+        host = nil
+        port = nil
+        quickID = nil
+        username = nil
+        password = nil
+    }
     
 }
