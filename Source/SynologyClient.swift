@@ -29,7 +29,7 @@ public class SynologyClient {
     private var port: Int?
     private var enableHTTPS = false
     private let Session = "FileStation"
-    private let queue = DispatchQueue(label: "me.shuifeng.SynologyKit")
+    private let queue = DispatchQueue(label: "me.shuifeng.SynologyKit", qos: .background, attributes: .concurrent)
     
     func baseURLString() -> String {
         let scheme = enableHTTPS ? "https": "http"
@@ -54,10 +54,6 @@ public class SynologyClient {
         self.sessionid = sessionID
     }
     
-    func requestUrlString(path: String) -> String {
-        return baseURLString().appending(path)
-    }
-        
     @discardableResult
     func post<T: Codable>(_ request: SynologyRequest, queue: DispatchQueue?, completion: @escaping SynologyCompletion<T>) -> DataRequest {
         return SessionManager.default.request(request.asURLRequest()).response(queue: queue) { response in
@@ -104,18 +100,6 @@ public class SynologyClient {
             completion(.failure(.decodeDataError(response, text)))
         }
     }
-    
-    
-    /// Download file from synology
-    /// - Parameters:
-    ///   - path: file path
-    ///   - parameters: additional parameters
-    ///   - destination: Callback closure.
-    public func download(path: String, parameters: Parameters, to destination: DownloadRequest.DownloadFileDestination?) -> DownloadRequest {
-        let urlString = baseURLString().appending("\(path)")
-        print(urlString)
-        return Alamofire.download(urlString, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil, to: destination)
-    }
 }
 
 // MARK: - Public functions
@@ -135,7 +119,7 @@ extension SynologyClient {
             parameters["session"] = Session
             var request = SynologyBasicRequest(baseURLString: baseURLString(), path: .auth, api: .auth, method: .login ,params: parameters)
             request.version = 3
-            post(request, queue: nil, completion: completion)
+            post(request, queue: queue, completion: completion)
         } else {
             getServerInfo(quickID: host) { response in
                 switch response {
@@ -158,9 +142,8 @@ extension SynologyClient {
     public func logout(completion: @escaping SynologyCompletion<EmptyResponse>) {
         let params = ["session": Session]
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .auth, api: .auth, method: .logout, params: params)
-        post(request, queue: nil, completion: completion)
+        post(request, queue: queue, completion: completion)
     }
-    
     
     /// Provide File Station information
     /// - Parameter completion: Callback closure.
@@ -220,7 +203,6 @@ extension SynologyClient {
         post(request, queue: nil, completion: completion)
     }
     
-    
     /// Get information of file(s)
     /// - Parameters:
     ///   - path: One or more folder/file path(s) started with a shared folder, separated by a comma, “,”.
@@ -234,18 +216,16 @@ extension SynologyClient {
         post(request, queue: nil, completion: completion)
     }
     
-    
     /// Search files according to given criteria
     /// - Parameters:
     ///   - folderPath: A searched folder path starting with a shared folder.
     ///   - options: Search options.
     ///   - recursive: Optional. If searching files within a folder and subfolders recursively or not.
-    public func search(atFolderPath folderPath: String, options: SearchOptions, recursive: Bool = true, completion: @escaping SynologyCompletion<String>) {
-        // TODO: check status
+    public func search(atFolderPath folderPath: String, options: SearchOptions, recursive: Bool = true, completion: @escaping SynologyCompletion<SearchFileTask>) {
         var parameters = Parameters()
         parameters["folder_path"] = folderPath
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFind, api: .search, method: .start, params: parameters)
-        post(request, queue: nil, completion: completion)
+        postNonBlockingRequest(request, completion: completion, method: .list)
     }
     
     /// List all mount point folders on one given type of virtual file system
@@ -423,6 +403,17 @@ extension SynologyClient {
         var request = SynologyBasicRequest(baseURLString: baseURLString(), path: .entry, api: .download, method: .download, params: params)
         request.version = 2
         return download(path: request.urlQuery(), parameters: params, to: to)
+    }
+    
+    /// Download file from synology
+    /// - Parameters:
+    ///   - path: file path
+    ///   - parameters: additional parameters
+    ///   - destination: Callback closure.
+    public func download(path: String, parameters: Parameters, to destination: DownloadRequest.DownloadFileDestination?) -> DownloadRequest {
+        let urlString = baseURLString().appending("\(path)")
+        print(urlString)
+        return Alamofire.download(urlString, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil, to: destination)
     }
     
     public func getSharingList(offset: Int = 0, limit: Int = 0) {
@@ -634,11 +625,11 @@ extension SynologyClient {
 extension SynologyClient {
         
     // TODO: Add timeout
-    func postNonBlockingRequest<T: SynologyTask>(_ request: SynologyBasicRequest, completion: @escaping SynologyCompletion<T>) {
+    func postNonBlockingRequest<T: SynologyTask>(_ request: SynologyBasicRequest, completion: @escaping SynologyCompletion<T>, method: SynologyMethod = .status) {
         post(request, queue: queue) { (response: Swift.Result<TaskResult, SynologyError>) in
             switch response {
             case .success(let task):
-                let result: Swift.Result<T, SynologyError> = self.checkTaskStatus(task, request: request)
+                let result: Swift.Result<T, SynologyError> = self.checkTaskStatus(task, request: request, method: method)
                 switch result {
                 case .success(let status):
                     completion(.success(status))
@@ -651,8 +642,9 @@ extension SynologyClient {
         }
     }
     
-    func checkTaskStatus<T: SynologyTask>(_ task: TaskResult, request: SynologyBasicRequest) -> Swift.Result<T, SynologyError> {
+    func checkTaskStatus<T: SynologyTask>(_ task: TaskResult, request: SynologyBasicRequest, method: SynologyMethod) -> Swift.Result<T, SynologyError> {
         var statusRequest = request
+        statusRequest.method = method
         statusRequest.params.removeAll()
         statusRequest.params["taskid"] = task.taskid
         var finished: Bool = false

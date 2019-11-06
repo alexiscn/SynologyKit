@@ -19,6 +19,20 @@ struct TaskResult: Codable {
 
 public extension SynologyClient {
     
+    struct SearchFileTask: SynologyTask {
+        /// If the searching task is finished or not.
+        var finished: Bool
+        
+        /// Total number of matched files
+        public let total: Int
+        
+        /// Requested offset.
+        public let offset: Int
+        
+        /// Array of <file> objects.
+        public let files: [File]
+    }
+    
     struct MD5Task: SynologyTask {
         
         /// Check if the task is finished or not.

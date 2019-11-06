@@ -21,5 +21,19 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
+    
+    private func connectViaQuickConnect() {
+        
+    }
+    
+    private func connect() {
+        
+    }
+    
+    private func listShare() {
+        
+    }
+    
+    
 }
 
