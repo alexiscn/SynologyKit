@@ -30,6 +30,8 @@ public class SynologyClient {
     private var enableHTTPS = false
     private let Session = "FileStation"
     
+    private var tasks: [String: AsyncSynologyTask] = [:]
+    
     func baseURLString() -> String {
         let scheme = enableHTTPS ? "https": "http"
         if let port = port {
@@ -639,6 +641,10 @@ extension SynologyClient {
         // TODO
     }
     
+    func checkTaskStatus<T: SynologyTaskStatus>(_ taskRequest: SynologyBasicRequest) -> T? {
+        return nil
+    }
+    
     func checkMD5RequestStatus(_ request: SynologyBasicRequest) -> String? {
         var finished: Bool = false
         var statusRequest = request
@@ -663,5 +669,18 @@ extension SynologyClient {
             seamphore.wait()
         }
         return md5
+    }
+}
+
+protocol SynologyTaskStatus {
+    var finished: Bool { get set }
+}
+
+class AsyncSynologyTask {
+    
+    var taskId: String
+    
+    init(taskId: String) {
+        self.taskId = taskId
     }
 }
