@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol SynologyTask: Codable {
+public protocol SynologyTask: Codable {
     /// If the task is finished or not.
     var finished: Bool { get }
 }
@@ -21,7 +21,7 @@ public extension SynologyClient {
     
     struct SearchFileTask: SynologyTask {
         /// If the searching task is finished or not.
-        var finished: Bool
+        public var finished: Bool
         
         /// Total number of matched files
         public let total: Int
@@ -36,7 +36,7 @@ public extension SynologyClient {
     struct MD5Task: SynologyTask {
         
         /// Check if the task is finished or not.
-        var finished: Bool
+        public var finished: Bool
         
         /// MD5 of the requested file.
         public let md5: String?
@@ -51,7 +51,7 @@ public extension SynologyClient {
             case totalSize = "total_size"
         }
         
-        var finished: Bool
+        public var finished: Bool
         
         /// Number of directories in the queried path(s).
         public let numberOfDirectory: Int
@@ -73,7 +73,7 @@ public extension SynologyClient {
             case destinationFolderPath = "dest_folder_path"
         }
         
-        var finished: Bool
+        public var finished: Bool
         
         /// If accurate_progress parameter is “true,” byte sizes of all copied/moved files will be accumulated.
         /// If “false,” only byte sizes of the file you give in path parameter is accumulated.
@@ -104,7 +104,7 @@ public extension SynologyClient {
             case progress
         }
         
-        var finished: Bool
+        public var finished: Bool
         
         /// If accurate_progress parameter is “true,” the number of all deleted files will be accumulated.
         /// If “false,” only the number of file you give in path parameter is accumulated.
@@ -133,7 +133,7 @@ public extension SynologyClient {
         }
         
         /// If the task is finished or not.
-        var finished: Bool
+        public var finished: Bool
         
         /// The extract progress expressed in range 0 to 1.
         public let progress: Float
@@ -149,7 +149,7 @@ public extension SynologyClient {
         }
         
         /// Whether or not the compress task is finished.
-        var finished: Bool
+        public var finished: Bool
         
         /// The requested destination path of an archive.
         public let destinationFilePath: String?

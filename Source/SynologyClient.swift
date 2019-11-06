@@ -14,6 +14,9 @@ public typealias SynologyCompletion<T: Codable> = (Swift.Result<T, SynologyError
 
 public typealias SynologyStreamCompletion = (Swift.Result<Data, SynologyError>) -> Void
 
+/// Non-blocking api request progress callback
+public typealias SynologyProgressHandler<T: SynologyTask> = ((T) -> Void)?
+
 public typealias QuickConnectCompletion = (Swift.Result<QuickIDResponse, SynologyError>) -> Void
 
 /// SynologyKit for File Station
@@ -209,9 +212,12 @@ extension SynologyClient {
     ///   - additional: Optional. Additional requested file information, separated by a comma, “,”.
     ///           When an additional option is requested, responded objects will be provided in the specified additional option.
     ///   - completion: Callback closure.
-    public func getFileInfo(atPath path: String, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func getFileInfo(atPath path: String, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<String>) {
         var parameters = Parameters()
         parameters["path"] = path
+        if let options = additional {
+            parameters["additional"] = options.value()
+        }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileShare, api: .list, method: .getinfo, params: parameters)
         post(request, queue: nil, completion: completion)
     }
@@ -237,7 +243,7 @@ extension SynologyClient {
     /// - Parameter direction: Optional. Specify to sort ascending or to sort descending.
     /// - Parameter additional: Optional. Additional requested file information, separated by a comma, “,”. When an additional option is requested, responded objects will be provided in the specified additional option
     /// - Parameter completion: Callback closure.
-    public func listVirtualFolder(type: VirtualFolderType, offset: Int = 0, limit: Int = 0, sortBy: FileSortBy = .name, direction: FileSortDirection = .ascending, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func listVirtualFolder(type: VirtualFolderType, offset: Int = 0, limit: Int = 0, sortBy: FileSortBy = .name, direction: FileSortDirection = .ascending, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<String>) {
         var params: Parameters = [:]
         params["type"] = type.rawValue
         params["offset"] = offset
@@ -245,7 +251,7 @@ extension SynologyClient {
         params["sort_by"] = sortBy.rawValue
         params["sort_direction"] = direction.rawValue
         if let additional = additional {
-            params["additional"] = additional
+            params["additional"] = additional.value()
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileVirtual, api: .virtualFolder, method: .list, params: params)
         post(request, queue: nil, completion: completion)
@@ -259,13 +265,13 @@ extension SynologyClient {
     ///   - additional: Optional. Additional requested information of a folder which a favorite links to, separated by a comma, “,”.
     ///                 When an additional option is requested, responded objects will be provided in the specified additional option.
     ///   - completion: Callback closure.
-    public func listFavorites(offset: Int = 0, limit: Int = 0, statusFilter: FavoriteStatus = .all, additional: Additional? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func listFavorites(offset: Int = 0, limit: Int = 0, statusFilter: FavoriteStatus = .all, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<String>) {
         var parameters = Parameters()
         parameters["offset"] = offset
         parameters["limit"] = limit
         parameters["status_filter"] = statusFilter.rawValue
         if let additional = additional {
-            parameters["additional"] = additional
+            parameters["additional"] = additional.value()
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileFavorite, api: .favorite, method: .list, params: parameters)
         post(request, queue: nil, completion: completion)
@@ -451,12 +457,12 @@ extension SynologyClient {
     /// - Parameter name: One or more new names, separated by commas “,”. The number of names must be the same as the number of folder paths in the path parameter. The first name parameter corresponding to the first path parameter.
     /// - Parameter additional: Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
     /// - Parameter searchTaskId: A unique ID for the search task which is obtained from start method. It is used to update the renamed file in the search result
-    public func rename(path: String, name: String, additional: Additional? = nil, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<FolderOperationResponse>) {
+    public func rename(path: String, name: String, additional: AdditionalOptions? = nil, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<FolderOperationResponse>) {
         var params: [String: Any] = [:]
         params["path"] = path
         params["name"] = name
         if let additional = additional {
-            params["additional"] = additional
+            params["additional"] = additional.value()
         }
         if let taskId = searchTaskId {
             params["search_taskid"] = taskId
@@ -475,7 +481,9 @@ extension SynologyClient {
     /// - Parameter removeSource: Optional. “true”: move filess/folders;”false”: copy files/folders
     /// - Parameter accurateProgress: Optional. “true”: calculate the progress by each moved/copied file within subfolder. “false”: calculate the progress by files which you give in path parameters. This calculates the progress faster, but is less precise.
     /// - Parameter searchTaskId: Optional. A unique ID for the search task which is gotten from SYNO.FileSation.Search API with start method. This is used to update the search result.
-    public func copyMove(path: String, destFolderPath: String, overwrite: Bool? = nil, removeSource: Bool = false, accurateProgress: Bool = true, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<CopyMoveTask>) {
+    ///   - progressHandler: progressHandler
+    ///   - completion: Callback closure.
+    public func copyMove(path: String, destFolderPath: String, overwrite: Bool? = nil, removeSource: Bool = false, accurateProgress: Bool = true, searchTaskId: String? = nil, progressHandler: SynologyProgressHandler<CopyMoveTask> = nil, completion: @escaping SynologyCompletion<CopyMoveTask>) {
         var parameters = Parameters()
         parameters["path"] = path
         parameters["dest_folder_path"] = destFolderPath
@@ -488,7 +496,7 @@ extension SynologyClient {
             parameters["search_taskid"] = taskId
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileMoveCopy, api: .copyMove, method: .start, params: parameters)
-        postNonBlockingRequest(request, completion: completion)
+        postNonBlockingRequest(request, progressHandler: progressHandler, completion: completion)
     }
     
     /// Delete file(s)/folder(s).
@@ -504,8 +512,9 @@ extension SynologyClient {
     ///                        If a deleted folder contains any file, an error occurs because the folder can’t be directly deleted
     /// - Parameter searchTaskid: Optional. A unique ID for the search task which is gotten from start method.
     ///                        It’s used to delete the file in the search result.
+    /// - Parameter progressHandler: progressHandler
     /// - Parameter completion: Callback closure.
-    public func delete(path: String, accurateProgress: Bool = true, recursive: Bool = true, searchTaskid: String? = nil, completion: @escaping SynologyCompletion<DeletionTask>) {
+    public func delete(path: String, accurateProgress: Bool = true, recursive: Bool = true, searchTaskid: String? = nil, progressHandler: SynologyProgressHandler<DeletionTask> = nil, completion: @escaping SynologyCompletion<DeletionTask>) {
         var params: [String: Any] = [:]
         params["path"] = path
         params["accurate_progress"] = accurateProgress
@@ -514,7 +523,7 @@ extension SynologyClient {
             params["search_taskid"] = taskId
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileDelete, api: .delete, method: .start, params: params)
-        postNonBlockingRequest(request, completion: completion)
+        postNonBlockingRequest(request, progressHandler: progressHandler, completion: completion)
     }
     
     /// Extract an archive and perform operations on archive files
@@ -526,8 +535,9 @@ extension SynologyClient {
     ///   - keepDirectory: Optional. Whether to keep the folder structure within an archive.
     ///   - createSubFolder: Optional. Whether to create a subfolder with an archive name which archived files are extracted to.
     ///   - password: Optional. The password for extracting the file.
+    ///   - progressHandler: progressHandler
     ///   - completion: Callback closure.
-    public func extract(filePath: String, destinationFolderPath: String, overwrite: Bool = false, keepDirectory: Bool = true, createSubFolder: Bool = false, password: String? = nil, completion: @escaping SynologyCompletion<ExtractTask>) {
+    public func extract(filePath: String, destinationFolderPath: String, overwrite: Bool = false, keepDirectory: Bool = true, createSubFolder: Bool = false, password: String? = nil, progressHandler: SynologyProgressHandler<ExtractTask> = nil, completion: @escaping SynologyCompletion<ExtractTask>) {
         var parameters = Parameters()
         parameters["file_path"] = filePath
         parameters["dest_folder_path"] = destinationFolderPath
@@ -538,7 +548,7 @@ extension SynologyClient {
             parameters["password"] = password
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileExtract, api: .extract, method: .start, params: parameters)
-        postNonBlockingRequest(request, completion: completion)
+        postNonBlockingRequest(request, progressHandler: progressHandler, completion: completion)
     }
     
     /// Compress file(s)/folder(s).
@@ -563,6 +573,38 @@ extension SynologyClient {
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .fileCompress, api: .compress, method: .start, params: params)
         postNonBlockingRequest(request, completion: completion)
+    }
+    
+    /// List all background tasks including copy, move, delete, compress and extract tasks
+    /// - Parameters:
+    ///   - filter: Optional. List background tasks with one or more given API name(s), separated by commas “,”.
+    ///                       If not given, all background tasks are listed.
+    ///   - options: List query options.
+    ///   - completion: Callback closure.
+    public func getBackgroundTaskList(filter: [BackgroundTaskFilter] = [], options: ListOptions = ListOptions(), completion: @escaping SynologyCompletion<BackgroundTaskList>) {
+        var parameters = Parameters()
+        if filter.count > 0 {
+            parameters["api_filter"] = filter.map { $0.rawValue }.joined(separator: ",")
+        }
+        for v in options.value() {
+            parameters[v.key] = v.value
+        }
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .backgroundTask, api: .backgroundTask, method: .list, params: parameters)
+        post(request, queue: queue, completion: completion)
+    }
+
+    /// Delete all finished background tasks.
+    /// - Parameters:
+    ///   - taskid: Unique IDs of finished copy, move, delete, compress or extract tasks. Specify multiple task IDs by “,”.
+    ///             If it’s not given, all finished tasks are deleted.
+    ///   - completion: Callback closure.
+    public func clearFinishedBackgroundTask(taskid: String? = nil, completion: @escaping SynologyCompletion<EmptyResponse>) {
+        var parameters = Parameters()
+        if let taskid = taskid {
+            parameters["taskid"] = taskid
+        }
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), path: .backgroundTask, api: .backgroundTask, method: .clear_finished, params: parameters)
+        post(request, queue: queue, completion: completion)
     }
 }
 
@@ -625,11 +667,11 @@ extension SynologyClient {
 extension SynologyClient {
         
     // TODO: Add timeout
-    func postNonBlockingRequest<T: SynologyTask>(_ request: SynologyBasicRequest, completion: @escaping SynologyCompletion<T>, method: SynologyMethod = .status) {
+    func postNonBlockingRequest<T: SynologyTask>(_ request: SynologyBasicRequest, progressHandler: SynologyProgressHandler<T> = nil, completion: @escaping SynologyCompletion<T>, method: SynologyMethod = .status) {
         post(request, queue: queue) { (response: Swift.Result<TaskResult, SynologyError>) in
             switch response {
             case .success(let task):
-                let result: Swift.Result<T, SynologyError> = self.checkTaskStatus(task, request: request, method: method)
+                let result: Swift.Result<T, SynologyError> = self.checkTaskStatus(task, request: request, method: method, progressHandler: progressHandler)
                 switch result {
                 case .success(let status):
                     completion(.success(status))
@@ -642,7 +684,7 @@ extension SynologyClient {
         }
     }
     
-    func checkTaskStatus<T: SynologyTask>(_ task: TaskResult, request: SynologyBasicRequest, method: SynologyMethod) -> Swift.Result<T, SynologyError> {
+    func checkTaskStatus<T: SynologyTask>(_ task: TaskResult, request: SynologyBasicRequest, method: SynologyMethod, progressHandler: SynologyProgressHandler<T>) -> Swift.Result<T, SynologyError> {
         var statusRequest = request
         statusRequest.method = method
         statusRequest.params.removeAll()
@@ -655,6 +697,7 @@ extension SynologyClient {
             post(statusRequest, queue: queue) { (response: Swift.Result<T, SynologyError>) in
                 switch response {
                 case .success(let statusResponse):
+                    progressHandler?(statusResponse)
                     if statusResponse.finished {
                         finished = true
                         status = statusResponse

@@ -271,4 +271,29 @@ public extension SynologyClient {
         case rotate270 = 3
         case rotate360 = 4
     }
+    
+    struct ListOptions {
+        public var offset: Int = 0
+        public var limit: Int = 0
+        public var sortBy: FileSortBy = .createTime
+        public var sortDirection: FileSortDirection = .ascending
+        
+        func value() -> Parameters {
+            return [
+                "offset": offset,
+                "limit": limit,
+                "sort_by": sortBy.rawValue,
+                "sort_direction": sortDirection.rawValue
+            ]
+        }
+        
+        public init() {}
+    }
+    
+    enum BackgroundTaskFilter: String {
+        case copyMove = "SYNO.FileStation.CopyMove"
+        case delete = "SYNO.FileStatio n.Delete"
+        case extract = "SYNO.FileStatio n.Extract"
+        case compress = "SYNO.FileStatio n.Compress"
+    }
 }

@@ -125,7 +125,7 @@ public extension SynologyClient {
         public let name: String
         
         /// Shared-folder additional object.
-        public let additional: Additional?
+        public let additional: FileAdditional?
         
         public func toFile() -> File {
             return File(path: path, name: name, isdir: isdir, children: nil, additional: additional)
@@ -152,7 +152,7 @@ public extension SynologyClient {
         public let name: String
         
         /// Virtual folder additional object.
-        public let additional: Additional?
+        public let additional: FileAdditional?
     }
     
     enum FavoriteStatus: String {
@@ -175,7 +175,7 @@ public extension SynologyClient {
         public let status: FavoriteStatus
         
         /// Favorite additional object.
-        public let additional: Additional?
+        public let additional: FileAdditional?
     }
     
     struct FolderOperationResponse: Codable {
@@ -211,10 +211,10 @@ public extension SynologyClient {
         public let children: Files?
         
         /// File additional object
-        public let additional: Additional?
+        public let additional: FileAdditional?
     }
     
-    struct Additional: Codable {
+    struct FileAdditional: Codable {
         
         enum CodingKeys: String, CodingKey {
             case realPath = "real_path"
@@ -303,5 +303,35 @@ public extension SynologyClient {
         public var createDate: Date? {
             return Date()
         }
+    }
+    
+    struct BackgroundTaskList: Codable {
+        
+        /// Total number of background tasks.
+        public let total: Int
+        
+        /// Requested offset.
+        public let offset: Int
+        
+        /// Array of <background task> objects.
+        public let tasks: [BackgroundTask]
+    }
+    
+    struct BackgroundTask: Codable {
+        
+        /// Requested API name.
+        public let api: String
+        
+        /// Requested API version.
+        public let version: Int
+        
+        /// Requested API method.
+        public let method: String
+        
+        /// A requested unique ID for the background task.
+        public let taskid: String
+        
+        /// Whether or not the background task is finished.
+        public let finished: Bool
     }
 }
