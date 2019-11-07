@@ -55,29 +55,10 @@ enum SynologyAPI: String {
     case backgroundTask = "SYNO.FileStation.BackgroundTask"
 }
 
-enum SynologyCGI: String {
-    case entry = "entry.cgi"
-    case auth = "auth.cgi"
-    case query = "query.cgi"
-    case info = "info.cgi"
-    case fileShare = "file_share.cgi"
-    case fileFind = "file_find.cgi"
-    case fileVirtual = "file_virtual.cgi"
-    case fileFavorite = "file_favorite.cgi"
-    case fileThumb = "file_thumb.cgi"
-    case fileDirSize = "file_dirSize.cgi"
-    case fileMD5 = "file_md5.cgi"
-    case filePermission = "file_permission.cgi"
-    case fileDownload = "file_download.cgi"
-    case fileSharing = "file_sharing.cgi"
-    case file_crtfdr = "file_crtfdr.cgi"
-    case fileRename = "file_rename.cgi"
-    case fileMoveCopy = "file_MVCP.cgi"
-    case fileDelete = "file_delete.cgi"
-    case fileExtract = "file_extract.cgi"
-    case fileCompress = "file_compress.cgi"
-    case backgroundTask = "background_task.cgi"
-    case apiUpload = "api_upload.cgi"
+struct SynologyCGI {
+    static let entry = "entry.cgi"
+    static let auth = "auth.cgi"
+    static let query = "query.cgi"
 }
 
 let SynologyErrorMapper: [Int: String] = [

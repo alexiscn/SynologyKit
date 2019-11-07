@@ -103,6 +103,13 @@ public extension SynologyClient {
         public var supportVirtualProtocol: Bool
     }
     
+    struct FileStationAPIInfo: Codable {
+        public let maxVersion: Int
+        public let minVersion: Int
+        public let path: String
+        public let requestFormat: String
+    }
+    
     struct SharedFolders: Codable {
         
         /// Total number of shared folders.

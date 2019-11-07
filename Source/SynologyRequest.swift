@@ -26,7 +26,7 @@ struct SynologyBasicRequest: SynologyRequest {
     var baseURLString: String
     
     /// path of the API. The path information can be retrieved by requesting SYNO.API.Info
-    var path: String
+    var path: String = SynologyCGI.entry
     
     /// Name of the API requested
     var api: SynologyAPI
@@ -60,9 +60,8 @@ struct SynologyBasicRequest: SynologyRequest {
         }
     }
     
-    init(baseURLString: String, path: SynologyCGI, api: SynologyAPI, method: SynologyMethod, params: Parameters) {
+    init(baseURLString: String, api: SynologyAPI, method: SynologyMethod, params: Parameters) {
         self.baseURLString = baseURLString
-        self.path = path.rawValue
         self.api = api
         self.method = method
         self.params = params
