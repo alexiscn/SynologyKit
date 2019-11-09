@@ -16,17 +16,18 @@ Features
 Install
 == 
 
+SynologyKit is available through CocoaPods. To install it, simply add the following line to your Podfile:
+
 ```sh
 pod 'SynologyKit'
 ```
 
-
 Usage
 ==
 
-TODO
+Other api can refer [Synology Official Document](https://global.download.synology.com/download/Document/Software/DeveloperGuide/Package/FileStation/All/enu/Synology_File_Station_API_Guide.pdf)
 
-#### Create `SynologyClient` 
+#### 1. Create `SynologyClient` 
 
 ```
 let address = "192.168.1.5"
@@ -41,7 +42,9 @@ client = SynologyClient(host: "your_quick_connect_id")
 ```
 
 
-#### Login in
+#### 2. Login in
+
+After create SynologyClient, you can now sign in with following code:
 
 ```swift
 let account = "your_synology_account"
@@ -51,9 +54,6 @@ client.login(account: account, passwd: password) { [weak self] response in
       case .success(let authRes):
           self?.client?.updateSessionID(authRes.sid)
           self?.handleLoginSuccess()
-          if remember {
-              LoginManager.shared.save(address: address, username: account, password: password)
-          }
           print(authRes.sid)
       case .failure(let error):
           print(error.description)
@@ -61,7 +61,11 @@ client.login(account: account, passwd: password) { [weak self] response in
   }
 ```
 
+When `sid` is got, you should update `SynologyClient` with SessionID. And then you can have access to all rest apis. 
+
 #### List Share Folders
+
+Before your list folder files, you should first list share folders.
 
 ```swift
 client.listShareFolders { response in
