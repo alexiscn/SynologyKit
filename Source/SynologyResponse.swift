@@ -11,7 +11,11 @@ import Alamofire
 struct SynologyResponse<T>: Codable where T: Codable {
     public var success: Bool
     public var data: T?
-    public var error: Int?
+    public var error: ErrorCode?
+}
+
+struct ErrorCode: Codable {
+    public let code: Int
 }
 
 public enum SynologyError: Error, CustomStringConvertible {

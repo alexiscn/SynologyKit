@@ -108,9 +108,9 @@ public class SynologyClient {
             let decodedRes = try JSONDecoder().decode(SynologyResponse<T>.self, from: data)
             if let data = decodedRes.data {
                 completion(.success(data))
-            } else if let code = decodedRes.error {
-                let message = SynologyErrorMapper[code] ?? "Unknown error"
-                completion(.failure(.serverError(code, message, response)))
+            } else if let error = decodedRes.error {
+                let message = SynologyErrorMapper[error.code] ?? "Unknown error"
+                completion(.failure(.serverError(error.code, message, response)))
             }
         } catch {
             let text = String(data: data, encoding: .utf8)

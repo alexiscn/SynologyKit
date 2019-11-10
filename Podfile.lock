@@ -2,7 +2,7 @@ PODS:
   - Alamofire (4.9.1)
   - KeychainSwift (18.0.0)
   - SnapKit (5.0.1)
-  - SynologyKit (0.2.4):
+  - SynologyKit (0.2.5):
     - Alamofire
   - WXActionSheet (0.3.0)
 
@@ -27,7 +27,7 @@ SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   KeychainSwift: c46e1438d121e47459fb304ac88c5e058a2a91ed
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  SynologyKit: d8347f878a4e24f8a8dfe80848dec8234b19cd7a
+  SynologyKit: bb701afc9df96274ad3b93d85e61c18a372723f8
   WXActionSheet: 8a1817ad641a892b17b53e157b6ec15ca7d1ff95
 
 PODFILE CHECKSUM: 07d5fd0261f0f448f47ec8016a920b1fa77d9b7b
