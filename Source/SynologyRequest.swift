@@ -295,4 +295,21 @@ public extension SynologyClient {
         case extract = "SYNO.FileStatio n.Extract"
         case compress = "SYNO.FileStatio n.Compress"
     }
+    
+    struct UploadOptions {
+        /// Optional. The value could be one of following:
+        /// true: overwrite the destination file if one exists
+        /// false: skip the upload if the destination file exists
+        /// nil: when it’s not specified as true or false, the upload will be responded with error when the destination file exists
+        public var overwrite: Bool? = nil
+        
+        /// Optional. Set last modify time of the uploaded file, unit: Linux timestamp in millisecond.
+        public var modificationTime: Int64? = nil
+        
+        /// Optional. Set the create time of the uploaded file, unit: Linux timestamp in millisecond.
+        public var createTime: Int64? = nil
+        
+        /// Optional. Set last access time of the uploaded file, unit: Linux timestamp in millisecond.
+        public var accessTime: Int64? = nil
+    }
 }

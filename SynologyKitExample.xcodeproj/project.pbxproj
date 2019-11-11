@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A37D4B4B237931A70003B908 /* Test.json in Resources */ = {isa = PBXBuildFile; fileRef = A37D4B4A237931A70003B908 /* Test.json */; };
 		A3AD405D23729AFA00F38D14 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD405C23729AFA00F38D14 /* LoginViewController.swift */; };
 		A3AD406023729C4000F38D14 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD405F23729C4000F38D14 /* LoginModel.swift */; };
 		A3AD406323729CAD00F38D14 /* LoginTextFieldViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD406223729CAD00F38D14 /* LoginTextFieldViewCell.swift */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		9FB844C6BFB9F98500C924BC /* Pods-SynologyKitExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SynologyKitExample.debug.xcconfig"; path = "Target Support Files/Pods-SynologyKitExample/Pods-SynologyKitExample.debug.xcconfig"; sourceTree = "<group>"; };
+		A37D4B4A237931A70003B908 /* Test.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Test.json; sourceTree = "<group>"; };
 		A3AD405C23729AFA00F38D14 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		A3AD405F23729C4000F38D14 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		A3AD406223729CAD00F38D14 /* LoginTextFieldViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTextFieldViewCell.swift; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 				A3B1B420236A8F27001D76E2 /* LaunchScreen.storyboard */,
 				A3B1B41B236A8F27001D76E2 /* Main.storyboard */,
 				A3B1B41E236A8F27001D76E2 /* Assets.xcassets */,
+				A37D4B4A237931A70003B908 /* Test.json */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -200,6 +203,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3B1B422236A8F27001D76E2 /* LaunchScreen.storyboard in Resources */,
+				A37D4B4B237931A70003B908 /* Test.json in Resources */,
 				A3B1B41F236A8F27001D76E2 /* Assets.xcassets in Resources */,
 				A3B1B41D236A8F27001D76E2 /* Main.storyboard in Resources */,
 			);

@@ -34,15 +34,36 @@ class BrowserViewController: UIViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+        
+        
+        setupNavigationBar()
+        setupTableView()
+        loadData()
+    }
+    
+    private func setupNavigationBar() {
         if title == nil {
             title = "Browse"
+            
+            let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(handleCloseButtonClicked))
+            navigationItem.leftBarButtonItem = closeButton
         }
         view.backgroundColor = .white
         navigationController?.navigationBar.barTintColor = .white
         
-        setupTableView()
-        loadData()
+        let moreButton = UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(handleActionButtonClicked))
+        navigationItem.rightBarButtonItem = moreButton
     }
+
+    @objc private func handleCloseButtonClicked() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
+    @objc private func handleActionButtonClicked() {
+        showMoreContext()
+    }
+    
     
     private func setupTableView() {
         tableView = UITableView(frame: view.bounds)
@@ -176,5 +197,37 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
                 print("File Downloaded to :\(path)")
             }
         }
+    }
+    
+    private func showMoreContext() {
+        let actionSheet = WXActionSheet(cancelButtonTitle: "Cancel")
+        actionSheet.add(WXActionSheetItem(title: "Upload", handler: { [weak self] _ in
+            self?.uploadFile()
+        }))
+        actionSheet.show()
+    }
+    
+    private func uploadFile() {
+        
+        guard let path = Bundle.main.path(forResource: "Test", ofType: "json"),
+            let data = try? Data(contentsOf: URL(fileURLWithPath: path)), let folder = folderPath else {
+            return
+        }
+        
+        client.upload(data: data, filename: "test.json", destinationFolderPath: folder, createParents: true, options: nil) { result in
+            switch result {
+            case .success(let request, _, _):
+                request.uploadProgress { progress in
+                    print(progress)
+                }.response { response in
+                    if response.error == nil {
+                        print("Uploaded")
+                    }
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+        
     }
 }

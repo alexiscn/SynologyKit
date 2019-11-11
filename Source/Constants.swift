@@ -151,6 +151,7 @@ enum SynologyMethod: String {
     case list_share
     case login
     case logout
+    case upload
     case query
     case rename
     case replace_all

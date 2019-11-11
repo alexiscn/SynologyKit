@@ -24,12 +24,6 @@ Features
 * Download Share File
 
 
-
-TODO
-==
-* Upload file
-
-
 Install
 == 
 
@@ -130,6 +124,25 @@ client.downloadFile(path: file.path, to: destination).downloadProgress { progres
 }.response { response in
     if response.error == nil, let path = response.destinationURL?.path {
         print("File Downloaded to :\(path)")
+    }
+}
+```
+
+#### Upload file
+
+```swift
+client.upload(data: data, filename: "test.json", destinationFolderPath: folder, createParents: true, options: nil) { result in
+    switch result {
+    case .success(let request, _, _):
+        request.uploadProgress { progress in
+            print(progress)
+        }.response { response in
+            if response.error == nil {
+                print("Uploaded")
+            }
+        }
+    case .failure(let error):
+        print(error)
     }
 }
 ```

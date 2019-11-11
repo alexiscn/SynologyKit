@@ -422,8 +422,57 @@ extension SynologyClient {
         post(request, completion: completion)
     }
     
-    public func upload(data: Data, destinationFolderPath: String, createParents: Bool, overwrites: Bool? = nil) {
-        // TODO
+    
+    /// Upload a file.
+    /// - Parameters:
+    ///   - data: The data to be uploaded.
+    ///   - filename: File name.
+    ///   - destinationFolderPath: A destination folder path starting with a shared folder to which files can be uploaded
+    ///   - createParents: Create parent folder(s) if none exist.
+    ///   - options: Upload options.
+    ///   - encodingCompletion: The closure called when the `MultipartFormData` encoding is complete.
+    public func upload(data: Data, filename: String, destinationFolderPath: String, createParents: Bool, options: UploadOptions? = nil, encodingCompletion: ((Alamofire.SessionManager.MultipartFormDataEncodingResult) -> Void)?) {
+        
+        struct UploadParam {
+            var key: String
+            var value: String
+        }
+        var parameters: [UploadParam] = []
+        parameters.append(UploadParam(key: "api", value: SynologyAPI.upload.rawValue))
+        parameters.append(UploadParam(key: "version", value: "2"))
+        parameters.append(UploadParam(key: "method", value: SynologyMethod.upload.rawValue))
+        if let sid = self.sessionid {
+            parameters.append(UploadParam(key: "_sid", value: sid))
+        }
+        parameters.append(UploadParam(key: "path", value: destinationFolderPath))
+        parameters.append(UploadParam(key: "create_parents", value: String(createParents)))
+        
+        if let options = options {
+            if let overwrite = options.overwrite {
+                parameters.append(UploadParam(key: "overwrite", value: String(overwrite)))
+            }
+            if let mtime = options.modificationTime {
+                parameters.append(UploadParam(key: "mtime", value: String(mtime)))
+            }
+            if let crtime = options.createTime {
+                parameters.append(UploadParam(key: "crtime", value: String(crtime)))
+            }
+            if let atime = options.accessTime {
+                parameters.append(UploadParam(key: "atime", value: String(atime)))
+            }
+        }
+        
+        let url = URL(string: baseURLString().appending("webapi/entry.cgi"))!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = data
+        
+        Alamofire.upload(multipartFormData: { (formData) in
+            for param in parameters {
+                formData.append(Data(param.value.utf8), withName: param.key)
+            }
+            formData.append(data, withName: "file", fileName: filename, mimeType: "application/octet-stream")
+        }, with: request, encodingCompletion: encodingCompletion)
     }
     
     public func downloadFile(path: String, to: @escaping DownloadRequest.DownloadFileDestination) -> DownloadRequest {
