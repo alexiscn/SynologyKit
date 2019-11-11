@@ -10,7 +10,24 @@ Features
 * Support IP/Port Sign In
 * List Share Folders
 * List Share Files
+* Get file info
+* list Virtual Folder
+* favorites management (list/add/delete/edit/replaceAll)
+* get thumbnail of a file
+* get directory size
+* calculate file md5
+* Directory management (create/rename/list)
+* copy move file
+* delete file (folder)
+* extract(compress) file
+* background task management(list/clearFinished)
 * Download Share File
+
+
+
+TODO
+==
+* Upload file
 
 
 Install
