@@ -63,7 +63,7 @@ client.login(account: account, passwd: password) { [weak self] response in
 
 When `sid` is got, you should update `SynologyClient` with SessionID. And then you can have access to all rest apis. 
 
-#### List Share Folders
+#### 3. List Share Folders
 
 Before your list folder files, you should first list share folders.
 
@@ -80,7 +80,7 @@ client.listShareFolders { response in
 }
 ```        
 
-#### List Folder
+#### 4. List Folder
 
 ```swift
 client.listFolder(folder) { response in
@@ -93,6 +93,26 @@ client.listFolder(folder) { response in
         }
     case .failure(let error):
         print(error)
+    }
+}
+```
+
+#### Download file
+
+Download file just as easy as using `Alamofire`
+
+```swift
+let destination: DownloadRequest.DownloadFileDestination = { (temporaryURL, response)  in
+    let options = DownloadRequest.DownloadOptions.removePreviousFile
+    let localURL = URL(fileURLWithPath: NSHomeDirectory().appending("/Documents/\(file.name)"))
+    return (localURL,options)
+}
+
+client.downloadFile(path: file.path, to: destination).downloadProgress { progress in
+    print(progress)
+}.response { response in
+    if response.error == nil, let path = response.destinationURL?.path {
+        print("File Downloaded to :\(path)")
     }
 }
 ```

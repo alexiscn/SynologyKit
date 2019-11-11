@@ -9,6 +9,7 @@
 import UIKit
 import SynologyKit
 import WXActionSheet
+import Alamofire
 
 class BrowserViewController: UIViewController {
     
@@ -139,6 +140,12 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
         actionSheet.add(WXActionSheetItem(title: "MD5", handler: { [weak self] _ in
             self?.calculateMD5(of: model)
         }))
+        if !model.isDirectory {
+            actionSheet.add(WXActionSheetItem(title: "Download", handler: { [weak self] _ in
+                self?.downloadFile(model)
+            }))
+        }
+        
         actionSheet.show()
     }
     
@@ -151,6 +158,22 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
                 }
             case .failure(let error):
                 print(error.description)
+            }
+        }
+    }
+    
+    private func downloadFile(_ file: BrowserModel) {
+        let destination: DownloadRequest.DownloadFileDestination = { (temporaryURL, response)  in
+            let options = DownloadRequest.DownloadOptions.removePreviousFile
+            let localURL = URL(fileURLWithPath: NSHomeDirectory().appending("/Documents/\(file.name)"))
+            return (localURL,options)
+        }
+        
+        client.downloadFile(path: file.path, to: destination).downloadProgress { progress in
+            print(progress)
+        }.response { response in
+            if response.error == nil, let path = response.destinationURL?.path {
+                print("File Downloaded to :\(path)")
             }
         }
     }
