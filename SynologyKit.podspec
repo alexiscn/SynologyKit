@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.version      = '0.2.6'
   s.license      = 'MIT'
   s.requires_arc = true
-#  s.swift_versions = '5.0'
+  s.swift_versions = ['5.0', '5.1']
   s.source = { :git => 'https://github.com/alexiscn/SynologyKit.git', :tag => s.version.to_s }
 
   s.summary = 'Synology File Station SDK for Swift'
