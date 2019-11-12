@@ -11,26 +11,41 @@ Features
 * List Share Folders
 * List Share Files
 * Get file info
-* list Virtual Folder
-* favorites management (list/add/delete/edit/replaceAll)
-* get thumbnail of a file
-* get directory size
-* calculate file md5
+* List Virtual Folder
+* Favorites management (list/add/delete/edit/replaceAll)
+* Get thumbnail of a file
+* Get directory size
+* Calculate file md5
 * Directory management (create/rename/list)
-* copy move file
-* delete file (folder)
-* extract(compress) file
-* background task management(list/clearFinished)
-* Download Share File
+* Copy move file
+* Delete file (folder)
+* Extract(compress) file
+* Background task management(list/clearFinished)
+* Download file
+* Upload file
 
 
 Install
 == 
 
+### CocoaPods
+
 SynologyKit is available through CocoaPods. To install it, simply add the following line to your Podfile:
 
 ```sh
-pod 'SynologyKit'
+pod 'SynologyKit', '~>0.2.6'
+```
+
+### Swift Package Manager
+
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler. 
+
+Once you have your Swift package set up, adding SynologyKit as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/alexiscn/SynologyKit.git", from: "0.2.6")
+]
 ```
 
 Usage
