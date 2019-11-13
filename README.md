@@ -1,9 +1,5 @@
 # SynologyKit
 
-Note
-==
-This project is still under developing
-
 Features
 ==
 * Support QuickConnect Sign In
@@ -144,6 +140,8 @@ client.downloadFile(path: file.path, to: destination).downloadProgress { progres
 ```
 
 #### Upload file
+
+Upload file is done with Alamofire.
 
 ```swift
 client.upload(data: data, filename: "test.json", destinationFolderPath: folder, createParents: true, options: nil) { result in
