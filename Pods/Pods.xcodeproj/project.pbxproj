@@ -1016,6 +1016,43 @@
 			};
 			name = Release;
 		};
+		1422396BE1954C96BF63469AE0F0F9D6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B680684F92DC7DFF09653154530D49C /* SynologyKit.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/SynologyKit/SynologyKit-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/SynologyKit/SynologyKit-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/SynologyKit/SynologyKit.modulemap";
+				PRODUCT_MODULE_NAME = SynologyKit;
+				PRODUCT_NAME = SynologyKit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.1;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		1746F9822C5E8572B5A32FF294A68686 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1519EF92E1C7AA5D9FCD8A32AC123BF7 /* WXActionSheet.xcconfig */;
@@ -1091,6 +1128,42 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
+		};
+		1DCA8940832A13C46B75808D046D6B4D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B680684F92DC7DFF09653154530D49C /* SynologyKit.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/SynologyKit/SynologyKit-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/SynologyKit/SynologyKit-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/SynologyKit/SynologyKit.modulemap";
+				PRODUCT_MODULE_NAME = SynologyKit;
+				PRODUCT_NAME = SynologyKit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.1;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
 		};
 		257497152829C177993B5EC99C1D227A /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1223,43 +1296,6 @@
 			};
 			name = Debug;
 		};
-		3FC740ABF5BBB3712542E8E658556339 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B680684F92DC7DFF09653154530D49C /* SynologyKit.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/SynologyKit/SynologyKit-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/SynologyKit/SynologyKit-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/SynologyKit/SynologyKit.modulemap";
-				PRODUCT_MODULE_NAME = SynologyKit;
-				PRODUCT_NAME = SynologyKit;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		75BBB760DFD877E344322B54D29DFE64 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A8A889A6AAF8EF1ED54696648BA56471 /* Alamofire.xcconfig */;
@@ -1359,42 +1395,6 @@
 				MODULEMAP_FILE = "Target Support Files/WXActionSheet/WXActionSheet.modulemap";
 				PRODUCT_MODULE_NAME = WXActionSheet;
 				PRODUCT_NAME = WXActionSheet;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		C21F9942C703EF05CA47A4CCC0FB0EE7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B680684F92DC7DFF09653154530D49C /* SynologyKit.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/SynologyKit/SynologyKit-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/SynologyKit/SynologyKit-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/SynologyKit/SynologyKit.modulemap";
-				PRODUCT_MODULE_NAME = SynologyKit;
-				PRODUCT_NAME = SynologyKit;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
@@ -1547,8 +1547,8 @@
 		09ED831F3A05F10AE17075CCF701A41A /* Build configuration list for PBXNativeTarget "SynologyKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C21F9942C703EF05CA47A4CCC0FB0EE7 /* Debug */,
-				3FC740ABF5BBB3712542E8E658556339 /* Release */,
+				1DCA8940832A13C46B75808D046D6B4D /* Debug */,
+				1422396BE1954C96BF63469AE0F0F9D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
