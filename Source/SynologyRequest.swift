@@ -311,5 +311,7 @@ public extension SynologyClient {
         
         /// Optional. Set last access time of the uploaded file, unit: Linux timestamp in millisecond.
         public var accessTime: Int64? = nil
+        
+        public init() { }
     }
 }

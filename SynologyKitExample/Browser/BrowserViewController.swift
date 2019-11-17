@@ -213,8 +213,8 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
             let data = try? Data(contentsOf: URL(fileURLWithPath: path)), let folder = folderPath else {
             return
         }
-        
-        client.upload(data: data, filename: "test.json", destinationFolderPath: folder, createParents: true, options: nil) { result in
+        let options = SynologyClient.UploadOptions()
+        client.upload(data: data, filename: "test.json", destinationFolderPath: folder, createParents: true, options: options) { result in
             switch result {
             case .success(let request, _, _):
                 request.uploadProgress { progress in
