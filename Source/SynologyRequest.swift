@@ -314,4 +314,17 @@ public extension SynologyClient {
         
         public init() { }
     }
+    
+    enum SharingSortBy: String {
+        case id
+        case name
+        case isFolder
+        case path
+        case dateExpired = "date_expired"
+        case dateAvailable = "date_available"
+        case status
+        case hasPassword = "has_password"
+        case url
+        case linkOwner = "link_owner"
+    }
 }

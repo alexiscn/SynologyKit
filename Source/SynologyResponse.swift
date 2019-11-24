@@ -278,6 +278,72 @@ public extension SynologyClient {
         /// “false”: It’s writable.
         let readonly: Bool
     }
+    
+    struct FileInfo: Codable {
+        public let files: [File]
+    }
+    
+    struct SharingLinkList: Codable {
+        
+        /// Total number of sharing links.
+        public let total: Int
+        
+        /// Requested offset
+        public let offset: Int
+        
+        /// Array of <Sharing_Link> object.
+        public let links: [SharingLink]
+    }
+    
+    struct SharingLink: Codable {
+        
+        public enum Status: String, Codable {
+            case valid
+            case invalid
+            case expired
+            case broken
+        }
+        
+        enum CodingKeys: String, CodingKey {
+            case id
+            case url
+            case linkOwner = "link_owner"
+            case path
+            case isFolder
+            case hasPassword = "has_password"
+            case dateExpired = "date_expired"
+            case dateAvaiable = "date_available"
+            case status
+        }
+        
+        /// A unique ID of a sharing link
+        public let id: String
+        
+        /// A URL of a sharing link.
+        public let url: String
+        
+        /// A user name of a sharing link owner
+        public let linkOwner: String
+        
+        /// A file or folder path of a sharing link
+        public let path: String
+        
+        /// Whether the sharing link is for a folder
+        public let isFolder: Bool
+        
+        /// Whether the sharing link has password
+        public let hasPassword: Bool
+        
+        /// The expiration date of the sharing link in the format 1 YYYY-MM-DD.
+        /// If the value is set to 0, the link will be permanent.
+        public let dateExpired: String
+        
+        /// The date when the sharing link becomes active in the format YYYY-MM-DD.
+        /// If the value is set to 0, the file sharing link will be active immediately after creation
+        public let dateAvaiable: String
+        
+        public let status: Status
+    }
 
     struct Owner: Codable {
         

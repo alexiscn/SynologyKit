@@ -235,7 +235,7 @@ extension SynologyClient {
     ///   - additional: Optional. Additional requested file information, separated by a comma, “,”.
     ///           When an additional option is requested, responded objects will be provided in the specified additional option.
     ///   - completion: Callback closure.
-    public func getFileInfo(atPath path: String, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func getFileInfo(atPath path: String, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<FileInfo>) {
         var parameters = Parameters()
         parameters["path"] = path
         if let options = additional {
@@ -452,7 +452,7 @@ extension SynologyClient {
     ///   - path: A folder path starting with a shared folder to check write permission.
     ///   - createOnly: Optional. True by default. If set to true, the permission will be allowed when there is non-existent file/folder.
     ///   - completion: Callback closure.
-    public func checkPermission(path: String, createOnly: Bool = true, completion: @escaping SynologyCompletion<String>) {
+    public func checkPermission(path: String, createOnly: Bool = true, completion: @escaping SynologyCompletion<EmptyResponse>) {
         var parameters = Parameters()
         parameters["path"] = path
         parameters["create_only"] = createOnly
@@ -531,8 +531,29 @@ extension SynologyClient {
         return Alamofire.download(urlString, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil, to: destination)
     }
     
-    public func getSharingList(offset: Int = 0, limit: Int = 0) {
-        
+    /// List user’s file sharing links.
+    /// - Parameters:
+    ///   - offset: Optional. Specify how many sharing links are skipped before beginning to return listed sharing links.
+    ///   - limit: Optional. Number of sharing links requested. 0 means to list all sharing links.
+    ///   - sortBy: Optional. Specify information of the sharing link to sort on.
+    ///   - direction: Optional. Specify to sort ascending or to sort descending.
+    ///   - forceClean: Optional. If set to false, the data will be retrieval from cache database rapidly.
+    ///                           If set to true, all sharing information including sharing statuses and
+    ///                           user name of sharing owner will be synchronized. It consumes some time.
+    ///   - completion: Callback closure.
+    public func getSharingList(offset: Int = 0, limit: Int = 0, sortBy: SharingSortBy? = nil, direction: FileSortDirection = .ascending, forceClean: Bool? = nil, completion: @escaping SynologyCompletion<SharingLinkList>) {
+        var params = Parameters()
+        params["offset"] = offset
+        params["limit"] = limit
+        if let sortBy = sortBy {
+            params["sort_by"] = sortBy.rawValue
+            params["sort_direction"] = direction.rawValue
+        }
+        if let forceClean = forceClean {
+            params["force_clean"] = forceClean
+        }
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), api: .sharing, method: .list, params: params)
+        post(request, completion: completion)
     }
     
     /// Create folders.
