@@ -200,7 +200,7 @@ public extension SynologyClient {
     
     struct SearchOptions {
         
-        public enum FileType {
+        public enum FileType: String {
             case file
             case directory
             case all

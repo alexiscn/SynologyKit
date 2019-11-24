@@ -253,6 +253,44 @@ extension SynologyClient {
     public func search(atFolderPath folderPath: String, options: SearchOptions, recursive: Bool = true, completion: @escaping SynologyCompletion<SearchFileTask>) {
         var parameters = Parameters()
         parameters["folder_path"] = folderPath
+        parameters["recursive"] = recursive
+        if let pattern = options.pattern {
+            parameters["pattern"] = pattern
+        }
+        if let ext = options.extension {
+            parameters["extension"] = ext
+        }
+        parameters["filetype"] = options.fileType.rawValue
+        if let sizeFrom = options.sizeFrom {
+            parameters["size_from"] = sizeFrom
+        }
+        if let sizeTo = options.sizeTo {
+            parameters["size_to"] = sizeTo
+        }
+        if let modifiyTimeFrom = options.lastModifiedTimeFrom {
+            parameters["mtime_from"] = modifiyTimeFrom
+        }
+        if let modifiyTimeTo = options.lastModifiedTimeTo {
+            parameters["mtime_to"] = modifiyTimeTo
+        }
+        if let createTimeFrom = options.createTimeFrom {
+            parameters["crtime_from"] = createTimeFrom
+        }
+        if let createTimeTo = options.createTimeTo {
+            parameters["crtime_to"] = createTimeTo
+        }
+        if let accessTimeFrom = options.lastAccesTimeFrom {
+            parameters["atime_from"] = accessTimeFrom
+        }
+        if let accessTimeTo = options.lastAccessTimeTo {
+            parameters["atime_to"] = accessTimeTo
+        }
+        if let owner = options.owner {
+            parameters["owner"] = owner
+        }
+        if let group = options.group {
+            parameters["group"] = group
+        }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), api: .search, method: .start, params: parameters)
         postNonBlockingRequest(request, completion: completion, method: .list)
     }
@@ -266,7 +304,7 @@ extension SynologyClient {
     /// - Parameter direction: Optional. Specify to sort ascending or to sort descending.
     /// - Parameter additional: Optional. Additional requested file information, separated by a comma, “,”. When an additional option is requested, responded objects will be provided in the specified additional option
     /// - Parameter completion: Callback closure.
-    public func listVirtualFolder(type: VirtualFolderType, offset: Int = 0, limit: Int = 0, sortBy: FileSortBy = .name, direction: FileSortDirection = .ascending, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func listVirtualFolder(type: VirtualFolderType, offset: Int = 0, limit: Int = 0, sortBy: FileSortBy = .name, direction: FileSortDirection = .ascending, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<VirtualFolderList>) {
         var params: Parameters = [:]
         params["type"] = type.rawValue
         params["offset"] = offset
@@ -288,7 +326,7 @@ extension SynologyClient {
     ///   - additional: Optional. Additional requested information of a folder which a favorite links to, separated by a comma, “,”.
     ///                 When an additional option is requested, responded objects will be provided in the specified additional option.
     ///   - completion: Callback closure.
-    public func listFavorites(offset: Int = 0, limit: Int = 0, statusFilter: FavoriteStatus = .all, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<String>) {
+    public func listFavorites(offset: Int = 0, limit: Int = 0, statusFilter: FavoriteStatus = .all, additional: AdditionalOptions? = nil, completion: @escaping SynologyCompletion<FavoriteList>) {
         var parameters = Parameters()
         parameters["offset"] = offset
         parameters["limit"] = limit

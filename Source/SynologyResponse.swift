@@ -166,7 +166,7 @@ public extension SynologyClient {
         public let additional: FileAdditional?
     }
     
-    enum FavoriteStatus: String {
+    enum FavoriteStatus: String, Codable {
         /// A folder, which a favorite links to, exists
         case valid
         /// A folder, which a favorite links to, doesn’t exist or be not permitted to access it.
@@ -175,7 +175,16 @@ public extension SynologyClient {
         case all
     }
     
-    struct Favorite {
+    struct FavoriteList: Codable {
+        /// Requested offset.
+        public let total: Int
+        /// Total number of favorites.
+        public let offset: Int
+        /// Array of <favorite> objects.
+        public let favorites: [Favorite]?
+    }
+    
+    struct Favorite: Codable {
         /// Folder path of a user’s favorites, started with a shared folder.
         public let path: String
         

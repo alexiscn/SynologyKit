@@ -204,6 +204,9 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
         actionSheet.add(WXActionSheetItem(title: "Upload", handler: { [weak self] _ in
             self?.uploadFile()
         }))
+        actionSheet.add(WXActionSheetItem(title: "Search", handler: { [weak self] _ in
+            self?.searchFile()
+        }))
         actionSheet.show()
     }
     
@@ -228,6 +231,23 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
                 print(error)
             }
         }
-        
+    }
+    
+    private func searchFile() {
+        guard let folderPath = folderPath else {
+            return
+        }
+        var options = SynologyClient.SearchOptions();
+        options.pattern = "*.jpg";
+        client.search(atFolderPath: folderPath, options: options) { result in
+            switch result {
+            case .success(let task):
+                for file in task.files {
+                    print(file.path)
+                } 
+            case .failure(let error):
+                print(error.description)
+            }
+        }
     }
 }

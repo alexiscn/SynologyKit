@@ -159,3 +159,22 @@ client.upload(data: data, filename: "test.json", destinationFolderPath: folder, 
     }
 }
 ```
+
+#### Search file
+
+Search file
+
+```swift
+var options = SynologyClient.SearchOptions();
+options.pattern = "*.jpg";
+client.search(atFolderPath: folderPath, options: options) { result in
+    switch result {
+    case .success(let task):
+        for file in task.files {
+            print(file.path)
+        } 
+    case .failure(let error):
+        print(error.description)
+    }
+}
+```
