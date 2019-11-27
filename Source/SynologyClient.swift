@@ -847,6 +847,9 @@ extension SynologyClient {
         if let error = error {
             return .failure(error)
         }
+        if status == nil {
+            return .failure(.unknownError)
+        }
         return .success(status)
     }
 }

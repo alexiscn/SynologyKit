@@ -22,6 +22,7 @@ public enum SynologyError: Error, CustomStringConvertible {
     case invalidResponse(DefaultDataResponse)
     case decodeDataError(DefaultDataResponse, String?)
     case serverError(Int, String, DefaultDataResponse)
+    case unknownError
     
     public var description: String {
         switch self {
@@ -37,6 +38,8 @@ public enum SynologyError: Error, CustomStringConvertible {
         case .serverError(let code, let message, let res):
             debugPrint("Error Code:\(code), response: \(res)")
             return message
+        case .unknownError:
+            return "Unknown Error"
         }
     }
 }
