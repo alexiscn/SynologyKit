@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SynologyKit'
-  s.version      = '0.3.1'
+  s.version      = '0.4.0'
   s.license      = 'MIT'
   s.requires_arc = true
   s.swift_versions = ['5.0', '5.1', '5.1.2']
@@ -11,6 +11,7 @@ Pod::Spec.new do |s|
   s.author       = { 'xushuifeng' => 'https://github.com/alexiscn' }
   s.platform     = :ios
   s.ios.deployment_target = '11.0'
+  s.osx.deployment_target = '10.12'
   s.source_files = 'Source/*.swift'
   
   s.dependency 'Alamofire'
