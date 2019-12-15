@@ -34,11 +34,10 @@ class BrowserTableViewCell: UITableViewCell {
         titleLabel = UILabel()
         titleLabel.lineBreakMode = .byTruncatingMiddle
         titleLabel.font = UIFont.systemFont(ofSize: 16)
-        titleLabel.textColor = UIColor.black
         
         subTitleLabel = UILabel()
         subTitleLabel.font = UIFont.systemFont(ofSize: 13)
-        subTitleLabel.textColor = UIColor(white: 0, alpha: 0.4)
+        subTitleLabel.textColor = UIColor.systemGray2
         
         infoStackView = UIStackView(arrangedSubviews: [titleLabel, subTitleLabel])
         infoStackView.axis = .vertical

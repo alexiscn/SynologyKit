@@ -48,8 +48,8 @@ class BrowserViewController: UIViewController {
             let closeButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(handleCloseButtonClicked))
             navigationItem.leftBarButtonItem = closeButton
         }
-        view.backgroundColor = .white
-        navigationController?.navigationBar.barTintColor = .white
+//        view.backgroundColor = .white
+//        navigationController?.navigationBar.barTintColor = .white
         
         let moreButton = UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(handleActionButtonClicked))
         navigationItem.rightBarButtonItem = moreButton
@@ -63,7 +63,6 @@ class BrowserViewController: UIViewController {
     @objc private func handleActionButtonClicked() {
         showMoreContext()
     }
-    
     
     private func setupTableView() {
         tableView = UITableView(frame: view.bounds)
@@ -202,7 +201,8 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
     private func showMoreContext() {
         let actionSheet = WXActionSheet(cancelButtonTitle: "Cancel")
         actionSheet.add(WXActionSheetItem(title: "Upload", handler: { [weak self] _ in
-            self?.uploadFile()
+            //self?.uploadFile()
+            self?.uploadImage()
         }))
         actionSheet.add(WXActionSheetItem(title: "Search", handler: { [weak self] _ in
             self?.searchFile()
@@ -229,6 +229,31 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
                 }
             case .failure(let error):
                 print(error)
+            }
+        }
+    }
+    
+    private func uploadImage() {
+        guard let img = UIImage(named: "swift"), let pngdata = img.pngData(), let folder = folderPath else {
+            return
+        }
+        var options = SynologyClient.UploadOptions()
+        options.overwrite = true
+        options.modificationTime = Int64(Date().timeIntervalSince1970*1000)
+        client.upload(data: pngdata, filename: "swift.png", destinationFolderPath: folder, createParents: true, options: options) { (result) in
+            switch result {
+            case .success(let request, let isStream, let streamFileURL):
+                print("isStream: \(isStream) - streamFileURL: \(String(describing: streamFileURL?.absoluteURL))")
+                request.uploadProgress { progress in
+                    print("progress: \(progress.fractionCompleted)")
+                }.response { response in
+                    print(response)
+                    if response.error == nil {
+                        print("swift.png uploaded")
+                    }
+                }
+            case .failure(let error):
+                print("error: \(error.localizedDescription)")
             }
         }
     }
