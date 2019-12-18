@@ -425,6 +425,19 @@ extension SynologyClient {
         getStreamData(request, completion: completion)
     }
     
+    
+    /// Get a thumbnail URL of a file.
+    /// - Parameters:
+    ///   - path: A file path started with a shared folder.
+    ///   - size: Different size thumbnail
+    public func thumbURL(path: String, size: FileThumbSize = .small) -> URL? {
+        var parameters = Parameters()
+        parameters["path"] = path
+        parameters["size"] = size.rawValue
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), api: .thumb, method: .get, params: parameters)
+        return request.asURL(sessionID: sessionid)
+    }
+    
     /// Get the accumulated size of files/folders within folder(s).
     /// - Parameters:
     ///   - path: One or more file/folder paths starting with a shared folder for calculating cumulative size, separated by a comma, “,”.

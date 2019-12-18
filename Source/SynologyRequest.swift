@@ -60,6 +60,24 @@ struct SynologyBasicRequest: SynologyRequest {
         }
     }
     
+    func asURL(sessionID: String?) -> URL? {
+        do {
+            let urlString = "\(baseURLString)webapi/\(path)"
+            var parameter = params
+            parameter["api"] = api.rawValue
+            parameter["method"] = method.rawValue
+            parameter["version"] = version
+            if let sid = sessionID {
+                parameter["_sid"] = sid
+            }
+            let request = try URLRequest(url: urlString, method: .get, headers: headers)
+            let encodedRequest = try URLEncoding.default.encode(request, with: parameter)
+            return encodedRequest.url
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+    
     init(baseURLString: String, api: SynologyAPI, method: SynologyMethod, params: Parameters) {
         self.baseURLString = baseURLString
         self.api = api

@@ -5,5 +5,6 @@ target 'SynologyKitExample' do
   pod 'SnapKit'
   pod 'KeychainSwift'
   pod 'WXActionSheet'
+  pod 'Kingfisher'
   pod 'SynologyKit', :path => '.'
 end

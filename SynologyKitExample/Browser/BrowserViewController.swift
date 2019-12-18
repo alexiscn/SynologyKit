@@ -21,6 +21,8 @@ class BrowserViewController: UIViewController {
     
     private let client: SynologyClient
     
+    private var showThumb: Bool = false
+    
     init(client: SynologyClient) {
         self.client = client
         super.init(nibName: nil, bundle: nil)
@@ -134,7 +136,7 @@ extension BrowserViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(BrowserTableViewCell.self), for: indexPath) as! BrowserTableViewCell
         cell.delegate = self
         let model = dataSource[indexPath.row]
-        cell.update(model)
+        cell.update(model, showThumb: showThumb, client: client)
         return cell
     }
     
@@ -207,6 +209,10 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
         actionSheet.add(WXActionSheetItem(title: "Search", handler: { [weak self] _ in
             self?.searchFile()
         }))
+        let thumbActionTitle = showThumb ? "Hide Thumb": "Show Thumb"
+        actionSheet.add(WXActionSheetItem(title: thumbActionTitle, handler: { [weak self] _ in
+            self?.showHideThumb()
+        }))
         actionSheet.show()
     }
     
@@ -274,5 +280,10 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
                 print(error.description)
             }
         }
+    }
+    
+    private func showHideThumb() {
+        showThumb.toggle()
+        tableView.reloadData()
     }
 }

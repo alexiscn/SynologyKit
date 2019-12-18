@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Kingfisher
+import SynologyKit
 
 protocol BrowserTableViewCellDelegate: class {
     func didTapMoreButton(model: BrowserModel)
@@ -77,9 +79,18 @@ class BrowserTableViewCell: UITableViewCell {
         }
     }
     
-    func update(_ model: BrowserModel) {
+    func update(_ model: BrowserModel, showThumb: Bool, client: SynologyClient) {
         self.model = model
-        iconImageView.image = model.isDirectory ? UIImage(named: "Folder_40x40_"): UIImage(named: "File_40x40_")
+        if model.isDirectory {
+            iconImageView.image = UIImage(named: "Folder_40x40_")
+        } else {
+            if showThumb {
+                let thumbURL = client.thumbURL(path: model.path)
+                iconImageView.kf.setImage(with: thumbURL)
+            } else {
+                iconImageView.image = UIImage(named: "File_40x40_")
+            }
+        }
         titleLabel.text = model.name
         //subTitleLabel.text = // TODO
     }
