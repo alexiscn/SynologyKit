@@ -51,6 +51,47 @@ public struct QuickIDResponse: Codable {
     public let service: QuickIDService?
 }
 
+public struct QuickConnectResponse: Codable {
+    public let command: String?
+    public let env: QuickIDEnv?
+    public let errno: Int
+    public let server: QuickConnectServer?
+    public let service: QuickIDService?
+}
+
+public struct QuickConnectServer: Codable {
+    public let ddns: String?
+    public let ds_state: String?
+
+    public struct External: Codable {
+        public let ip: String
+        public let ipv6: String?
+    }
+    
+    public let external: External?
+    
+    public let fqnd: String?
+    
+    public let gateway: String?
+    
+    public let interface: [ServerInterface]?
+    
+    public struct ServerInterface: Codable {
+        public let ip: String
+        public let mask: String
+        public let name: String
+    }
+    
+    public struct SeverIPV6: Codable {
+        public let addr_type: Int?
+        public let address: String?
+        public let prefix_length: Int?
+        public let scope: String?
+    }
+}
+
+
+
 public struct QuickIDService: Codable {
     
     enum CodingKeys: String, CodingKey {

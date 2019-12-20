@@ -1,6 +1,6 @@
 {
   "name": "SynologyKit",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "license": "MIT",
   "requires_arc": true,
   "swift_versions": [
@@ -10,7 +10,7 @@
   ],
   "source": {
     "git": "https://github.com/alexiscn/SynologyKit.git",
-    "tag": "0.4.1"
+    "tag": "0.5.0"
   },
   "summary": "Synology File Station SDK for Swift",
   "homepage": "https://github.com/alexiscn/SynologyKit",
