@@ -29,7 +29,7 @@ Install
 SynologyKit is available through CocoaPods. To install it, simply add the following line to your Podfile:
 
 ```sh
-pod 'SynologyKit', '~>0.5.0'
+pod 'SynologyKit', '~>0.5.1'
 ```
 
 ### Swift Package Manager
@@ -40,7 +40,7 @@ Once you have your Swift package set up, adding SynologyKit as a dependency is a
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/alexiscn/SynologyKit.git", from: "0.5.0")
+    .package(url: "https://github.com/alexiscn/SynologyKit.git", from: "0.5.1")
 ]
 ```
 
