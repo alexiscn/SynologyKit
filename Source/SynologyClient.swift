@@ -161,6 +161,21 @@ extension SynologyClient {
                     self.host = h
                     self.port = p
                     self.login(account: account, passwd: password, completion: completion)
+                } else if let controlHost = connect.env?.controlHost {
+                    self.getServerInfo(server: controlHost, quickID: quickID) { quickIDRes in
+                        switch quickIDRes {
+                        case .success(let connectResponse):
+                            if let h = connectResponse.service?.relayIP, let p = connectResponse.service?.relayPort {
+                                self.host = h
+                                self.port = p
+                                self.login(account: account, passwd: password, completion: completion)
+                            } else {
+                                completion(.failure(.unknownError))
+                            }
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
                 } else {
                     completion(.failure(.unknownError))
                 }
@@ -784,21 +799,21 @@ extension SynologyClient {
     /// - Parameter quickID: quickID of your Synology
     /// - Parameter platform: platform
     /// - Parameter completion: callback closure
-//    public func getServerInfo(server: String, quickID: String, platform: String = "iPhone9,1", completion: @escaping QuickIDCompletion) {
-//        let url = "https://\(server)"
-//        var params: [String: Any] = [:]
-//        params["location"] = "en_CN"
-//        params["id"] = "audio_http"
-//        params["platform"] = platform
-//        params["serverID"] = quickID
-//        params["command"] = "request_tunnel"
-//        params["version"] = 1
-//        let headers = ["User-Agent": userAgent]
-//        let request = QuickConnectRequest(baseURLString: url, path: "/Serv.php", params: params, headers: headers)
-//        SessionManager.default.request(request.asURLRequest()).response(queue: nil) { response in
-//            self.handleQuickIDResponse(response, completion: completion)
-//        }
-//    }
+    public func getServerInfo(server: String, quickID: String, platform: String = "iPhone9,1", completion: @escaping QuickIDCompletion) {
+        let url = "https://\(server)"
+        var params: [String: Any] = [:]
+        params["location"] = "en_CN"
+        params["id"] = "audio_http"
+        params["platform"] = platform
+        params["serverID"] = quickID
+        params["command"] = "request_tunnel"
+        params["version"] = 1
+        let headers = ["User-Agent": userAgent]
+        let request = QuickConnectRequest(baseURLString: url, path: "/Serv.php", params: params, headers: headers)
+        SessionManager.default.request(request.asURLRequest()).response(queue: nil) { response in
+            self.handleQuickIDResponse(response, completion: completion)
+        }
+    }
     
     func handleQuickConnectResponse(_ response: DefaultDataResponse, completion: @escaping GlobalQuickConnectCompletion) {
         DispatchQueue.main.async {
@@ -816,21 +831,21 @@ extension SynologyClient {
         }
     }
     
-//    func handleQuickIDResponse(_ response: DefaultDataResponse, completion: @escaping QuickIDCompletion) {
-//        DispatchQueue.main.async {
-//            guard let data = response.data else {
-//                completion(.failure(.invalidResponse(response)))
-//                return
-//            }
-//            do {
-//                let decodedRes = try JSONDecoder().decode(QuickIDResponse.self, from: data)
-//                completion(.success(decodedRes))
-//            } catch {
-//                let text = String(data: data, encoding: .utf8)
-//                completion(.failure(.decodeDataError(response, text)))
-//            }
-//        }
-//    }
+    func handleQuickIDResponse(_ response: DefaultDataResponse, completion: @escaping QuickIDCompletion) {
+        DispatchQueue.main.async {
+            guard let data = response.data else {
+                completion(.failure(.invalidResponse(response)))
+                return
+            }
+            do {
+                let decodedRes = try JSONDecoder().decode(QuickIDResponse.self, from: data)
+                completion(.success(decodedRes))
+            } catch {
+                let text = String(data: data, encoding: .utf8)
+                completion(.failure(.decodeDataError(response, text)))
+            }
+        }
+    }
 }
 
 // MARK: - Non-Blocking Operations
