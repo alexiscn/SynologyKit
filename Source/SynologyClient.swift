@@ -497,7 +497,6 @@ extension SynologyClient {
         post(request, completion: completion)
     }
     
-    
     /// Upload a file.
     /// - Parameters:
     ///   - data: The data to be uploaded.
@@ -505,8 +504,9 @@ extension SynologyClient {
     ///   - destinationFolderPath: A destination folder path starting with a shared folder to which files can be uploaded
     ///   - createParents: Create parent folder(s) if none exist.
     ///   - options: Upload options.
-    ///   - encodingCompletion: The closure called when the `MultipartFormData` encoding is complete.
-    public func upload(data: Data, filename: String, destinationFolderPath: String, createParents: Bool, options: UploadOptions? = nil, encodingCompletion: ((Alamofire.SessionManager.MultipartFormDataEncodingResult) -> Void)?) {
+    ///   - progressHandler: The upload progress handler.
+    ///   - completion: Callback Closure.
+    public func upload(data: Data, filename: String, destinationFolderPath: String, createParents: Bool, options: UploadOptions? = nil, progressHandler: UploadRequest.ProgressHandler? = nil, completion: @escaping SynologyCompletion<UploadResponse>) {
         
         struct UploadParam {
             var key: String
@@ -538,16 +538,39 @@ extension SynologyClient {
         }
         
         let url = URL(string: baseURLString().appending("webapi/entry.cgi"))!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = data
-        
         Alamofire.upload(multipartFormData: { (formData) in
             for param in parameters {
                 formData.append(Data(param.value.utf8), withName: param.key)
             }
             formData.append(data, withName: "file", fileName: filename, mimeType: "application/octet-stream")
-        }, with: request, encodingCompletion: encodingCompletion)
+        }, to: url) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(.uploadError(error)))
+            case .success(let request, _, _):
+                request.uploadProgress { progress in
+                    progressHandler?(progress)
+                }.response { response in
+                    guard let data = response.data else {
+                        completion(.failure(.invalidResponse(response)))
+                        return
+                    }
+                    do {
+                        let decodedRes = try JSONDecoder().decode(UploadResponse.self, from: data)
+                        if decodedRes.success {
+                            completion(.success(decodedRes))
+                        } else {
+                            let code = decodedRes.error?.code ?? -1
+                            let msg = SynologyErrorMapper[code] ?? "Unknow error"
+                            completion(.failure(.serverError(code, msg, response)))
+                        }
+                    } catch {
+                        let text = String(data: data, encoding: .utf8)
+                        completion(.failure(.decodeDataError(response, text)))
+                    }
+                }
+            }
+        }
     }
     
     public func downloadFile(path: String, to: @escaping DownloadRequest.DownloadFileDestination) -> DownloadRequest {

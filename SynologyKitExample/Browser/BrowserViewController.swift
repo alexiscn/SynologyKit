@@ -216,50 +216,22 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
         actionSheet.show()
     }
     
-    private func uploadFile() {
-        
-        guard let path = Bundle.main.path(forResource: "Test", ofType: "json"),
-            let data = try? Data(contentsOf: URL(fileURLWithPath: path)), let folder = folderPath else {
-            return
-        }
-        let options = SynologyClient.UploadOptions()
-        client.upload(data: data, filename: "test.json", destinationFolderPath: folder, createParents: true, options: options) { result in
-            switch result {
-            case .success(let request, _, _):
-                request.uploadProgress { progress in
-                    print(progress)
-                }.response { response in
-                    if response.error == nil {
-                        print("Uploaded")
-                    }
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
     private func uploadImage() {
-        guard let img = UIImage(named: "swift"), let pngdata = img.pngData(), let folder = folderPath else {
+        guard let img = UIImage(named: "swift"), let data = img.pngData(), let folder = folderPath else {
             return
         }
+        
         var options = SynologyClient.UploadOptions()
         options.overwrite = true
         options.modificationTime = Int64(Date().timeIntervalSince1970*1000)
-        client.upload(data: pngdata, filename: "swift.png", destinationFolderPath: folder, createParents: true, options: options) { (result) in
+        client.upload(data: data, filename: "swift.png", destinationFolderPath: folder, createParents: true, options: options, progressHandler: { (progress) in
+            print("progress: \(progress.fractionCompleted)")
+        }) { result in
             switch result {
-            case .success(let request, let isStream, let streamFileURL):
-                print("isStream: \(isStream) - streamFileURL: \(String(describing: streamFileURL?.absoluteURL))")
-                request.uploadProgress { progress in
-                    print("progress: \(progress.fractionCompleted)")
-                }.response { response in
-                    print(response)
-                    if response.error == nil {
-                        print("swift.png uploaded")
-                    }
-                }
             case .failure(let error):
-                print("error: \(error.localizedDescription)")
+                print(error.description)
+            case .success(let response):
+                print("uploaded:\(response)")
             }
         }
     }

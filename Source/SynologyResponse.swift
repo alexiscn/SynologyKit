@@ -14,7 +14,7 @@ struct SynologyResponse<T>: Codable where T: Codable {
     public var error: ErrorCode?
 }
 
-struct ErrorCode: Codable {
+public struct ErrorCode: Codable {
     public let code: Int
 }
 
@@ -23,6 +23,7 @@ public enum SynologyError: Error, CustomStringConvertible {
     case decodeDataError(DefaultDataResponse, String?)
     case serverError(Int, String, DefaultDataResponse)
     case unknownError
+    case uploadError(Error)
     
     public var description: String {
         switch self {
@@ -40,6 +41,8 @@ public enum SynologyError: Error, CustomStringConvertible {
             return message
         case .unknownError:
             return "Unknown Error"
+        case .uploadError(let error):
+            return "Upload Error:\(error.localizedDescription)"
         }
     }
 }
@@ -90,8 +93,6 @@ public struct QuickConnectServer: Codable {
     }
 }
 
-
-
 public struct QuickIDService: Codable {
     
     enum CodingKeys: String, CodingKey {
@@ -114,6 +115,25 @@ public struct QuickIDEnv: Codable {
     
     let relayRegion: String
     let controlHost: String
+}
+
+public struct UploadResponse: Codable {
+    
+    public let success: Bool
+    
+    public let data: UploadFile?
+    
+    public let error: ErrorCode?
+    
+    public struct UploadFile: Codable {
+        public let blSkip: Bool
+        
+        public let file: String
+        
+        public let pid: Int
+        
+        public let progress: Float
+    }
 }
 
 public extension SynologyClient {
