@@ -8,6 +8,12 @@
 import Foundation
 import Alamofire
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+import MobileCoreServices
+#elseif os(macOS)
+import CoreServices
+#endif
+
 // https://global.download.synology.com/download/Document/DeveloperGuide/Synology_File_Station_API_Guide.pdf
 
 public typealias SynologyCompletion<T: Codable> = (Swift.Result<T, SynologyError>) -> Void
@@ -118,6 +124,15 @@ public class SynologyClient {
             let text = String(data: data, encoding: .utf8)
             completion(.failure(.decodeDataError(response, text)))
         }
+    }
+    
+    private func mimeType(forPathExtension pathExtension: String) -> String {
+        if let id = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as CFString, nil)?.takeRetainedValue(),
+            let contentType = UTTypeCopyPreferredTagWithClass(id, kUTTagClassMIMEType)?.takeRetainedValue()
+        {
+            return contentType as String
+        }
+        return "application/octet-stream"
     }
 }
 
@@ -513,12 +528,6 @@ extension SynologyClient {
             var value: String
         }
         var parameters: [UploadParam] = []
-        parameters.append(UploadParam(key: "api", value: SynologyAPI.upload.rawValue))
-        parameters.append(UploadParam(key: "version", value: "2"))
-        parameters.append(UploadParam(key: "method", value: SynologyMethod.upload.rawValue))
-        if let sid = self.sessionid {
-            parameters.append(UploadParam(key: "_sid", value: sid))
-        }
         parameters.append(UploadParam(key: "path", value: destinationFolderPath))
         parameters.append(UploadParam(key: "create_parents", value: String(createParents)))
         
@@ -537,12 +546,24 @@ extension SynologyClient {
             }
         }
         
-        let url = URL(string: baseURLString().appending("webapi/entry.cgi"))!
+        var urlString = baseURLString().appending("webapi/entry.cgi?api=\(SynologyAPI.upload.rawValue)&method=upload&version=2")
+        if let sid = self.sessionid {
+            urlString = urlString.appending("&_sid=\(sid)")
+        }
+        let url = URL(string: urlString)!
+        
         Alamofire.upload(multipartFormData: { (formData) in
             for param in parameters {
                 formData.append(Data(param.value.utf8), withName: param.key)
             }
-            formData.append(data, withName: "file", fileName: filename, mimeType: "application/octet-stream")
+            let mimeType: String
+            if filename.contains(".") {
+                let pathExtension = String(filename.split(separator: ".").last!)
+                mimeType = self.mimeType(forPathExtension: pathExtension)
+            } else {
+                mimeType = "application/octet-stream"
+            }
+            formData.append(data, withName: "file", fileName: filename, mimeType: mimeType)
         }, to: url) { result in
             switch result {
             case .failure(let error):
