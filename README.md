@@ -1,7 +1,26 @@
 # SynologyKit
 
-Features
-==
+Synology File API for Swift.
+
+Table of Contents
+=================
+
+* [Features](#features)
+* [Installation](#installation)
+    * [CocoaPods](#cocoapods)
+    * [Swift Package Manager](#swift-package-manager)
+* [Get Started](#get-started)
+    * [Create SynologyClient](#create-synologyclient)
+    * [Login in](#login-in)
+    * [List Share Folders](#list-share-folders)
+    * [List Folder](#list-folder)
+    * [Download file](#download-file)
+    * [Upload file](#upload-file)
+    * [Search file](#search-file)
+* [LICENSE](#license)
+
+## Features
+
 * Support QuickConnect Sign In
 * Support IP/Port Sign In
 * List Share Folders
@@ -21,8 +40,7 @@ Features
 * Upload file
 
 
-Install
-== 
+## Installation
 
 ### CocoaPods
 
@@ -44,12 +62,11 @@ dependencies: [
 ]
 ```
 
-Usage
-==
+## Get Started
 
 Other api can refer [Synology Official Document](https://global.download.synology.com/download/Document/Software/DeveloperGuide/Package/FileStation/All/enu/Synology_File_Station_API_Guide.pdf)
 
-#### 1. Create `SynologyClient` 
+### Create SynologyClient
 
 ```
 let address = "192.168.1.5"
@@ -64,7 +81,7 @@ client = SynologyClient(host: "your_quick_connect_id")
 ```
 
 
-#### 2. Login in
+### Login in
 
 After create SynologyClient, you can now sign in with following code:
 
@@ -85,7 +102,7 @@ client.login(account: account, passwd: password) { [weak self] response in
 
 When `sid` is got, you should update `SynologyClient` with SessionID. And then you can have access to all rest apis. 
 
-#### 3. List Share Folders
+### List Share Folders
 
 Before your list folder files, you should first list share folders.
 
@@ -102,7 +119,7 @@ client.listShareFolders { response in
 }
 ```        
 
-#### 4. List Folder
+### List Folder
 
 ```swift
 client.listFolder(folder) { response in
@@ -119,9 +136,9 @@ client.listFolder(folder) { response in
 }
 ```
 
-#### Download file
+### Download file
 
-Download file just as easy as using `Alamofire`
+Download file just as easy as using `Alamofire`.
 
 ```swift
 let destination: DownloadRequest.DownloadFileDestination = { (temporaryURL, response)  in
@@ -139,7 +156,7 @@ client.downloadFile(path: file.path, to: destination).downloadProgress { progres
 }
 ```
 
-#### Upload file
+### Upload file
 
 Upload file is done with Alamofire.
 
@@ -160,7 +177,7 @@ client.upload(data: data, filename: "test.json", destinationFolderPath: folder, 
 }
 ```
 
-#### Search file
+### Search file
 
 Search file
 
@@ -178,3 +195,7 @@ client.search(atFolderPath: folderPath, options: options) { result in
     }
 }
 ```
+
+## LICENSE
+
+`SynologyKit` is MIT-licensed. [LICENSE](LICENSE)
