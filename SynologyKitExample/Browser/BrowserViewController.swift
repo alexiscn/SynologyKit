@@ -203,7 +203,6 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
     private func showMoreContext() {
         let actionSheet = WXActionSheet(cancelButtonTitle: "Cancel")
         actionSheet.add(WXActionSheetItem(title: "Upload", handler: { [weak self] _ in
-            //self?.uploadFile()
             self?.uploadImage()
         }))
         actionSheet.add(WXActionSheetItem(title: "Search", handler: { [weak self] _ in
@@ -217,14 +216,16 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
     }
     
     private func uploadImage() {
-        guard let img = UIImage(named: "swift"), let data = img.pngData(), let folder = folderPath else {
+        guard let url = Bundle.main.url(forResource: "unsplash", withExtension: "jpg"),
+            let data = try? Data(contentsOf: url),
+            let folder = folderPath else {
             return
         }
         
         var options = SynologyClient.UploadOptions()
         options.overwrite = true
         options.modificationTime = Int64(Date().timeIntervalSince1970*1000)
-        client.upload(data: data, filename: "swift.png", destinationFolderPath: folder, createParents: true, options: options, progressHandler: { (progress) in
+        client.upload(data: data, filename: "unsplash.jpg", destinationFolderPath: folder, createParents: true, options: options, progressHandler: { (progress) in
             print("progress: \(progress.fractionCompleted)")
         }) { result in
             switch result {
