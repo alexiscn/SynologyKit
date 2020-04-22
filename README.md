@@ -47,7 +47,7 @@ Table of Contents
 SynologyKit is available through CocoaPods. To install it, simply add the following line to your Podfile:
 
 ```sh
-pod 'SynologyKit', '~>0.5.1'
+pod 'SynologyKit', '~>0.6.0'
 ```
 
 ### Swift Package Manager
@@ -58,7 +58,7 @@ Once you have your Swift package set up, adding SynologyKit as a dependency is a
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/alexiscn/SynologyKit.git", from: "0.5.1")
+    .package(url: "https://github.com/alexiscn/SynologyKit.git", from: "0.6.0")
 ]
 ```
 
@@ -141,8 +141,8 @@ client.listFolder(folder) { response in
 Download file just as easy as using `Alamofire`.
 
 ```swift
-let destination: DownloadRequest.DownloadFileDestination = { (temporaryURL, response)  in
-    let options = DownloadRequest.DownloadOptions.removePreviousFile
+let destination: DownloadRequest.Destination = { (temporaryURL, response)  in
+    let options = DownloadRequest.Options.removePreviousFile
     let localURL = URL(fileURLWithPath: NSHomeDirectory().appending("/Documents/\(file.name)"))
     return (localURL,options)
 }
@@ -150,7 +150,7 @@ let destination: DownloadRequest.DownloadFileDestination = { (temporaryURL, resp
 client.downloadFile(path: file.path, to: destination).downloadProgress { progress in
     print(progress)
 }.response { response in
-    if response.error == nil, let path = response.destinationURL?.path {
+    if response.error == nil, let path = response.fileURL?.path {
         print("File Downloaded to :\(path)")
     }
 }
