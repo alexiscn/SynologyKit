@@ -185,8 +185,8 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
     }
     
     private func downloadFile(_ file: BrowserModel) {
-        let destination: DownloadRequest.DownloadFileDestination = { (temporaryURL, response)  in
-            let options = DownloadRequest.DownloadOptions.removePreviousFile
+        let destination: DownloadRequest.Destination = { (temporaryURL, response)  in
+            let options = DownloadRequest.Options.removePreviousFile
             let localURL = URL(fileURLWithPath: NSHomeDirectory().appending("/Documents/\(file.name)"))
             return (localURL,options)
         }
@@ -194,8 +194,8 @@ extension BrowserViewController: BrowserTableViewCellDelegate {
         client.downloadFile(path: file.path, to: destination).downloadProgress { progress in
             print(progress)
         }.response { response in
-            if response.error == nil, let path = response.destinationURL?.path {
-                print("File Downloaded to :\(path)")
+            if response.error == nil, let path = response.fileURL?.path {
+                debugPrint("File Downloaded to :\(path)")
             }
         }
     }

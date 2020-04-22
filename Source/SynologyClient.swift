@@ -73,7 +73,7 @@ public class SynologyClient {
             _request.params = parameters
         }
         queue.async {
-            SessionManager.default.request(_request.asURLRequest()).response { response in
+            AF.request(_request.asURLRequest()).response { response in
                 self.handleDataResponse(response, completion: completion)
             }
         }
@@ -87,7 +87,7 @@ public class SynologyClient {
             actualRequest.params = parameters
         }
         queue.async {
-            SessionManager.default.request(actualRequest.asURLRequest()).response { response in
+            AF.request(actualRequest.asURLRequest()).response { response in
                 if let error = response.error {
                     let code = response.response?.statusCode ?? -1
                     completion(.failure(.serverError(code, error.localizedDescription, response)))
@@ -102,7 +102,7 @@ public class SynologyClient {
         }
     }
     
-    func handleDataResponse<T>(_ response: DefaultDataResponse, completion: @escaping SynologyCompletion<T>) {
+    func handleDataResponse<T>(_ response: AFDataResponse<Data?>, completion: @escaping SynologyCompletion<T>) {
         if let error = response.error {
             let code = response.response?.statusCode ?? -1
             completion(.failure(.serverError(code, error.localizedDescription, response)))
@@ -552,7 +552,7 @@ extension SynologyClient {
         }
         let url = URL(string: urlString)!
         
-        Alamofire.upload(multipartFormData: { (formData) in
+        let multipart: (MultipartFormData) -> Void = { formData in
             for param in parameters {
                 formData.append(Data(param.value.utf8), withName: param.key)
             }
@@ -564,37 +564,34 @@ extension SynologyClient {
                 mimeType = "application/octet-stream"
             }
             formData.append(data, withName: "file", fileName: filename, mimeType: mimeType)
-        }, to: url) { result in
-            switch result {
-            case .failure(let error):
-                completion(.failure(.uploadError(error)))
-            case .success(let request, _, _):
-                request.uploadProgress { progress in
-                    progressHandler?(progress)
-                }.response { response in
-                    guard let data = response.data else {
-                        completion(.failure(.invalidResponse(response)))
-                        return
+        }
+        
+        AF.upload(multipartFormData: multipart, to: url)
+            .uploadProgress { p in
+                progressHandler?(p)
+            }
+            .response { response in
+                guard let data = response.data else {
+                    completion(.failure(.invalidResponse(response)))
+                    return
+                }
+                do {
+                    let decodedRes = try JSONDecoder().decode(UploadResponse.self, from: data)
+                    if decodedRes.success {
+                        completion(.success(decodedRes))
+                    } else {
+                        let code = decodedRes.error?.code ?? -1
+                        let msg = SynologyErrorMapper[code] ?? "Unknow error"
+                        completion(.failure(.serverError(code, msg, response)))
                     }
-                    do {
-                        let decodedRes = try JSONDecoder().decode(UploadResponse.self, from: data)
-                        if decodedRes.success {
-                            completion(.success(decodedRes))
-                        } else {
-                            let code = decodedRes.error?.code ?? -1
-                            let msg = SynologyErrorMapper[code] ?? "Unknow error"
-                            completion(.failure(.serverError(code, msg, response)))
-                        }
-                    } catch {
-                        let text = String(data: data, encoding: .utf8)
-                        completion(.failure(.decodeDataError(response, text)))
-                    }
+                } catch {
+                    let text = String(data: data, encoding: .utf8)
+                    completion(.failure(.decodeDataError(response, text)))
                 }
             }
-        }
     }
     
-    public func downloadFile(path: String, to: @escaping DownloadRequest.DownloadFileDestination) -> DownloadRequest {
+    public func downloadFile(path: String, to: @escaping DownloadRequest.Destination) -> DownloadRequest {
         let params = ["path": path, "mode": "open"]
         var request = SynologyBasicRequest(baseURLString: baseURLString(), api: .download, method: .download, params: params)
         request.version = 2
@@ -606,10 +603,10 @@ extension SynologyClient {
     ///   - path: file path
     ///   - parameters: additional parameters
     ///   - destination: Callback closure.
-    public func download(path: String, parameters: Parameters, to destination: DownloadRequest.DownloadFileDestination?) -> DownloadRequest {
+    public func download(path: String, parameters: Parameters, to destination: DownloadRequest.Destination?) -> DownloadRequest {
         let urlString = baseURLString().appending("\(path)")
         print(urlString)
-        return Alamofire.download(urlString, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil, to: destination)
+        return AF.download(urlString, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil, to: destination)
     }
     
     /// List user’s file sharing links.
@@ -832,9 +829,10 @@ extension SynologyClient {
         params["serverID"] = quickID
         params["command"] = "get_server_info"
         params["version"] = 1
-        let headers = ["User-Agent": userAgent]
+        var headers = HTTPHeaders()
+        headers.add(name: "User-Agent", value: userAgent)
         let request = QuickConnectRequest(baseURLString: baseUrl, path: "/Serv.php", params: params, headers: headers)
-        SessionManager.default.request(request.asURLRequest()).response(queue: nil) { response in
+        AF.request(request.asURLRequest()).response { response in
             self.handleQuickConnectResponse(response, completion: completion)
         }
     }
@@ -852,14 +850,15 @@ extension SynologyClient {
         params["serverID"] = quickID
         params["command"] = "request_tunnel"
         params["version"] = 1
-        let headers = ["User-Agent": userAgent]
+        var headers = HTTPHeaders()
+        headers.add(name: "User-Agent", value: userAgent)
         let request = QuickConnectRequest(baseURLString: url, path: "/Serv.php", params: params, headers: headers)
-        SessionManager.default.request(request.asURLRequest()).response(queue: nil) { response in
+        AF.request(request.asURLRequest()).response { response in
             self.handleQuickIDResponse(response, completion: completion)
         }
     }
     
-    func handleQuickConnectResponse(_ response: DefaultDataResponse, completion: @escaping GlobalQuickConnectCompletion) {
+    func handleQuickConnectResponse(_ response: AFDataResponse<Data?>, completion: @escaping GlobalQuickConnectCompletion) {
         DispatchQueue.main.async {
             guard let data = response.data else {
                 completion(.failure(.invalidResponse(response)))
@@ -875,7 +874,7 @@ extension SynologyClient {
         }
     }
     
-    func handleQuickIDResponse(_ response: DefaultDataResponse, completion: @escaping QuickIDCompletion) {
+    func handleQuickIDResponse(_ response: AFDataResponse<Data?>, completion: @escaping QuickIDCompletion) {
         DispatchQueue.main.async {
             guard let data = response.data else {
                 completion(.failure(.invalidResponse(response)))

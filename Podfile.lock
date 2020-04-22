@@ -1,9 +1,9 @@
 PODS:
-  - Alamofire (4.9.1)
-  - KeychainSwift (18.0.0)
-  - Kingfisher (5.12.0):
-    - Kingfisher/Core (= 5.12.0)
-  - Kingfisher/Core (5.12.0)
+  - Alamofire (5.1.0)
+  - KeychainSwift (19.0.0)
+  - Kingfisher (5.13.4):
+    - Kingfisher/Core (= 5.13.4)
+  - Kingfisher/Core (5.13.4)
   - SnapKit (5.0.1)
   - SynologyKit (0.5.1):
     - Alamofire
@@ -29,13 +29,13 @@ EXTERNAL SOURCES:
     :path: "."
 
 SPEC CHECKSUMS:
-  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
-  KeychainSwift: c46e1438d121e47459fb304ac88c5e058a2a91ed
-  Kingfisher: dc6e0f53bb5b12c3e75bedb0e01bbd7a640eea69
+  Alamofire: 9d5c5f602928e512395b30950c5984eca840093c
+  KeychainSwift: a06190cf933ad46b1e0abc3d77d29c06331715c7
+  Kingfisher: d2279a7abece3c7f25a80cd2b7f363ca5cf3f44c
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SynologyKit: 28205881f624f96c0d059a1d94775c35060b30cc
   WXActionSheet: 8a1817ad641a892b17b53e157b6ec15ca7d1ff95
 
 PODFILE CHECKSUM: cea38b1729acce2617d8c5f0afde579b3f23c85a
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1

@@ -19,9 +19,9 @@ public struct ErrorCode: Codable {
 }
 
 public enum SynologyError: Error, CustomStringConvertible {
-    case invalidResponse(DefaultDataResponse)
-    case decodeDataError(DefaultDataResponse, String?)
-    case serverError(Int, String, DefaultDataResponse)
+    case invalidResponse(AFDataResponse<Data?>)
+    case decodeDataError(AFDataResponse<Data?>, String?)
+    case serverError(Int, String, AFDataResponse<Data?>)
     case unknownError
     case uploadError(Error)
     
