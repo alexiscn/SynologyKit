@@ -825,7 +825,7 @@ extension SynologyClient {
     func getGlobalServerInfo(quickID: String, completion: @escaping SynologyCompletion<QuickConnectResponse>) {
         let baseUrl = "https://global.QuickConnect.to"
         var params: [String: Any] = [:]
-        params["id"] = "audio_http"
+        params["id"] = "dsm"//"audio_http"
         params["serverID"] = quickID
         params["command"] = "get_server_info"
         params["version"] = 1
@@ -845,7 +845,7 @@ extension SynologyClient {
         let url = "https://\(server)"
         var params: [String: Any] = [:]
         params["location"] = "en_CN"
-        params["id"] = "audio_http"
+        params["id"] = "dsm"//"audio_http"
         params["platform"] = platform
         params["serverID"] = quickID
         params["command"] = "request_tunnel"
