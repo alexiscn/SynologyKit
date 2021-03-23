@@ -58,7 +58,7 @@ Once you have your Swift package set up, adding SynologyKit as a dependency is a
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/alexiscn/SynologyKit.git", from: "1.0.0")
+    .package(url: "https://github.com/alexiscn/SynologyKit.git", from: "1.2.0")
 ]
 ```
 
