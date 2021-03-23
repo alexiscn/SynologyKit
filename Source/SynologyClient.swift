@@ -477,6 +477,23 @@ extension SynologyClient {
         return request.asURL(sessionID: sessionid)
     }
     
+    /// Get the file download url
+    /// - Parameters:
+    ///   - path: A file started with a shared folder.
+    ///   - filename: The name of the file.
+    /// - Returns: An url for download or play usage.
+    public func fileDownloadURL(atPath path: String, filename: String) -> URL? {
+        guard let data = path.data(using: .utf8), let sessionId = sessionid else {
+            return nil
+        }
+        let dlink = "\"" + data.map { String(format: "%02.2hhx", $0) }.joined().uppercased() + "\""
+        let nameEncoded = Alamofire.URLEncoding.default.escape(filename)
+        let dlinkEncoded = URLEncoding.default.escape(dlink)
+        let sidEncoded = URLEncoding.default.escape(sessionId)
+        let urlString = "\(baseURLString())fbdownload/\(nameEncoded)?dlink=\(dlinkEncoded)&_sid=\(sidEncoded)&mime=1"
+        return URL(string: urlString)
+    }
+    
     /// Get the accumulated size of files/folders within folder(s).
     /// - Parameters:
     ///   - path: One or more file/folder paths starting with a shared folder for calculating cumulative size, separated by a comma, “,”.
