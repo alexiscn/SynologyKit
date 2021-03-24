@@ -39,6 +39,8 @@ struct SynologyBasicRequest: SynologyRequest {
     /// Version of the API requested
     var version: Int = 1
     
+    var timeoutInterval: TimeInterval?
+    
     var headers: HTTPHeaders?
     
     func urlQuery() -> String {
@@ -53,7 +55,10 @@ struct SynologyBasicRequest: SynologyRequest {
             parameter["method"] = method.rawValue
             parameter["version"] = version
             let request = try URLRequest(url: urlString, method: .post, headers: headers)
-            let encodedRequest = try URLEncoding.default.encode(request, with: parameter)
+            var encodedRequest = try URLEncoding.default.encode(request, with: parameter)
+            if let interval = timeoutInterval {
+                encodedRequest.timeoutInterval = interval
+            }
             return encodedRequest
         } catch {
             fatalError(error.localizedDescription)

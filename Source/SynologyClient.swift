@@ -168,11 +168,38 @@ extension SynologyClient {
         }
     }
     
+    // try inner login first
+    private func tryInnerLogin(account: String, passwd: String, relayIP: String, relayPort: Int, completion: @escaping SynologyCompletion<AuthResponse>) {
+        var parameters: Parameters = [:]
+        parameters["account"] = account
+        parameters["passwd"] = passwd
+        parameters["session"] = Session
+        var request = SynologyBasicRequest(baseURLString: baseURLString(), api: .auth, method: .login ,params: parameters)
+        request.path = SynologyCGI.auth
+        request.version = 3
+        request.timeoutInterval = 15
+        post(request) { (result: Result<AuthResponse, SynologyError>) in
+            switch result {
+            case .failure(_):
+                self.host = relayIP
+                self.port = relayPort
+                self.login(account: account, passwd: passwd, completion: completion)
+            case .success(let res):
+                completion(.success(res))
+            }
+        }
+    }
+    
     private func loginViaQuickID(_ quickID: String, account: String, password: String, completion: @escaping SynologyCompletion<AuthResponse>) {
         getGlobalServerInfo(quickID: host) { response in
             switch response {
             case .success(let connect):
-                if let h = connect.service?.relayIP, let p = connect.service?.relayPort {
+                if let inter = connect.server?.interface?.first, let p = connect.service?.port,
+                   let relayIP = connect.service?.relayIP, let relayPort = connect.service?.relayPort {
+                    self.host = inter.ip
+                    self.port = p
+                    self.tryInnerLogin(account: account, passwd: password, relayIP: relayIP, relayPort: relayPort, completion: completion)
+                } else if let h = connect.service?.relayIP, let p = connect.service?.relayPort {
                     self.host = h
                     self.port = p
                     self.login(account: account, passwd: password, completion: completion)

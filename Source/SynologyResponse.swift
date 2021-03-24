@@ -99,11 +99,13 @@ public struct QuickIDService: Codable {
         case relayIP = "relay_ip"
         case relayPort = "relay_port"
         case env
+        case port
     }
     
     public let relayIP: String?
     public let relayPort: Int?
     public let env: QuickIDEnv?
+    public let port: Int?
 }
 
 public struct QuickIDEnv: Codable {
