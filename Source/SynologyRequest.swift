@@ -183,6 +183,35 @@ public extension SynologyClient {
             if contains(.type) {
                 result.append("type")
             }
+            return result.description
+        }
+        
+        func query() -> String {
+            var result: [String] = []
+            if self.contains(.realPath) {
+                result.append("real_path")
+            }
+            if contains(.size) {
+                result.append("size")
+            }
+            if contains(.owner) {
+                result.append("owner")
+            }
+            if contains(.time) {
+                result.append("time")
+            }
+            if contains(.perm) {
+                result.append("perm")
+            }
+            if contains(.mountPointType) {
+                result.append("mount_point_type")
+            }
+            if contains(.volumeStatus) {
+                result.append("volume_status")
+            }
+            if contains(.type) {
+                result.append("type")
+            }
             return result.joined(separator: ",")
         }
     }

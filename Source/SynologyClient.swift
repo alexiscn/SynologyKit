@@ -305,7 +305,7 @@ extension SynologyClient {
         var parameters = Parameters()
         parameters["path"] = path
         if let options = additional {
-            parameters["additional"] = options.value()
+            parameters["additional"] = options.query()
         }
         let request = SynologyBasicRequest(baseURLString: baseURLString(), api: .list, method: .getinfo, params: parameters)
         post(request, completion: completion)
