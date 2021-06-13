@@ -183,7 +183,7 @@ public extension SynologyClient {
             if contains(.type) {
                 result.append("type")
             }
-            return result.description
+            return result.joined(separator: ",")
         }
     }
 
