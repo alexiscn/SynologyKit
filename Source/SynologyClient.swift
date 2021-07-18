@@ -168,7 +168,7 @@ extension SynologyClient {
             post(request, completion: completion)
             return
         } else {
-            loginViaQuickID(host, account: account, password: passwd, completion: completion)
+            loginViaQuickID(host, account: account, password: passwd, optCode: optCode, completion: completion)
         }
     }
     
@@ -197,7 +197,7 @@ extension SynologyClient {
         }
     }
     
-    private func loginViaQuickID(_ quickID: String, account: String, password: String, completion: @escaping SynologyCompletion<AuthResponse>) {
+    private func loginViaQuickID(_ quickID: String, account: String, password: String, optCode: String? = nil, completion: @escaping SynologyCompletion<AuthResponse>) {
         getGlobalServerInfo(quickID: host) { response in
             switch response {
             case .success(let connect):
@@ -205,11 +205,11 @@ extension SynologyClient {
                    let relayIP = connect.service?.relayIP, let relayPort = connect.service?.relayPort {
                     self.host = inter.ip
                     self.port = p
-                    self.tryInnerLogin(account: account, passwd: password, relayIP: relayIP, relayPort: relayPort, completion: completion)
+                    self.tryInnerLogin(account: account, passwd: password, relayIP: relayIP, relayPort: relayPort, optCode: optCode, completion: completion)
                 } else if let h = connect.service?.relayIP, let p = connect.service?.relayPort {
                     self.host = h
                     self.port = p
-                    self.login(account: account, passwd: password, completion: completion)
+                    self.login(account: account, passwd: password, optCode: optCode, completion: completion)
                 } else if let controlHost = connect.env?.controlHost {
                     self.getServerInfo(server: controlHost, quickID: quickID) { quickIDRes in
                         switch quickIDRes {
@@ -217,7 +217,7 @@ extension SynologyClient {
                             if let h = connectResponse.service?.relayIP, let p = connectResponse.service?.relayPort {
                                 self.host = h
                                 self.port = p
-                                self.login(account: account, passwd: password, completion: completion)
+                                self.login(account: account, passwd: password, optCode: optCode, completion: completion)
                             } else {
                                 completion(.failure(.unknownError))
                             }
