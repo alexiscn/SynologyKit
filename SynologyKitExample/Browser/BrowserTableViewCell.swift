@@ -10,7 +10,7 @@ import UIKit
 import Kingfisher
 import SynologyKit
 
-protocol BrowserTableViewCellDelegate: class {
+protocol BrowserTableViewCellDelegate: AnyObject {
     func didTapMoreButton(model: BrowserModel)
 }
 

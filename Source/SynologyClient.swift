@@ -150,13 +150,17 @@ extension SynologyClient {
     /// - Parameters:
     ///   - account: Login account name.
     ///   - passwd: Login account password.
+    ///   - optCode: Reserved key. DSM 4.2 and later support a 2-step verification option with an OTP code. If it's enabled, the user is required to enter a verification code to log in to DSM sessions
     ///   - completion: Callback closure.
-    public func login(account: String, passwd: String, completion: @escaping SynologyCompletion<AuthResponse>) {
+    public func login(account: String, passwd: String, optCode: String? = nil, completion: @escaping SynologyCompletion<AuthResponse>) {
         
         if host.contains(".") {
             var parameters: Parameters = [:]
             parameters["account"] = account
             parameters["passwd"] = passwd
+            if let code = optCode {
+                parameters["otp_code"] = code
+            }
             parameters["session"] = Session
             var request = SynologyBasicRequest(baseURLString: baseURLString(), api: .auth, method: .login ,params: parameters)
             request.path = SynologyCGI.auth
@@ -169,11 +173,14 @@ extension SynologyClient {
     }
     
     // try inner login first
-    private func tryInnerLogin(account: String, passwd: String, relayIP: String, relayPort: Int, completion: @escaping SynologyCompletion<AuthResponse>) {
+    private func tryInnerLogin(account: String, passwd: String, relayIP: String, relayPort: Int, optCode: String? = nil, completion: @escaping SynologyCompletion<AuthResponse>) {
         var parameters: Parameters = [:]
         parameters["account"] = account
         parameters["passwd"] = passwd
         parameters["session"] = Session
+        if let code = optCode {
+            parameters["otp_code"] = code
+        }
         var request = SynologyBasicRequest(baseURLString: baseURLString(), api: .auth, method: .login ,params: parameters)
         request.path = SynologyCGI.auth
         request.version = 3
