@@ -563,6 +563,78 @@ extension SynologyClient {
         post(request, completion: completion)
     }
     
+    
+    /// Upload file to Synology with file url.
+    /// - Parameters:
+    ///   - fileURL: The file url.
+    ///   - filename: File name.
+    ///   - destinationFolderPath: A destination folder path starting with a shared folder to which files can be uploaded
+    ///   - createParents: Create parent folder(s) if none exist.
+    ///   - options: Upload options.
+    ///   - progressHandler: The upload progress handler.
+    ///   - completion: Callback Closure.
+    public func upload(fileURL: URL, filename: String, destinationFolderPath: String, createParents: Bool = true, options: UploadOptions? = nil, progressHandler: UploadRequest.ProgressHandler? = nil, completion: @escaping SynologyCompletion<UploadResponse>) {
+        struct UploadParam {
+            var key: String
+            var value: String
+        }
+        var parameters: [UploadParam] = []
+        parameters.append(UploadParam(key: "path", value: destinationFolderPath))
+        parameters.append(UploadParam(key: "create_parents", value: String(createParents)))
+        
+        if let options = options {
+            if let overwrite = options.overwrite {
+                parameters.append(UploadParam(key: "overwrite", value: String(overwrite)))
+            }
+            if let mtime = options.modificationTime {
+                parameters.append(UploadParam(key: "mtime", value: String(mtime)))
+            }
+            if let crtime = options.createTime {
+                parameters.append(UploadParam(key: "crtime", value: String(crtime)))
+            }
+            if let atime = options.accessTime {
+                parameters.append(UploadParam(key: "atime", value: String(atime)))
+            }
+        }
+        
+        var urlString = baseURLString().appending("webapi/entry.cgi?api=\(SynologyAPI.upload.rawValue)&method=upload&version=2")
+        if let sid = self.sessionid {
+            urlString = urlString.appending("&_sid=\(sid)")
+        }
+        let url = URL(string: urlString)!
+        
+        let multipart: (MultipartFormData) -> Void = { formData in
+            for param in parameters {
+                formData.append(Data(param.value.utf8), withName: param.key)
+            }
+            formData.append(fileURL, withName: "file")
+        }
+        
+        AF.upload(multipartFormData: multipart, to: url)
+            .uploadProgress { p in
+                progressHandler?(p)
+            }
+            .response { response in
+                guard let data = response.data else {
+                    completion(.failure(.invalidResponse(response)))
+                    return
+                }
+                do {
+                    let decodedRes = try JSONDecoder().decode(UploadResponse.self, from: data)
+                    if decodedRes.success {
+                        completion(.success(decodedRes))
+                    } else {
+                        let code = decodedRes.error?.code ?? -1
+                        let msg = SynologyErrorMapper[code] ?? "Unknow error"
+                        completion(.failure(.serverError(code, msg, response)))
+                    }
+                } catch {
+                    let text = String(data: data, encoding: .utf8)
+                    completion(.failure(.decodeDataError(response, text)))
+                }
+            }
+    }
+    
     /// Upload a file.
     /// - Parameters:
     ///   - data: The data to be uploaded.
