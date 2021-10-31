@@ -798,7 +798,8 @@ extension SynologyClient {
         if let taskId = searchTaskId {
             params["search_taskid"] = taskId
         }
-        let request = SynologyBasicRequest(baseURLString: baseURLString(), api: .rename, method: .rename, params: params)
+        var request = SynologyBasicRequest(baseURLString: baseURLString(), api: .rename, method: .rename, params: params)
+        request.version = 2
         post(request, completion: completion)
     }
     
@@ -819,7 +820,8 @@ extension SynologyClient {
         if let taskId = searchTaskId {
             params["search_taskid"] = taskId
         }
-        let request = SynologyBasicRequest(baseURLString: baseURLString(), api: .rename, method: .rename, params: params)
+        var request = SynologyBasicRequest(baseURLString: baseURLString(), api: .rename, method: .rename, params: params)
+        request.version = 2
         post(request, completion: completion)
     }
     
