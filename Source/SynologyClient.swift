@@ -811,10 +811,10 @@ extension SynologyClient {
     /// - Parameter searchTaskId: A unique ID for the search task which is obtained from start method. It is used to update the renamed file in the search result
     public func rename(path: [String], name: [String], additional: [AdditionalOptions]? = nil, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<FileInfo>) {
         var params: [String: Any] = [:]
-        params["path"] = "[" + path.joined(separator: ",") + "]"
-        params["name"] = "[" + name.joined(separator: ",") + "]"
+        params["path"] = path.json
+        params["name"] = name.json
         if let additionals = additional {
-            params["additional"] = "[" + additionals.map { $0.value() }.joined(separator: ",") + "]"
+            params["additional"] = additionals.map { $0.value() }.json
         }
         if let taskId = searchTaskId {
             params["search_taskid"] = taskId
@@ -1091,5 +1091,12 @@ extension SynologyClient {
             return .failure(.unknownError)
         }
         return .success(status)
+    }
+}
+
+extension Encodable {
+    var json: String {
+        let data = (try? JSONEncoder().encode(self)) ?? Data()
+        return String(data: data, encoding: .utf8) ?? ""
     }
 }
