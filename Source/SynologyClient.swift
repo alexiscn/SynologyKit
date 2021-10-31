@@ -802,6 +802,27 @@ extension SynologyClient {
         post(request, completion: completion)
     }
     
+    /// Rename a file/folder.
+    /// - Parameter path: One or more paths of files/folders to be renamed, separated by commas “,”.
+    ///                   The number of paths must be the same as the number of names in the name parameter.
+    /// The first path parameter corresponds to the first name parameter
+    /// - Parameter name: One or more new names, separated by commas “,”. The number of names must be the same as the number of folder paths in the path parameter. The first name parameter corresponding to the first path parameter.
+    /// - Parameter additional: Additional requested file information, separated by commas “,”. When an additional option is requested, responded objects will be provided in the specified additional option.
+    /// - Parameter searchTaskId: A unique ID for the search task which is obtained from start method. It is used to update the renamed file in the search result
+    public func rename(path: [String], name: [String], additional: [AdditionalOptions]? = nil, searchTaskId: String? = nil, completion: @escaping SynologyCompletion<FileInfo>) {
+        var params: [String: Any] = [:]
+        params["path"] = "[" + path.joined(separator: ",") + "]"
+        params["name"] = "[" + name.joined(separator: ",") + "]"
+        if let additionals = additional {
+            params["additional"] = "[" + additionals.map { $0.value() }.joined(separator: ",") + "]"
+        }
+        if let taskId = searchTaskId {
+            params["search_taskid"] = taskId
+        }
+        let request = SynologyBasicRequest(baseURLString: baseURLString(), api: .rename, method: .rename, params: params)
+        post(request, completion: completion)
+    }
+    
     /// Start to copy/move files
     /// This is a non-blocking API.
     /// You need to start to copy/move files with start method. Then, you should poll requests with status
