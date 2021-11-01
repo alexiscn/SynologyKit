@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 //
 
-#if !(os(watchOS) || os(Linux))
+#if !(os(watchOS) || os(Linux) || os(Windows))
 
 import Foundation
 import SystemConfiguration
@@ -174,7 +174,7 @@ open class NetworkReachabilityManager {
         }
 
         var context = SCNetworkReachabilityContext(version: 0,
-                                                   info: Unmanaged.passRetained(self).toOpaque(),
+                                                   info: Unmanaged.passUnretained(self).toOpaque(),
                                                    retain: nil,
                                                    release: nil,
                                                    copyDescription: nil)
