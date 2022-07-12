@@ -36,6 +36,8 @@ public class SynologyClient {
     
     public var connected: Bool { return sessionid != nil }
     
+    public var sessionInvalidHandler: (() -> Void)?
+    
     private var host: String
     private var port: Int?
     private var enableHTTPS = false
@@ -117,6 +119,9 @@ public class SynologyClient {
             if let data = decodedRes.data {
                 completion(.success(data))
             } else if let error = decodedRes.error {
+                if error.code == 106 || error.code == 107 || error.code == 119 {
+                    sessionInvalidHandler?()
+                }
                 let message = SynologyErrorMapper[error.code] ?? "Unknown error"
                 completion(.failure(.serverError(error.code, message, response)))
             }
