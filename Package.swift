@@ -5,7 +5,10 @@ import PackageDescription
 
 let package = Package(
     name: "SynologyKit",
-    platforms: [.iOS(.v11)],
+    platforms: [
+        .iOS(.v11),
+        .tvOS(.v13)
+    ],
     products: [.library(name: "SynologyKit",
                         targets: ["SynologyKit"]),
     ],
