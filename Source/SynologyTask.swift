@@ -2,7 +2,7 @@
 //  SynologyTask.swift
 //  SynologyKit
 //
-//  Created by xu.shuifeng on 2019/11/6.
+//  Created by alexiscn on 2019/11/6.
 //
 
 import Foundation

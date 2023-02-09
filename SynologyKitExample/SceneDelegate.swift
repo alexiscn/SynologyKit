@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  SynologyKitExample
 //
-//  Created by xu.shuifeng on 2019/10/31.
+//  Created by alexiscn on 2019/10/31.
 //  Copyright © 2019 alexiscn. All rights reserved.
 //
 

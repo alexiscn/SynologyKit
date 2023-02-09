@@ -2,7 +2,7 @@
 //  SynologyResponse.swift
 //  SynologyKit
 //
-//  Created by xu.shuifeng on 20/09/2017.
+//  Created by alexiscn on 20/09/2017.
 //
 
 import Foundation
@@ -18,7 +18,7 @@ public struct ErrorCode: Codable {
     public let code: Int
 }
 
-public enum SynologyError: Error, CustomStringConvertible {
+public enum SynologyError: LocalizedError, CustomStringConvertible {
     case invalidResponse(AFDataResponse<Data?>)
     case decodeDataError(AFDataResponse<Data?>, String?)
     case serverError(Int, String, AFDataResponse<Data?>)
@@ -44,6 +44,10 @@ public enum SynologyError: Error, CustomStringConvertible {
         case .uploadError(let error):
             return "Upload Error:\(error.localizedDescription)"
         }
+    }
+    
+    public var errorDescription: String? {
+        return description
     }
 }
 

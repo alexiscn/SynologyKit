@@ -2,7 +2,7 @@
 //  LoginSwitchViewCell.swift
 //  SynologyKitExample
 //
-//  Created by xu.shuifeng on 2019/11/6.
+//  Created by alexiscn on 2019/11/6.
 //  Copyright © 2019 alexiscn. All rights reserved.
 //
 

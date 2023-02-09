@@ -2,7 +2,7 @@
 //  SynologyClient.swift
 //  SynologyKit
 //
-//  Created by xu.shuifeng on 19/09/2017.
+//  Created by alexiscn on 19/09/2017.
 //
 
 import Foundation

@@ -2,7 +2,7 @@
 //  SynologyRequest.swift
 //  SynologyKit
 //
-//  Created by xu.shuifeng on 20/09/2017.
+//  Created by alexiscn on 20/09/2017.
 //
 
 import Foundation
