@@ -46,7 +46,7 @@ public class SynologyClient {
     
     func baseURLString() -> String {
         let scheme = enableHTTPS ? "https": "http"
-        if let port = port {
+        if let port = port, !host.contains(":") {
             return "\(scheme)://\(host):\(port)/"
         }
         return "\(scheme)://\(host)/"
