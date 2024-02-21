@@ -192,10 +192,19 @@ extension SynologyClient {
         request.timeoutInterval = 15
         post(request) { (result: Result<AuthResponse, SynologyError>) in
             switch result {
-            case .failure(_):
+            case .failure(let error):
                 self.host = relayIP
                 self.port = relayPort
-                self.tryInnerLogin(account: account, passwd: passwd, relayIP: relayIP, relayPort: relayPort, completion: completion)
+                switch error {
+                case .serverError(let code, let message, _):
+                    if code == 400 {
+                        self.tryInnerLogin(account: account, passwd: passwd, relayIP: relayIP, relayPort: relayPort, completion: completion)
+                    } else {
+                        self.login(account: account, passwd: passwd, completion: completion)
+                    }
+                default:
+                    self.login(account: account, passwd: passwd, completion: completion)
+                }
             case .success(let res):
                 completion(.success(res))
             }
