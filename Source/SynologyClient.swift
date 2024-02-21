@@ -195,7 +195,7 @@ extension SynologyClient {
             case .failure(_):
                 self.host = relayIP
                 self.port = relayPort
-                self.login(account: account, passwd: passwd, completion: completion)
+                self.tryInnerLogin(account: account, passwd: passwd, relayIP: relayIP, relayPort: relayPort, completion: completion)
             case .success(let res):
                 completion(.success(res))
             }
