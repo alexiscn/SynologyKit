@@ -38,8 +38,8 @@ public class SynologyClient {
     
     public var sessionInvalidHandler: (() -> Void)?
     
-    private var host: String
-    private var port: Int?
+    public private(set) var host: String
+    public private(set) var port: Int?
     private var enableHTTPS = false
     private let Session = "FileStation"
     private let queue = DispatchQueue(label: "me.shuifeng.SynologyKit", qos: .background, attributes: .concurrent)
@@ -192,19 +192,10 @@ extension SynologyClient {
         request.timeoutInterval = 15
         post(request) { (result: Result<AuthResponse, SynologyError>) in
             switch result {
-            case .failure(let error):
+            case .failure(_):
                 self.host = relayIP
                 self.port = relayPort
-                switch error {
-                case .serverError(let code, let message, _):
-                    if code == 400 {
-                        self.tryInnerLogin(account: account, passwd: passwd, relayIP: relayIP, relayPort: relayPort, completion: completion)
-                    } else {
-                        self.login(account: account, passwd: passwd, completion: completion)
-                    }
-                default:
-                    self.login(account: account, passwd: passwd, completion: completion)
-                }
+                self.login(account: account, passwd: passwd, completion: completion)
             case .success(let res):
                 completion(.success(res))
             }
