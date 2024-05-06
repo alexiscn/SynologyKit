@@ -40,9 +40,15 @@ public class SynologyClient {
     
     public private(set) var host: String
     public private(set) var port: Int?
+    private var session: Alamofire.Session = .default
     private var enableHTTPS = false
     private let Session = "FileStation"
     private let queue = DispatchQueue(label: "me.shuifeng.SynologyKit", qos: .background, attributes: .concurrent)
+    
+    private lazy var inSecureSession: Alamofire.Session = {
+        let trustManager = ServerTrustManager(allHostsMustBeEvaluated: false, evaluators: [:])
+        return Alamofire.Session(serverTrustManager: trustManager)
+    }()
     
     func baseURLString() -> String {
         if host.hasPrefix("http") {
@@ -84,7 +90,7 @@ public class SynologyClient {
             _request.params = parameters
         }
         queue.async {
-            AF.request(_request.asURLRequest()).response { response in
+            self.session.request(_request.asURLRequest()).response { response in
                 self.handleDataResponse(response, completion: completion)
             }
         }
@@ -98,7 +104,7 @@ public class SynologyClient {
             actualRequest.params = parameters
         }
         queue.async {
-            AF.request(actualRequest.asURLRequest()).response { response in
+            self.session.request(actualRequest.asURLRequest()).response { response in
                 if let error = response.error {
                     let code = response.response?.statusCode ?? -1
                     completion(.failure(.serverError(code, error.localizedDescription, response)))
@@ -165,8 +171,13 @@ extension SynologyClient {
     ///   - account: Login account name.
     ///   - passwd: Login account password.
     ///   - optCode: Reserved key. DSM 4.2 and later support a 2-step verification option with an OTP code. If it's enabled, the user is required to enter a verification code to log in to DSM sessions
+    ///   - allowInsecureConnection: A Boolean value indicates with allows insecure connection.
     ///   - completion: Callback closure.
-    public func login(account: String, passwd: String, optCode: String? = nil, completion: @escaping SynologyCompletion<AuthResponse>) {
+    public func login(account: String, passwd: String, optCode: String? = nil, allowInsecureConnection: Bool = false, completion: @escaping SynologyCompletion<AuthResponse>) {
+        
+        if allowInsecureConnection {
+            self.session = inSecureSession
+        }
         
         if host.contains(".") {
             var parameters: Parameters = [:]
@@ -624,7 +635,7 @@ extension SynologyClient {
             formData.append(fileURL, withName: "file")
         }
         
-        AF.upload(multipartFormData: multipart, to: url)
+        session.upload(multipartFormData: multipart, to: url)
             .uploadProgress { p in
                 progressHandler?(p)
             }
@@ -703,7 +714,7 @@ extension SynologyClient {
             formData.append(data, withName: "file", fileName: filename, mimeType: mimeType)
         }
         
-        AF.upload(multipartFormData: multipart, to: url)
+        session.upload(multipartFormData: multipart, to: url)
             .uploadProgress { p in
                 progressHandler?(p)
             }
@@ -743,7 +754,7 @@ extension SynologyClient {
     public func download(path: String, parameters: Parameters, to destination: DownloadRequest.Destination?) -> DownloadRequest {
         let urlString = baseURLString().appending("\(path)")
         print(urlString)
-        return AF.download(urlString, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil, to: destination)
+        return session.download(urlString, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil, to: destination)
     }
     
     /// List user’s file sharing links.
@@ -992,7 +1003,7 @@ extension SynologyClient {
         var headers = HTTPHeaders()
         headers.add(name: "User-Agent", value: userAgent)
         let request = QuickConnectRequest(baseURLString: baseUrl, path: "/Serv.php", params: params, headers: headers)
-        AF.request(request.asURLRequest()).response { response in
+        session.request(request.asURLRequest()).response { response in
             self.handleQuickConnectResponse(response, completion: completion)
         }
     }
@@ -1013,7 +1024,7 @@ extension SynologyClient {
         var headers = HTTPHeaders()
         headers.add(name: "User-Agent", value: userAgent)
         let request = QuickConnectRequest(baseURLString: url, path: "/Serv.php", params: params, headers: headers)
-        AF.request(request.asURLRequest()).response { response in
+        session.request(request.asURLRequest()).response { response in
             self.handleQuickIDResponse(response, completion: completion)
         }
     }
