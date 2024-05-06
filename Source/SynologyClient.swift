@@ -193,6 +193,9 @@ extension SynologyClient {
     }
     
     private func makeInSecureSession() -> Alamofire.Session {
+        guard let url = URL(string: baseURLString()), let host = url.host else {
+            return .default
+        }
         let trustManager = ServerTrustManager(evaluators: [host: DisabledTrustEvaluator()])
         return Alamofire.Session(serverTrustManager: trustManager)
     }
