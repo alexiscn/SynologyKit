@@ -45,6 +45,15 @@ public class SynologyClient {
     private let queue = DispatchQueue(label: "me.shuifeng.SynologyKit", qos: .background, attributes: .concurrent)
     
     func baseURLString() -> String {
+        if host.hasPrefix("http") {
+            if let port = port, !host.contains(":") {
+                return "\(host):\(port)/"
+            } else if !host.hasSuffix("/") {
+                return host + "/"
+            } else {
+                return host
+            }
+        }
         let scheme = enableHTTPS ? "https": "http"
         if let port = port, !host.contains(":") {
             return "\(scheme)://\(host):\(port)/"
