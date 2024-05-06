@@ -45,11 +45,6 @@ public class SynologyClient {
     private let Session = "FileStation"
     private let queue = DispatchQueue(label: "me.shuifeng.SynologyKit", qos: .background, attributes: .concurrent)
     
-    private lazy var inSecureSession: Alamofire.Session = {
-        let trustManager = ServerTrustManager(allHostsMustBeEvaluated: false, evaluators: [:])
-        return Alamofire.Session(serverTrustManager: trustManager)
-    }()
-    
     func baseURLString() -> String {
         if host.hasPrefix("http") {
             if let port = port, !host.contains(":") {
@@ -176,7 +171,7 @@ extension SynologyClient {
     public func login(account: String, passwd: String, optCode: String? = nil, allowInsecureConnection: Bool = false, completion: @escaping SynologyCompletion<AuthResponse>) {
         
         if allowInsecureConnection {
-            self.session = inSecureSession
+            self.session = makeInSecureSession()
         }
         
         if host.contains(".") {
@@ -195,6 +190,11 @@ extension SynologyClient {
         } else {
             loginViaQuickID(host, account: account, password: passwd, optCode: optCode, completion: completion)
         }
+    }
+    
+    private func makeInSecureSession() -> Alamofire.Session {
+        let trustManager = ServerTrustManager(evaluators: [host: DisabledTrustEvaluator()])
+        return Alamofire.Session(serverTrustManager: trustManager)
     }
     
     // try inner login first
