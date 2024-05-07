@@ -47,7 +47,7 @@ public class SynologyClient {
     
     func baseURLString() -> String {
         if host.hasPrefix("http") {
-            if let port = port, !host.contains(":") {
+            if let port = port, let url = URL(string: host), url.port == nil {
                 return "\(host):\(port)/"
             } else if !host.hasSuffix("/") {
                 return host + "/"
