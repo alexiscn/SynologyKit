@@ -1092,7 +1092,7 @@ extension SynologyClient {
         var statusRequest = request
         statusRequest.method = method
         statusRequest.params.removeAll()
-        statusRequest.params["taskid"] = task.taskid
+        statusRequest.params["taskid"] = "\"\(task.taskid)\""
         var finished: Bool = false
         let seamphore = DispatchSemaphore(value: 0)
         var error: SynologyError? = nil

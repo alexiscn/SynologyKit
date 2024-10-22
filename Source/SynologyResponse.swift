@@ -452,12 +452,12 @@ public extension SynologyClient {
         
         let changedTime: TimeInterval?
         public var changedDate: Date? {
-            return Date()
+            return Date(timeIntervalSince1970: changedTime ?? 0)
         }
         
         let createTime: TimeInterval?
         public var createDate: Date? {
-            return Date()
+            return Date(timeIntervalSince1970: createTime ?? 0)
         }
     }
     
