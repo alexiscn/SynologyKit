@@ -124,6 +124,12 @@ public class SynologyClient {
             completion(.failure(.invalidResponse(response)))
             return
         }
+        
+        if T.self == EmptyResponse.self {
+            completion(.success(EmptyResponse() as! T))
+            return
+        }
+
         do {
             let decodedRes = try JSONDecoder().decode(SynologyResponse<T>.self, from: data)
             if let data = decodedRes.data {
